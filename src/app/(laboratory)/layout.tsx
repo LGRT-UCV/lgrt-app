@@ -1,6 +1,6 @@
 import { Layout } from "antd";
-import { Header, Content, Footer } from "antd/es/layout/layout";
-import SideMenu from "@/components/navigation/sideMenu";
+import { Content, Footer } from "antd/es/layout/layout";
+import SideMenu from "@/components/layout/sideMenu";
 import { LabProvider } from "@/providers/laboratoryProvider";
 
 export default function LabLayout({
@@ -14,8 +14,7 @@ export default function LabLayout({
         <Layout className="min-h-screen">
           <SideMenu />
           <Layout>
-            <Header style={{ padding: 0 }} className="bg-gray-200" />
-            <Content style={{ margin: '0 16px' }}>
+            <Content className="p-4">
               {children}
             </Content>
             <Footer className="text-center">

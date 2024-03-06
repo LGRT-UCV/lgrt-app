@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, type MenuProps } from 'antd';
+import { Menu, type MenuProps } from "antd";
 import Sider from "antd/es/layout/Sider";
 import {
   ProjectOutlined,
@@ -8,11 +8,13 @@ import {
   ProfileOutlined,
   TeamOutlined,
   FileSearchOutlined,
-} from '@ant-design/icons';
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useLabProvider } from "@/providers/laboratoryProvider";
-import Avatar from '../dataDisplay/avatar';
+import Avatar from "../dataDisplay/avatar";
+import { Roles } from "@/lib/constants";
 
-type TMenuItem = Required<MenuProps>['items'][number];
+type TMenuItem = Required<MenuProps>["items"][number];
 
 /**
  * Side menu component
@@ -20,7 +22,7 @@ type TMenuItem = Required<MenuProps>['items'][number];
  * @returns SideMenu component view
  */
 export default function SideMenu () {
-  const { menuCollapsed, handleMenuCollapsed } = useLabProvider();
+  const { role, menuCollapsed, handleMenuCollapsed } = useLabProvider();
 
   /**
    * Get menu item formated
@@ -43,11 +45,14 @@ export default function SideMenu () {
    * Items array to render into the side menu
    */
   const items: TMenuItem[] = [
-    getItem('Inventario', '1', <ProfileOutlined />),
-    getItem('Proyectos', '2', <ProjectOutlined />),
-    getItem('Solicitudes', '3', <FileSearchOutlined />),
-    getItem('Usuarios', '4', <TeamOutlined />),
-    getItem('Archivos', '5', <FileOutlined />),
+    getItem("Inventario", "1", <ProfileOutlined />,
+      [Roles.Admin, Roles.Internal].includes(role) ?
+        [getItem("Añadir nuevo", "inv-1", <PlusOutlined />)]
+      : undefined),
+    getItem("Proyectos", "2", <ProjectOutlined />),
+    getItem("Solicitudes", "3", <FileSearchOutlined />),
+    getItem("Usuarios", "4", <TeamOutlined />),
+    getItem("Archivos", "5", <FileOutlined />),
   ];
 
   return (
@@ -56,7 +61,7 @@ export default function SideMenu () {
         label="username"
         hideLabel={menuCollapsed}
       />
-      <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+      <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" items={items} />
     </Sider>
   )
 };

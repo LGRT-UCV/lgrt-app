@@ -1,16 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Table, { type TTableData } from "@/components/dataDisplay/table";
+import Table from "@/components/dataDisplay/table";
 import type { TableColumnsType } from "antd";
-import Title from "antd/es/typography/Title";
+import { PlusOutlined } from "@ant-design/icons";
 import TableFilter, { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
+import Header from "@/components/layout/header";
+import { AnyObject } from "antd/es/_util/type";
 
 export default function Inventory () {
   const [searchValue, setSearchValue] = useState("");
 
   // Example data
-  const columns: TableColumnsType<TTableData> = [
+  const columns: TableColumnsType<AnyObject> = [
     {
       title: 'Full Name',
       width: 100,
@@ -80,7 +82,7 @@ export default function Inventory () {
   const filters: Array<TFilter> = [
     {
       label: "Seleccionar",
-      placeHolder: "Selecciona un elemento",
+      placeholder: "Selecciona un elemento",
       type: FilterType.SELECT,
       values: [
         {
@@ -102,7 +104,7 @@ export default function Inventory () {
     },
     {
       label: "Buscar",
-      placeHolder: "Buscar...",
+      placeholder: "Buscar...",
       type: FilterType.SEARCH,
       values: [],
       onChange(value) {
@@ -111,7 +113,7 @@ export default function Inventory () {
     },
   ];
 
-  const tableData: Array<TTableData> = useMemo(() => {
+  const tableData: Array<AnyObject> = useMemo(() => {
     const auxData = [];
 
     for (let i = 0; i < 100; i++) {
@@ -128,7 +130,13 @@ export default function Inventory () {
 
   return (
     <div className="flex flex-col gap-8 p-4">
-      <Title>Inventario</Title>
+      <Header
+        title="Inventario"
+        btn={{
+          btnLabel: "Añadir nuevo",
+          btnIcon: <PlusOutlined />,
+        }}  
+      />
 
       <TableFilter filters={filters}/>
       

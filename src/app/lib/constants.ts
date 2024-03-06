@@ -6,3 +6,8 @@ export enum Routes {
   Profile = "/profile",
 };
 
+export enum Roles {
+  External = "external",
+  Internal = "internal",
+  Admin = "admin",
+};

@@ -3,6 +3,13 @@ import { UserOutlined } from '@ant-design/icons';
 
 /**
  * Avatar interface
+ * 
+ * @property `src` avatar uri
+ * @property `label` label under the avatar image
+ * @property `hideLabel` show or hide the label
+ * @property `className` container className
+ * @property `onClick` active when the user click the avatar image
+ * 
  */
 interface IAvatar {
   src?: string;

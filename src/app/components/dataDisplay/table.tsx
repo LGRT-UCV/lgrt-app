@@ -1,16 +1,16 @@
 import { Table as TableComponent } from 'antd';
 import type { TableColumnsType } from 'antd';
+import { AnyObject } from 'antd/es/_util/type';
 
-export type TTableData = {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-};
-
+/**
+ * Table interface
+ * 
+ * @property `columns` table columns
+ * @property `data` registries list
+ */
 export interface ITable {
-  columns: TableColumnsType<TTableData>;
-  data: Array<TTableData>;
+  columns: TableColumnsType<AnyObject>;
+  data: readonly AnyObject[];
 };
 
 /**
@@ -25,7 +25,6 @@ export default function Table ({
   columns,
   data,
 }: ITable) {
-
   return (
     <TableComponent
       columns={columns}

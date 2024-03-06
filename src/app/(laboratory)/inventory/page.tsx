@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Table, { type TTableData } from "@/components/dataDisplay/table";
 import type { TableColumnsType } from "antd";
 import Title from "antd/es/typography/Title";
-
+import TableFilter, { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 
 export default function Inventory () {
+  const [searchValue, setSearchValue] = useState("");
 
   // Example data
   const columns: TableColumnsType<TTableData> = [
@@ -76,6 +77,40 @@ export default function Inventory () {
     },
   ];
 
+  const filters: Array<TFilter> = [
+    {
+      label: "Seleccionar",
+      placeHolder: "Selecciona un elemento",
+      type: FilterType.SELECT,
+      values: [
+        {
+          label: "Element 1",
+          value: "element-1"
+        },
+        {
+          label: "Element 2",
+          value: "element-2"
+        },
+        {
+          label: "Element 3",
+          value: "element-3"
+        },
+      ],
+      onChange(value) {
+        console.log("select", value)
+      },
+    },
+    {
+      label: "Buscar",
+      placeHolder: "Buscar...",
+      type: FilterType.SEARCH,
+      values: [],
+      onChange(value) {
+        setSearchValue(String(value));
+      },
+    },
+  ];
+
   const tableData: Array<TTableData> = useMemo(() => {
     const auxData = [];
 
@@ -94,6 +129,9 @@ export default function Inventory () {
   return (
     <div className="flex flex-col gap-8 p-4">
       <Title>Inventario</Title>
+
+      <TableFilter filters={filters}/>
+      
       <Table
         columns={columns}
         data={tableData}

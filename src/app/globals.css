@@ -16,18 +16,30 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+*::-webkit-scrollbar {
+  width: 0.4em;
+  height: 0.4em;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #2B2F29;
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #2B2F29;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.ant-typography {
+  font-size: 16px;
+}
+
+#root .ant-form {
+  font-size: 16px !important;
 }

@@ -49,11 +49,11 @@ export default function Avatar ({
         />
       ) : (
         <UserOutlined
-          className={`p-1 text-4xl border-4 rounded-full ${!!onClick ? "cursor-pointer" : ""}`}
+          className={`p-1 text-4xl border-4 rounded-full text-white ${!!onClick ? "cursor-pointer" : ""}`}
           onClick={onClick}
         />
       )}
-      {!hideLabel && <p className="text-center">{label}</p>}
+      {!hideLabel && <p className="text-center text-white">{label}</p>}
     </div>
   );
 };

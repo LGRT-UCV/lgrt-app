@@ -16,10 +16,6 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-}
-
 *::-webkit-scrollbar {
   width: 0.4em;
   height: 0.4em;
@@ -38,4 +34,12 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.ant-typography {
+  font-size: 16px;
+}
+
+#root .ant-form {
+  font-size: 16px !important;
 }

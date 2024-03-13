@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
+import { LabProvider } from "@/context/labProvider";
 import SideMenu from "@/components/layout/sideMenu";
-import { LabProvider } from "@/providers/laboratoryProvider";
 
 export default function LabLayout({
   children,

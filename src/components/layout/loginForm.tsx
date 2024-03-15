@@ -1,9 +1,12 @@
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Text from "antd/es/typography";
 import Title from "antd/es/typography/Title";
 import { Button, Checkbox, Form, Input } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { LAB_DETAILS } from "@/lib/constants";
+import { LAB_DETAILS, Routes } from "@/lib/constants";
+import useNotification from "@/hooks/useNotification";
 
 type TLoginFormData = {
   email: string;
@@ -12,12 +15,30 @@ type TLoginFormData = {
 };
 
 export default function LoginForm () {
-  const onFinish = (values: TLoginFormData) => {
+  const { openNotification, notificationElement } = useNotification();
+  const router = useRouter();
+
+  const onFinish = async (values: TLoginFormData) => {
     console.log("Received values of form: ", values);
+    const responseNextAuth = await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+    });
+
+    if (responseNextAuth?.error) {
+      responseNextAuth.error.split(",").map((error, index) => {
+        openNotification(error, "", "topRight");
+      });
+      return;
+    }
+
+    router.push(Routes.Inventory);
   };
 
   return (
     <>
+      {notificationElement}
       <div className="text-center my-8">
           <Title className="py-2">Iniciar Sesión</Title>
           <Text className="py-4 w-3/4 mx-auto">

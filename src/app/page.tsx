@@ -2,7 +2,7 @@
 
 import Lottie from "lottie-react";
 import Title from "antd/es/typography/Title";
-import LoginForm from "@/components/layout/loginForm";
+import LoginForm from "../components/layout/loginForm";
 import { LAB_DETAILS } from "@/lib/constants";
 import bioLoginAnimation from "@/lib/lottieAnimations/bio-login.json";
 

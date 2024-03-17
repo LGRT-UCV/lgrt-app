@@ -10,7 +10,7 @@ import {
   FileSearchOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { useLabProvider } from "@/context/laboratoryProvider";
+import { useLabProvider } from "../../context/labProvider";
 import Avatar from "../dataDisplay/avatar";
 import { Roles } from "@/lib/constants";
 

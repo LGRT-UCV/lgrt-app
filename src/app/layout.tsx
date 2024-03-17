@@ -19,9 +19,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-        <SessionAuthProvider>
-          {children}
-        </SessionAuthProvider>
+        <main className="min-h-screen">
+          <SessionAuthProvider>
+            {children}
+          </SessionAuthProvider>
+        </main>
       </body>
     </html>
   );

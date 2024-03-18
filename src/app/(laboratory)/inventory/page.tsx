@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Table from "@/components/dataDisplay/table";
+import Table from "../../../components/dataDisplay/table";
 import type { TableColumnsType } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import TableFilter, { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
-import Header from "@/components/layout/header";
+import TableFilter, { TFilter, FilterType } from "../../../components/dataEntry/tableFilter";
+import Header from "../../../components/layout/header";
 import { AnyObject } from "antd/es/_util/type";
 
 export default function Inventory () {

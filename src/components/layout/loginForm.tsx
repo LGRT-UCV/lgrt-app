@@ -30,7 +30,10 @@ export default function LoginForm () {
 
     if (responseNextAuth?.error) {
       responseNextAuth.error.split(",").map((error, index) => {
-        openNotification(error, "", "topRight");
+        const msg = error.includes("Bad credentials") || error.includes("CredentialsSignin") ?
+          "Email o contraseña inválido" :
+          error;
+        openNotification("error", msg, "", "topRight");
       });
       return;
     }

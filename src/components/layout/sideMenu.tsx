@@ -9,10 +9,12 @@ import {
   TeamOutlined,
   FileSearchOutlined,
   PlusOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { useLabProvider } from "../../context/labProvider";
 import Avatar from "../dataDisplay/avatar";
 import { Roles } from "@/lib/constants";
+import { signOut } from "next-auth/react";
 
 type TMenuItem = Required<MenuProps>["items"][number];
 
@@ -32,12 +34,14 @@ export default function SideMenu () {
     key: React.Key,
     icon?: React.ReactNode,
     children?: TMenuItem[],
+    onClick?: () => void,
   ): TMenuItem => {
     return {
       key,
       icon,
       children,
       label,
+      onClick,
     } as TMenuItem;
   }
   
@@ -53,6 +57,8 @@ export default function SideMenu () {
     getItem("Solicitudes", "3", <FileSearchOutlined />),
     getItem("Usuarios", "4", <TeamOutlined />),
     getItem("Archivos", "5", <FileOutlined />),
+    { type: 'divider' },
+    getItem("Cerrar Sesión", "6", <LogoutOutlined />, undefined, () => void signOut()),
   ];
 
   return (

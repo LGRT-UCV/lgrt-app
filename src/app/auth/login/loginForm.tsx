@@ -33,6 +33,7 @@ export default function LoginForm () {
           "Email o contraseña inválido" :
           error;
         openNotification("error", msg, "", "topRight");
+        console.log("ERROR: ", error);
       });
       return;
     }

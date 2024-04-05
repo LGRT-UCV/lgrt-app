@@ -19,15 +19,22 @@ export default function RequestResetPassword () {
 
   const onFinish = async (values: TRequestResetFormData) => {
     try {
-      console.log("VALUE:", values)
       await requestResetPassword(values.email);
-      void router.push(Routes.ResetPassword);
+      
+      openNotification(
+        "success",
+        "Código de Verificación enviado!",
+        "Se ha enviado un código de verificación a su correo",
+        "topRight"
+      );
+      void router.push(`${Routes.ResetPassword}?email=${values.email}`);
     // @ts-expect-error
     } catch (error: Error) {
-      const msg = error.message.includes("Bad credentials") || error.message.includes("CredentialsSignin") ?
-          "Email o contraseña inválido" :
-          error;
+      const msg = error.message.includes("Bad credentials") || error.message.includes("Non existent user") ?
+          "Email inválido" :
+          error.message;
       openNotification("error", msg, "", "topRight");
+      console.log("ERROR: ", error);
     }
   };
 

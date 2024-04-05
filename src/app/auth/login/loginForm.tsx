@@ -21,7 +21,6 @@ export default function LoginForm () {
   const router = useRouter();
 
   const onFinish = async (values: TLoginFormData) => {
-    console.log("Received values of form: ", values);
     const responseNextAuth = await signIn("credentials", {
       email: values.email,
       password: values.password,
@@ -30,7 +29,11 @@ export default function LoginForm () {
 
     if (responseNextAuth?.error) {
       responseNextAuth.error.split(",").map((error, index) => {
-        openNotification(error, "", "topRight");
+        const msg = error.includes("Bad credentials") || error.includes("CredentialsSignin") ?
+          "Email o contraseña inválido" :
+          error;
+        openNotification("error", msg, "", "topRight");
+        console.log("ERROR: ", error);
       });
       return;
     }
@@ -88,7 +91,7 @@ export default function LoginForm () {
           />
         </Form.Item>
         <Form.Item>
-          <Link className="float-right" href="">
+          <Link className="float-right" href={Routes.RequestResetPassword}>
             Olvidé mi contraseña
           </Link>
         </Form.Item>

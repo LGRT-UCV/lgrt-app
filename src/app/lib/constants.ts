@@ -1,8 +1,11 @@
 export enum Routes {
   Home = "/",
   Inventory = "/inventory",
+  Login = "/auth/login",
   Projects = "/projects",
   Requests = "/requests",
+  RequestResetPassword = "/auth/request-reset",
+  ResetPassword = "/auth/reset-password",
   Profile = "/profile",
 };
 

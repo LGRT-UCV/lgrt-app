@@ -5,16 +5,36 @@ import type { NotificationPlacement } from "antd/es/notification/interface";
 export default function useNotification () {
   const [api, notificationElement] = notification.useNotification();
 
-  const openNotification = (message: string, description: string | ReactNode, placement: NotificationPlacement) => {
+  const openNotification = (
+    type: "info" | "success" | "error" | "warning",
+    message: string,
+    description: string | ReactNode,
+    placement: NotificationPlacement
+  ) => {
     const renderDescription = typeof description === "string" ?
       <p>{description}</p> :
       description;
-    
-    api.info({
+
+    const notificationData = {
       message,
       description: renderDescription,
       placement,
-    });
+    };
+    
+    switch (type) {
+      case "success":
+        api.success(notificationData);
+        break;
+      case "error":
+        api.error(notificationData);
+        break;
+      case "warning":
+        api.warning(notificationData);
+        break;
+      default:
+        api.info(notificationData);
+        break;
+    };
   };
 
 

@@ -27,13 +27,10 @@ const handler = NextAuth({
           );
 
           const user = await res.json();
-          console.log("USER: ", user);
-          console.log("TOKEN: ", res.headers.getSetCookie())
   
           if (user.error) throw user;
-  
+
           return user;
-          
         } catch (error) {
           console.log("ERROR: ", error)
         }

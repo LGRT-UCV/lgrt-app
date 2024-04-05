@@ -21,7 +21,6 @@ export default function LoginForm () {
   const router = useRouter();
 
   const onFinish = async (values: TLoginFormData) => {
-    console.log("Received values of form: ", values);
     const responseNextAuth = await signIn("credentials", {
       email: values.email,
       password: values.password,
@@ -91,7 +90,7 @@ export default function LoginForm () {
           />
         </Form.Item>
         <Form.Item>
-          <Link className="float-right" href="">
+          <Link className="float-right" href={Routes.RequestResetPassword}>
             Olvidé mi contraseña
           </Link>
         </Form.Item>

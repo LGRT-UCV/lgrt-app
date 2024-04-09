@@ -27,8 +27,15 @@ const handler = NextAuth({
           );
 
           const user = await res.json();
-  
+          
           if (user.error) throw user;
+          
+          const coockies = await res.headers.getSetCookie();
+          const token = coockies[0]?.split(";")[0]?.replace("accessToken=", "");
+
+          if (!token ) throw new Error("CredentialsSignin");
+
+          user.token = token;
 
           return user;
         } catch (error) {

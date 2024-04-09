@@ -3,7 +3,7 @@ export enum RequestMethods {
   GET = "GET",
   POST = "POST",
   PUT = "PUT",
-}
+};
 
 export const API_REQUEST_HEADERS = { "Content-Type": "application/json" };
 

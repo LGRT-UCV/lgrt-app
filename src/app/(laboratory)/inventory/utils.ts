@@ -4,7 +4,6 @@ import { IMaterial } from "./interfaces";
 const MATERIAL_TYPE_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/materialTypes`;
 const MATERIALS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/materials`;
 
-
 export const getMaterialTypes = async () => {
   return newRequest(
     MATERIAL_TYPE_URI,

@@ -58,6 +58,7 @@ export default function LoginForm () {
         onFinish={onFinish}
         layout="vertical"
         requiredMark="optional"
+        size="large"
         className="w-3/4 mx-auto"
       >
         <Form.Item

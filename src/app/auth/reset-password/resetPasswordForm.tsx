@@ -41,8 +41,8 @@ export default function ResetPassword () {
       void router.push(Routes.Login);
     // @ts-expect-error
     } catch (error: Error) {
-      const msg = error.message.includes("The user does not have any token available.") || error.message.includes("Non existent user") ?
-          "Token o email inválido" :
+      const msg = error.message.includes("The user does not have any token available.") || error.message.includes("The token is wrong") ?
+          "Token o inválido" :
           error.message;
       openNotification("error", msg, "", "topRight");
       console.log("ERROR: ", error);

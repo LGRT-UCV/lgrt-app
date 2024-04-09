@@ -1,26 +1,22 @@
+import { createHash } from "crypto";
+import { newRequest, RequestMethods } from "@/utils/requests";
+
 export const resetPassword = async (
   email: string,
   token: string,
   newPassword: string,
   confirmPassword: string,
 ) => {
-  const response = await fetch(
+  const password = createHash('sha256').update(newPassword).digest('base64');
+  const confirm = createHash('sha256').update(confirmPassword).digest('base64');
+  
+  return await newRequest(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/password/reset?id=${email}`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        token,
-        newPassword,
-        confirmPassword,
-      }),
-      headers: { "Content-Type": "application/json" },
-    }
+    RequestMethods.POST,
+    JSON.stringify({
+      token,
+      newPassword: password,
+      confirmPassword: confirm,
+    })
   );
-
-  if (!response.ok)
-    throw new Error(
-      `Error: ${JSON.stringify(await response.json())}`,
-    );
-
-  return await response.json();
 };

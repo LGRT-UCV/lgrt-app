@@ -39,11 +39,9 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }) {
-      console.log("jwt", token, user)
       return { ...token, ...user };
     },
     async session({ session, token }) {
-      console.log("session: ", session, token)
       session.user = token as any;
       return session;
     },

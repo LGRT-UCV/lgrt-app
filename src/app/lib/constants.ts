@@ -21,4 +21,4 @@ export const LAB_DETAILS = {
   shortName: "LGRT UCV",
   symbol: "LGRT",
   address: "",
-}
+};

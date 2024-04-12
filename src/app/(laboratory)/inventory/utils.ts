@@ -4,6 +4,7 @@ import { IMaterial } from "./interfaces";
 const MATERIAL_TYPE_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/materialtypes`;
 const MATERIALS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/materials`;
 const MEASUREMENTS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/measurements`;
+const SGA_CLASSIGICATIONS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/sgaclassifications`;
 
 export const getMaterialTypes = async () => {
   return newRequest(
@@ -15,6 +16,13 @@ export const getMaterialTypes = async () => {
 export const getMeasurements = async () => {
   return newRequest(
     MEASUREMENTS_URI,
+    RequestMethods.GET
+  );
+};
+
+export const getSGAClassification = async () => {
+  return newRequest(
+    SGA_CLASSIGICATIONS_URI,
     RequestMethods.GET
   );
 };

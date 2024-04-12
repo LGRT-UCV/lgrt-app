@@ -7,11 +7,35 @@ import useNotification from "@/hooks/useNotification";
 import TextArea from "antd/es/input/TextArea";
 import { getMaterialTypes, getMeasurements } from "../utils";
 import { Routes } from "@/lib/constants";
+import NFPAForm from "./nfpaForm";
 
 type TNewMaterialFormData = {
-  email: string;
-  password: string;
-  remember: boolean;
+  name: string;
+  description: string;
+  presentation: string;
+  quantity: string;
+  brand: string;
+  batch: string;
+  concentration: string;
+  storagePlace: string;
+  expirationDate: string;
+  observations: string;
+  condition: string;
+  weight: string;
+  additionalInfo: string;
+  capacity: string;
+  code: string;
+  superUse: boolean;
+  sensibleMaterial: boolean;
+  materialType: string;
+  measurement: string;
+  nfpaClassif: {
+    nfpaBlue: number;
+    nfpaRed: number;
+    nfpaYellow: number;
+    nfpaWhite: string;
+  };
+  sgaClassif: Array<{ idSgaClassif: string }>
 };
 
 type TMaterialType = {
@@ -78,21 +102,11 @@ export default function MaterialForm ({
   };
 
   const onFinish = async (values: TNewMaterialFormData) => {
-    const responseNextAuth = await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirect: false,
-    });
-
-    if (responseNextAuth?.error) {
-      responseNextAuth.error.split(",").map((error, index) => {
-        const msg = error.includes("Bad credentials") || error.includes("CredentialsSignin") ?
-          "Email o contraseña inválido" :
-          error;
-        openNotification("error", msg, "", "topRight");
-        console.log("ERROR: ", error);
-      });
-      return;
+    try {
+      console.log("Values", values)
+    } catch (error) {
+      openNotification("error", "Ha ocurrido un error al guardar el elemento", "", "topRight");
+      console.log("ERROR: ", error);
     }
 
     router.push(Routes.Inventory);
@@ -105,7 +119,7 @@ export default function MaterialForm ({
   };
 
   return (
-    <div className="max-h-fit overflow-y-auto">
+    <div className="max-h-full overflow-y-auto p-2">
       {notificationElement}
       <Form
         name="materialForm"
@@ -400,6 +414,8 @@ export default function MaterialForm ({
               maxLength={500}
             />
           </Form.Item>
+
+          <NFPAForm />
         </>}
       </Form>
     </div>

@@ -45,7 +45,7 @@ export default function Header ({
   return (
     <div className="relative w-full">
       <div className={`flex justify-between p-2 items-center ${fixed ? "fixed z-10" : ""}`}>
-        <Title>{title}</Title>
+        <h1 className="text-base font-bold md:text-4xl">{title}</h1>
         {!!btn && (
           <Button type={btn.type} icon={btn.icon} onClick={btn.onClick}>{btn.label}</Button>
         )}

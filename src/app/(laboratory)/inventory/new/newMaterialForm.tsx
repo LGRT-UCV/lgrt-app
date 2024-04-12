@@ -109,7 +109,7 @@ export default function MaterialForm ({
       console.log("ERROR: ", error);
     }
 
-    router.push(Routes.Inventory);
+    //router.push(Routes.Inventory);
   };
 
   const hasField = (field: string) => {
@@ -384,6 +384,7 @@ export default function MaterialForm ({
           <div className="flex flex-wrap gap-8">
             <Form.Item
               name="sensibleMaterial"
+              initialValue={false}
             >
               <Checkbox>
                 Material sensible
@@ -391,6 +392,7 @@ export default function MaterialForm ({
             </Form.Item>
             <Form.Item
               name="superUse"
+              initialValue={false}
             >
               <Checkbox>
                 Necesita un supervisor

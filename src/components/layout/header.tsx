@@ -26,6 +26,7 @@ export type TButtonProps = {
 interface IHeader {
   title: string;
   btn?: TButtonProps;
+  fixed?: boolean;
 };
 
 /**
@@ -39,13 +40,16 @@ interface IHeader {
 export default function Header ({
   title,
   btn,
+  fixed,
 }: IHeader) {
   return (
-    <div className="w-full flex justify-between">
-      <Title>{title}</Title>
-      {!!btn && (
-        <Button type={btn.type} icon={btn.icon} onClick={btn.onClick}>{btn.label}</Button>
-      )}
+    <div className="relative w-full">
+      <div className={`flex justify-between p-2 items-center ${fixed ? "fixed z-10" : ""}`}>
+        <Title>{title}</Title>
+        {!!btn && (
+          <Button type={btn.type} icon={btn.icon} onClick={btn.onClick}>{btn.label}</Button>
+        )}
+      </div>
     </div>
   );
 }

@@ -16,9 +16,9 @@ export default function LabLayout({
         <Layout className="min-h-screen">
           <SideMenu />
           <Layout>
-            <Content className="flex flex-col gap-8 p-8">
+            <div className="flex flex-col gap-8 p-8 relative">
               {children}
-            </Content>
+            </div>
             <Footer className="text-center">
               LGRT ©{new Date().getFullYear()}
             </Footer>

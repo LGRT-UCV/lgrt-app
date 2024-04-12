@@ -10,7 +10,7 @@ export default function NewMaterial () {
         title="Nuevo elemento"
         btn={{
           label: "Guardar",
-          icon: <SaveOutlined />
+          icon: <SaveOutlined />,
         }}
       />
 

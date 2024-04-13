@@ -43,6 +43,7 @@ export const getAllMaterials = async () => {
 };
 
 export const createMaterial = async (data: IMaterial, sessionToken: string) => {
+  console.log(data, sessionToken)
   const headers = {
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`

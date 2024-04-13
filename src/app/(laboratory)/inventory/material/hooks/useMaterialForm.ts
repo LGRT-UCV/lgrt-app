@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd/lib";
 import useNotification from "@/hooks/useNotification";
 import { Routes } from "@/lib/constants";
-import { getMaterialTypes, getMeasurements, getSGAClassification } from "../../utils";
+import { createMaterial, getMaterialTypes, getMeasurements, getSGAClassification } from "../../utils";
 import { variableFields } from "../utils";
-import type { TMaterialType, TMeasurements, TSGAClassification } from "../../interfaces";
+import type {
+  TMaterialForm,
+  TMaterialType,
+  TMeasurements,
+  TSGAClassification
+} from "../../interfaces";
 
 export default function useMaterialForm (formIntance: FormInstance) {
   const [measurementList, setMeasurementList] = useState<Array<TMeasurements>>([]);
@@ -15,6 +21,7 @@ export default function useMaterialForm (formIntance: FormInstance) {
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
   const { openNotification, notificationElement } = useNotification();
   const router = useRouter();
+  const { data: sessionData } = useSession();
 
   useEffect(() => {
     const getFormData = async () => {
@@ -38,15 +45,35 @@ export default function useMaterialForm (formIntance: FormInstance) {
     setCurrentMeasurement(value);
   };
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: TMaterialForm) => {
     try {
-      console.log("Values", values)
+      const {
+        nfpaBlue,
+        nfpaRed,
+        nfpaWhite,
+        nfpaYellow,
+        materialType,
+        sgaClassif,
+        ...fieldValues
+      } = values;
+      const materialTypeParsed = JSON.parse(materialType) as TMaterialType;
+
+      await createMaterial({
+        nfpaClassif: {
+          nfpaBlue,
+          nfpaRed,
+          nfpaWhite,
+          nfpaYellow,
+        },
+        materialType: materialTypeParsed.id,
+        sgaClassif: sgaClassif.map(sga => ({ idSgaClassif: sga })),
+        ...fieldValues,
+      }, sessionData?.user.token ?? "");
+      //router.push(Routes.Inventory);
     } catch (error) {
-      openNotification("error", "Ha ocurrido un error al guardar el elemento", "", "topRight");
+      openNotification("error", "Ha ocurrido un error al guardar el material", "", "topRight");
       console.log("ERROR: ", error);
     }
-
-    //router.push(Routes.Inventory);
   };
 
   const hasField = (field: string) => {

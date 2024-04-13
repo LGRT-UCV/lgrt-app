@@ -24,7 +24,7 @@ export const newRequest = async (
 
   if (!response.ok)
     throw new Error(
-      `Error: ${JSON.stringify(await response.json())}`,
+      `Error: ${JSON.stringify(await response.json())}`
     );
 
   return await response.json();

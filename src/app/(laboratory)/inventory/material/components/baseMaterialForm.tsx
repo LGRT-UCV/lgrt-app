@@ -17,7 +17,7 @@ export default function BaseMaterialForm ({
       <div className="flex flex-wrap justify-between">
         <Form.Item
           label="Nombre del material"
-          name="materialName"
+          name="name"
           className="w-full md:w-2/3 px-2 mb-4"
           rules={[
             {

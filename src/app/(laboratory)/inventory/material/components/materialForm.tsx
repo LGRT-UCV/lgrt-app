@@ -241,7 +241,7 @@ export default function MaterialForm ({
           <div className="flex flex-wrap gap-8">
             <Form.Item
               name="sensibleMaterial"
-              initialValue={false}
+              valuePropName="checked"
             >
               <Checkbox>
                 Material sensible
@@ -249,7 +249,7 @@ export default function MaterialForm ({
             </Form.Item>
             <Form.Item
               name="superUse"
-              initialValue={false}
+              valuePropName="checked"
             >
               <Checkbox>
                 Necesita un supervisor

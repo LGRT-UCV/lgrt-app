@@ -4,22 +4,37 @@ interface IGenericId {
   id: string;
 }
 
+export type TMaterialForm = {
+  name: string;
+  description: string;
+  quantity: string;
+  superUse: boolean;
+  sensibleMaterial: boolean;
+  materialType: string;
+  measurement: string;
+  nfpaBlue: number;
+  nfpaRed: number;
+  nfpaYellow: number;
+  nfpaWhite: string;
+  sgaClassif: Array<string>;
+  presentation?: string;
+  brand?: string;
+  batch?: string;
+  concentration?: string;
+  storagePlace: string;
+  expirationDate?: string;
+  observations?: string;
+  condition?: string;
+  weight?: string;
+  additionalInfo?: string;
+  capacity?: string;
+  code?: string;
+};
+
 export interface IMaterial {
   name: string;
   description: string;
-  presentation: string;
   quantity: string;
-  brand: string;
-  batch: string;
-  concentration: string;
-  storagePlace: string;
-  expirationDate: string;
-  observations: string;
-  condition: string;
-  weight: string;
-  additionalInfo: string;
-  capacity: string;
-  code: string;
   superUse: boolean;
   sensibleMaterial: boolean;
   materialType: string;
@@ -30,7 +45,19 @@ export interface IMaterial {
     nfpaYellow: number;
     nfpaWhite: string;
   };
-  sgaClassif: Array<{ idSgaClassif: string }>
+  sgaClassif: Array<{ idSgaClassif: string } | undefined>
+  presentation?: string;
+  brand?: string;
+  batch?: string;
+  concentration?: string;
+  storagePlace: string;
+  expirationDate?: string;
+  observations?: string;
+  condition?: string;
+  weight?: string;
+  additionalInfo?: string;
+  capacity?: string;
+  code?: string;
 };
 
 export type TMaterial = IMaterial & IGenericId;

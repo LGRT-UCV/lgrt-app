@@ -2,6 +2,7 @@ export enum Routes {
   Home = "/",
   Inventory = "/inventory",
   Login = "/auth/login",
+  SaveMaterial = "/inventory/material",
   Projects = "/projects",
   Requests = "/requests",
   RequestResetPassword = "/auth/request-reset",
@@ -21,4 +22,4 @@ export const LAB_DETAILS = {
   shortName: "LGRT UCV",
   symbol: "LGRT",
   address: "",
-}
+};

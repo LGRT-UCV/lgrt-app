@@ -1,6 +1,8 @@
 "use client";
 
 import { Menu, type MenuProps } from "antd";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Sider from "antd/es/layout/Sider";
 import {
   ProjectOutlined,
@@ -10,11 +12,11 @@ import {
   FileSearchOutlined,
   PlusOutlined,
   LogoutOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
-import { useLabProvider } from "../../context/labProvider";
+import { useLabProvider } from "@/context/labProvider";
+import { Roles, Routes } from "@/lib/constants";
 import Avatar from "../dataDisplay/avatar";
-import { Roles } from "@/lib/constants";
-import { signOut } from "next-auth/react";
 
 type TMenuItem = Required<MenuProps>["items"][number];
 
@@ -24,6 +26,7 @@ type TMenuItem = Required<MenuProps>["items"][number];
  * @returns SideMenu component view
  */
 export default function SideMenu () {
+  const router = useRouter();
   const { role, menuCollapsed, handleMenuCollapsed } = useLabProvider();
 
   /**
@@ -51,7 +54,10 @@ export default function SideMenu () {
   const items: TMenuItem[] = [
     getItem("Inventario", "1", <ProfileOutlined />,
       [Roles.Admin, Roles.Internal].includes(role) ?
-        [getItem("Añadir nuevo", "inv-1", <PlusOutlined />)]
+        [
+          getItem("Ver todos", "inv-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Inventory)),
+          getItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveMaterial))
+        ]
       : undefined),
     getItem("Proyectos", "2", <ProjectOutlined />),
     getItem("Solicitudes", "3", <FileSearchOutlined />),

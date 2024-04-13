@@ -1,15 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Table from "../../../components/dataDisplay/table";
+import { useRouter } from "next/navigation";
 import type { TableColumnsType } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import TableFilter, { TFilter, FilterType } from "../../../components/dataEntry/tableFilter";
-import Header from "../../../components/layout/header";
 import { AnyObject } from "antd/es/_util/type";
+import TableFilter, { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
+import Table from "@/components/dataDisplay/table";
+import Header from "@/components/layout/header";
+import { Routes } from "@/lib/constants";
 
 export default function Inventory () {
   const [searchValue, setSearchValue] = useState("");
+  const router = useRouter();
 
   // Example data
   const columns: TableColumnsType<AnyObject> = [
@@ -129,13 +132,14 @@ export default function Inventory () {
   }, []);
 
   return (
-    <div className="flex flex-col gap-8 p-4">
+    <>
       <Header
         title="Inventario"
         btn={{
-          btnLabel: "Añadir nuevo",
-          btnIcon: <PlusOutlined />,
-        }}  
+          label: "Añadir nuevo",
+          icon: <PlusOutlined />,
+          onClick: () => void router.push(Routes.SaveMaterial),
+        }}
       />
 
       <TableFilter filters={filters}/>
@@ -144,6 +148,6 @@ export default function Inventory () {
         columns={columns}
         data={tableData}
       />
-    </div>
+    </>
   )
 };

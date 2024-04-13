@@ -8,11 +8,13 @@ import Title from "antd/es/typography/Title";
  * @property `btnLabel` prints button label
  * @property `btnType` sets button type
  * @property `btnIcon` sets button icon from a component
+ * @property `href` ref uri
  */
 export type TButtonProps = {
-  btnLabel?: string;
-  btnType?: "primary" | "link" | "text" | "default";
-  btnIcon?: ReactNode;
+  label?: string;
+  type?: "primary" | "link" | "text" | "default";
+  icon?: ReactNode;
+  onClick?: () => void;
 }
 
 /**
@@ -24,6 +26,7 @@ export type TButtonProps = {
 interface IHeader {
   title: string;
   btn?: TButtonProps;
+  fixed?: boolean;
 };
 
 /**
@@ -37,13 +40,16 @@ interface IHeader {
 export default function Header ({
   title,
   btn,
+  fixed,
 }: IHeader) {
   return (
-    <div className="w-full flex justify-between">
-      <Title>{title}</Title>
-      {!!btn && (
-        <Button type={btn.btnType} icon={btn.btnIcon}>{btn.btnLabel}</Button>
-      )}
+    <div className="relative w-full">
+      <div className={`flex justify-between p-2 items-center ${fixed ? "fixed z-10" : ""}`}>
+        <h1 className="text-base font-bold md:text-4xl">{title}</h1>
+        {!!btn && (
+          <Button type={btn.type} icon={btn.icon} onClick={btn.onClick}>{btn.label}</Button>
+        )}
+      </div>
     </div>
   );
 }

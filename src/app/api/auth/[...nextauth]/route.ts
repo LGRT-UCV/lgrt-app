@@ -27,8 +27,15 @@ const handler = NextAuth({
           );
 
           const user = await res.json();
-  
+          
           if (user.error) throw user;
+          
+          const coockies = await res.headers.getSetCookie();
+          const token = coockies[0]?.split(";")[0]?.replace("accessToken=", "");
+
+          if (!token ) throw new Error("CredentialsSignin");
+
+          user.token = token;
 
           return user;
         } catch (error) {
@@ -39,11 +46,9 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }) {
-      console.log("jwt", token, user)
       return { ...token, ...user };
     },
     async session({ session, token }) {
-      console.log("session: ", session, token)
       session.user = token as any;
       return session;
     },

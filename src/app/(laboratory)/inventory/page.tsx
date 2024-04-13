@@ -138,7 +138,7 @@ export default function Inventory () {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => void router.push(Routes.NewInventory),
+          onClick: () => void router.push(Routes.SaveMaterial),
         }}
       />
 

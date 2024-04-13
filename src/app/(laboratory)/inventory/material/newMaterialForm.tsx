@@ -5,7 +5,7 @@ import { Select, Form, Input, InputNumber, DatePicker, Checkbox } from "antd";
 import type { FormInstance } from "antd/lib";
 import useNotification from "@/hooks/useNotification";
 import TextArea from "antd/es/input/TextArea";
-import { getMaterialTypes, getMeasurements } from "../utils";
+import { getMaterialTypes, getMeasurements, getSGAClassification } from "../utils";
 import { Routes } from "@/lib/constants";
 import NFPAForm from "./nfpaForm";
 
@@ -50,15 +50,22 @@ type TMeasurements = {
   id: string;
 }
 
+type TSGAClassification = {
+  name: string;
+  description: string;
+  id: number;
+};
+
 interface IMaterialForm {
   formIntance: FormInstance;
-}
+};
 
 export default function MaterialForm ({
   formIntance
 }: IMaterialForm) {
   const [measurementList, setMeasurementList] = useState<Array<TMeasurements>>([]);
   const [materialTypeList, setMaterialTypeList] = useState<Array<TMaterialType>>([]);
+  const [sgaClassification, setSgaClassification] = useState<Array<TSGAClassification>>([]);
   const [currentMeasurement, setCurrentMeasurement] = useState<string>("");
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
   const { openNotification, notificationElement } = useNotification();
@@ -68,8 +75,10 @@ export default function MaterialForm ({
     const getFormData = async () => {
       const measurementsResponse: TMeasurements[] = await getMeasurements();
       const materialTypeResponse: TMaterialType[] = await getMaterialTypes();
+      const sgaResponse: TSGAClassification[] = await getSGAClassification();
       setMeasurementList(measurementsResponse);
       setMaterialTypeList(materialTypeResponse);
+      setSgaClassification(sgaResponse);
     };
 
     void getFormData();
@@ -101,7 +110,7 @@ export default function MaterialForm ({
     setCurrentMeasurement(value);
   };
 
-  const onFinish = async (values: TNewMaterialFormData) => {
+  const onFinish = async (values: any) => {
     try {
       console.log("Values", values)
     } catch (error) {
@@ -417,7 +426,31 @@ export default function MaterialForm ({
             />
           </Form.Item>
 
-          <NFPAForm />
+          <div className="flex flex-wrap">
+            <NFPAForm />
+
+            <Form.Item
+              label="Clasificación SGA"
+              name="sgaClassif"
+              className="w-1/2"
+            >
+              <Checkbox.Group className="w-full">
+                <div className="flex flex-wrap justify-between">
+                  {sgaClassification.map((sga, index) => {
+                    return (
+                      <Checkbox
+                        key={`sga-${index}`}
+                        value={sga.id}
+                        className="w-1/2 mb-8 font-bold text-base"
+                      >
+                        {sga.description}
+                      </Checkbox>
+                    );
+                  })}
+                </div>
+              </Checkbox.Group>
+            </Form.Item>
+          </div>
         </>}
       </Form>
     </div>

@@ -56,7 +56,7 @@ export default function SideMenu () {
       [Roles.Admin, Roles.Internal].includes(role) ?
         [
           getItem("Ver todos", "inv-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Inventory)),
-          getItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => void router.push(Routes.NewInventory))
+          getItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveMaterial))
         ]
       : undefined),
     getItem("Proyectos", "2", <ProjectOutlined />),

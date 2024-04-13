@@ -1,12 +1,12 @@
 import { Form, Input, InputNumber } from "antd";
 import Title from "antd/es/typography/Title";
 
-const NFPAForm = () => {
+export default function NFPAForm() {
   return (
-    <div>
-      <Title level={5}>Clasificación NFPA</Title>
+    <div className="w-1/2">
+      <h5>Clasificación NFPA</h5>
       
-      <div className="relative w-full h-48">
+      <div className="relative w-full h-48 mt-8">
         {/* diamond red */}
         <div
           className="w-24 h-24 bg-red-500 border border-black flex justify-center items-center absolute top-0 left-1/2 transform -translate-x-1/2 -rotate-45"
@@ -108,5 +108,3 @@ const NFPAForm = () => {
     </div>
   );
 };
-
-export default NFPAForm;

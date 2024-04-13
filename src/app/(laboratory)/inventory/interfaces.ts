@@ -1,3 +1,9 @@
+import type { FormInstance } from "antd/lib";
+
+interface IGenericId {
+  id: string;
+}
+
 export interface IMaterial {
   name: string;
   description: string;
@@ -22,11 +28,31 @@ export interface IMaterial {
     nfpaBlue: number;
     nfpaRed: number;
     nfpaYellow: number;
-    nfpaWhite: string
+    nfpaWhite: string;
   };
-  sgaClassif: [
-    {
-      idSgaClassif: string
-    }
-  ];
+  sgaClassif: Array<{ idSgaClassif: string }>
+};
+
+export type TMaterial = IMaterial & IGenericId;
+
+export interface IMaterialForm {
+  formIntance: FormInstance;
+};
+
+export type TMaterialType = {
+  name: string;
+  fields: string;
+  id: string;
+};
+
+export type TMeasurements = {
+  name: string;
+  description: string;
+  id: string;
 }
+
+export type TSGAClassification = {
+  name: string;
+  description: string;
+  id: number;
+};

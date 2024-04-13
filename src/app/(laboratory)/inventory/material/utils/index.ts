@@ -1,0 +1,18 @@
+export const variableFields = [
+  "measurement",
+  "presentation",
+  "capacity",
+  "weight",
+  "quantity",
+  "brand",
+  "code",
+  "batch",
+  "concentration",
+  "expirationDate",
+  "condition",
+  "storagePlace",
+  "sensibleMaterial",
+  "superUse",
+  "additionalInfo",
+  "observations",
+];

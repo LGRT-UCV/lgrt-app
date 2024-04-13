@@ -3,7 +3,7 @@
 import { SaveOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
 import Header from "@/components/layout/header";
-import NewMaterialForm from "./newMaterialForm";
+import MaterialForm from "./components/materialForm";
 
 export default function NewMaterial () {
   const [form] = useForm();
@@ -20,7 +20,7 @@ export default function NewMaterial () {
       />
 
       <div className="h-[calc(100vh-250px)] overflow-y-auto p-4">
-        <NewMaterialForm formIntance={form} />
+        <MaterialForm formIntance={form} />
       </div>
     </>
   );

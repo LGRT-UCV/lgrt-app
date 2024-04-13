@@ -53,6 +53,7 @@ export default function useMaterialForm (formIntance: FormInstance) {
         nfpaWhite,
         nfpaYellow,
         materialType,
+        measurement,
         sgaClassif,
         weight,
         ...fieldValues
@@ -66,12 +67,23 @@ export default function useMaterialForm (formIntance: FormInstance) {
           nfpaWhite,
           nfpaYellow,
         },
-        materialType: materialTypeParsed.id,
+        materialType: {
+          id: materialTypeParsed.id
+        },
+        measurement: {
+          id: measurement,
+        },
         sgaClassif: sgaClassif.map(sga => ({ idSgaClassif: sga })),
         weight: weight?.toString(),
         ...fieldValues,
       }, sessionData?.user.token ?? "");
-      //router.push(Routes.Inventory);
+      openNotification(
+        "success",
+        "Material creado con exito",
+        `El material ${values.name} ha sido creado con exito.`,
+        "topRight"
+      );
+      void router.push(Routes.Inventory);
     } catch (error) {
       openNotification("error", "Ha ocurrido un error al guardar el material", "", "topRight");
       console.log("ERROR: ", error);

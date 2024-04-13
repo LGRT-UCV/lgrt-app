@@ -37,8 +37,8 @@ export interface IMaterial {
   quantity: string;
   superUse: boolean;
   sensibleMaterial: boolean;
-  materialType: string;
-  measurement: string;
+  materialType: IGenericId;
+  measurement: IGenericId;
   nfpaClassif: {
     nfpaBlue: number;
     nfpaRed: number;

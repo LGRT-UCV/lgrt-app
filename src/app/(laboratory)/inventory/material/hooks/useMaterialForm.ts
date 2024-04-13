@@ -54,6 +54,7 @@ export default function useMaterialForm (formIntance: FormInstance) {
         nfpaYellow,
         materialType,
         sgaClassif,
+        weight,
         ...fieldValues
       } = values;
       const materialTypeParsed = JSON.parse(materialType) as TMaterialType;
@@ -67,6 +68,7 @@ export default function useMaterialForm (formIntance: FormInstance) {
         },
         materialType: materialTypeParsed.id,
         sgaClassif: sgaClassif.map(sga => ({ idSgaClassif: sga })),
+        weight: weight?.toString(),
         ...fieldValues,
       }, sessionData?.user.token ?? "");
       //router.push(Routes.Inventory);

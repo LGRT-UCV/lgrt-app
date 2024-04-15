@@ -29,7 +29,7 @@ export default function Table ({
     <TableComponent
       columns={columns}
       dataSource={data}
-      scroll={{ x: 1500, y: 800 }}
+      scroll={{ x: 1800, y: 800 }}
     />
   );
 };

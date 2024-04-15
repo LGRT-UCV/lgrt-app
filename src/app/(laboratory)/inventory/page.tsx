@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { TableColumnsType } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Divider, Popover, type TableColumnsType } from "antd";
+import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { AnyObject } from "antd/es/_util/type";
 import TableFilter, { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
@@ -17,10 +17,7 @@ import useNotification from "@/hooks/useNotification";
 import { useSession } from "next-auth/react";
 
 export default function Inventory () {
-  const {
-    materialTypeList,
-    measurementList,
-  } = useMaterialInit();
+  const { materialTypeList } = useMaterialInit();
   const { openNotification, notificationElement } = useNotification();
   const [materialList, setMaterialList] = useState<Array<TMaterial>>([]);
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
@@ -62,12 +59,30 @@ export default function Inventory () {
       dataIndex: column.id,
       key: column.id,
       fixed: column.id === "name" ? "left" : undefined,
+      align: "center",
     }));
     columnToShow.push(({
       title: "Acción",
-      width: 100,
+      width: 65,
       fixed: "right",
-      render: () => <a>action</a>,
+      render: () => (
+        <Popover
+          placement="topRight"
+          content={(
+            <div>
+              <Divider className="m-2"/>
+              <a className="w-full h-full">Ver info</a>
+              <Divider className="m-2"/>
+              <a onClick={() => void router.push(`${Routes.SaveMaterial}?material=`)} className="w-full h-full">Actualizar</a>
+              <Divider className="m-2"/>
+              <a className="w-full h-full">Eliminar</a>
+            </div>
+          )}
+          title="Opciones"
+        >
+          <MoreOutlined className="cursor-pointer"/>
+        </Popover>
+      ),
     }));
     return columnToShow;
   }, [currentMaterialType]);

@@ -37,8 +37,6 @@ export interface IMaterial {
   quantity: string;
   superUse: boolean;
   sensibleMaterial: boolean;
-  materialType: IGenericId;
-  measurement: IGenericId;
   nfpaClassif: {
     nfpaBlue: number;
     nfpaRed: number;
@@ -60,10 +58,19 @@ export interface IMaterial {
   code?: string;
 };
 
-export type TMaterial = IMaterial & IGenericId;
+export type TMaterial = IMaterial & IGenericId & { measurement: TMeasurements } & { materialType: TMaterialType };
+export type TCreateMaterial = IMaterial & TMaterialTypeRequest & TMesurementsRequest;
 
 export interface IMaterialForm {
   formIntance: FormInstance;
+};
+
+export type TMaterialTypeRequest = {
+  materialType: IGenericId;
+};
+
+export type TMesurementsRequest = {
+  measurement: IGenericId;
 };
 
 export type TMaterialType = {
@@ -71,6 +78,7 @@ export type TMaterialType = {
   fields: string;
   id: string;
 };
+
 
 export type TMeasurements = {
   name: string;

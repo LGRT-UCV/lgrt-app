@@ -34,8 +34,9 @@ export type TFilter = {
   label: string;
   type: FilterType;
   placeholder: string;
-  values?: Array<TFilterValue>
-  onChange: (value: string | number, key?: string) => void;
+  values?: Array<TFilterValue>;
+  defaultValue?: TFilterValue["value"];
+  onChange: (value: TFilterValue["value"], key?: string) => void;
 };
 
 /**
@@ -74,6 +75,7 @@ export default function TableFilter ({
           return (
             <Select
               key={`select-filter-${key}`}
+              value={element.defaultValue}
               placeholder={element.placeholder}
               className="w-60"
               onChange={(value) => element.onChange(value)}

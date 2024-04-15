@@ -10,8 +10,8 @@ export const API_REQUEST_HEADERS = { "Content-Type": "application/json" };
 export const newRequest = async (
   uri: string,
   method: RequestMethods,
+  headers: HeadersInit = API_REQUEST_HEADERS,
   body?: string,
-  headers: HeadersInit = API_REQUEST_HEADERS
 ) => {
   const response = await fetch(
     uri,

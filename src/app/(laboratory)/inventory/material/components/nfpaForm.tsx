@@ -1,6 +1,15 @@
 import { Form, Input, InputNumber } from "antd";
+import { IMaterial } from "../../interfaces";
 
-export default function NFPAForm() {
+interface INFPAForm {
+  nfpaData?: IMaterial["nfpaClassif"],
+  readOnly?: boolean;
+};
+
+export default function NFPAForm({
+  nfpaData,
+  readOnly = false
+}: INFPAForm) {
   return (
     <div className="w-1/2">
       <h5>Clasificación NFPA</h5>
@@ -29,6 +38,7 @@ export default function NFPAForm() {
               min={0}
               max={4}
               controls={false}
+              readOnly={readOnly}
             />
           </Form.Item>
         </div>
@@ -55,6 +65,7 @@ export default function NFPAForm() {
               min={0}
               max={4}
               controls={false}
+              readOnly={readOnly}
             />
           </Form.Item>
         </div>
@@ -81,6 +92,7 @@ export default function NFPAForm() {
             min={0}
             max={4}
             controls={false}
+            readOnly={readOnly}
           />
           </Form.Item>
         </div>
@@ -100,7 +112,7 @@ export default function NFPAForm() {
               },
             ]}
           >
-            <Input maxLength={30} className="text-center font-bold text-sm w-full" />
+            <Input maxLength={30} readOnly={readOnly} className="text-center font-bold text-sm w-full" />
           </Form.Item>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Divider, Popover, type TableColumnsType } from "antd";
+import { Divider, Popover, Modal, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { AnyObject } from "antd/es/_util/type";
 import TableFilter, { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
@@ -15,12 +15,15 @@ import { getAllMaterials } from "./utils";
 import { fieldsToList } from "./material/utils";
 import useNotification from "@/hooks/useNotification";
 import { useSession } from "next-auth/react";
+import DetailsModal from "./material/components/detailsModal";
 
 export default function Inventory () {
   const { materialTypeList } = useMaterialInit();
   const { openNotification, notificationElement } = useNotification();
+  const [openModal, setOpenModal] = useState(false);
   const [materialList, setMaterialList] = useState<Array<TMaterial>>([]);
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
+  const [currentMaterial, setCurrentMaterial] = useState<TMaterial>();
   const [searchValue, setSearchValue] = useState("");
   const { data: sessionData } = useSession();
   const router = useRouter();
@@ -62,20 +65,24 @@ export default function Inventory () {
       align: "center",
     }));
     columnToShow.push(({
-      title: "Acción",
-      width: 65,
+      width: 30,
       fixed: "right",
-      render: () => (
+      render: (record: TMaterial & { key: string }) => (
         <Popover
           placement="topRight"
           content={(
-            <div>
+            <div className="text-center">
               <Divider className="m-2"/>
-              <a className="w-full h-full">Ver info</a>
+              <span onClick={() => handleMaterialDetails(record)} className="h-full w-full cursor-pointer">Ver material</span>
               <Divider className="m-2"/>
-              <a onClick={() => void router.push(`${Routes.SaveMaterial}?material=`)} className="w-full h-full">Actualizar</a>
+              <span
+                onClick={() => void router.push(`${Routes.SaveMaterial}?material=${record.id}`)}
+                className="h-full w-full cursor-pointer"
+              >
+                  Editar
+              </span>
               <Divider className="m-2"/>
-              <a className="w-full h-full">Eliminar</a>
+              <span className="h-full w-full cursor-pointer">Eliminar</span>
             </div>
           )}
           title="Opciones"
@@ -132,6 +139,11 @@ export default function Inventory () {
     }));
   }, [currentMaterialType, materialList, searchValue]);
 
+  const handleMaterialDetails = (material?: TMaterial, show = true) => {
+    setCurrentMaterial(material)
+    setOpenModal(show);
+  };
+
   return (
     <>
       {notificationElement}
@@ -150,6 +162,16 @@ export default function Inventory () {
         columns={columns}
         data={tableData}
       />
+
+      <Modal
+        title="Detalles del material"
+        centered
+        open={openModal}
+        onOk={() => handleMaterialDetails()}
+        onCancel={() => handleMaterialDetails(undefined, false)}
+      >
+        <DetailsModal material={currentMaterial} />
+      </Modal>
     </>
   )
 };

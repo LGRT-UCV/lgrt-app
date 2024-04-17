@@ -128,9 +128,9 @@ export default function Inventory () {
       key: `material-${index}`,
       materialType: currentMaterialType?.name,
       weight: `${material.weight} ${material.measurement.name}`,
-      capacity: `${material.capacity} ${material.measurement.name}`,
-      quantity: `${material.quantity} ${material.measurement.name}`,
-      presentation: `${material.presentation} ${material.measurement.name}`,
+      capacity: !!material.capacity ? `${material.capacity} ${material.measurement.name}` : "",
+      quantity: !!material.quantity ? `${material.quantity} ${material.measurement.name}` : "",
+      presentation: !!material.presentation ? `${material.presentation} ${material.measurement.name}` : "",
       sensibleMaterial: material.sensibleMaterial ? "Si" : "No",
       superUse: material.superUse ? "Si" : "No",
       expirationDate: material.expirationDate ?
@@ -139,8 +139,8 @@ export default function Inventory () {
     }));
   }, [currentMaterialType, materialList, searchValue]);
 
-  const handleMaterialDetails = (material?: TMaterial, show = true) => {
-    setCurrentMaterial(material)
+  const handleMaterialDetails = (materialData?: TMaterial, show = true) => {
+    setCurrentMaterial(materialData)
     setOpenModal(show);
   };
 

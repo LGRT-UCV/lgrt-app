@@ -11,8 +11,6 @@ export default function DetailsModal ({
 }: IDetailsModal) {
   const { sgaClassification } = useMaterialInit();
 
-  console.log("Material", material)
-
   if (typeof material === "undefined") return <></>;
   
   return (
@@ -34,7 +32,7 @@ export default function DetailsModal ({
           <li>
             <strong>Cantidad:</strong> {material.quantity}
           </li>
-          {material.presentation && !material.presentation.includes("null") && 
+          {material.presentation && 
             <li><strong>Presentación:</strong> {material.presentation}</li>
           }
           {material.brand && <li><strong>Marca:</strong> {material.brand}</li>}
@@ -42,7 +40,7 @@ export default function DetailsModal ({
           {material.concentration && <li><strong>Concentración:</strong> {material.concentration}</li>}
           {material.condition && <li><strong>Condición:</strong> {material.condition}</li>}
           {material.weight && <li><strong>Peso:</strong> {material.weight}</li>}
-          {material.capacity && !material.capacity.includes("null") &&
+          {material.capacity &&
             <li><strong>Capacidad:</strong> {material.capacity}</li>
           }
           {material.code && <li><strong>Código:</strong> {material.code}</li>}

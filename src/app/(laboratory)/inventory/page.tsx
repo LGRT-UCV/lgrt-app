@@ -167,8 +167,13 @@ export default function Inventory () {
         title="Detalles del material"
         centered
         open={openModal}
+        okText={"Editar"}
+        cancelText={"Cerrar"}
         onOk={() => handleMaterialDetails()}
         onCancel={() => handleMaterialDetails(undefined, false)}
+        okButtonProps={{
+          className: "bg-blue-500"
+        }}
       >
         <DetailsModal material={currentMaterial} />
       </Modal>

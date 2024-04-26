@@ -4,41 +4,26 @@ import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd/lib";
 import useNotification from "@/hooks/useNotification";
 import { Routes } from "@/lib/constants";
-import { createMaterial, getMaterialTypes, getMeasurements, getSGAClassification } from "../../utils";
+import { createMaterial } from "../../utils";
 import { variableFields } from "../utils";
-import type {
-  TMaterialForm,
-  TMaterialType,
-  TMeasurements,
-  TSGAClassification
-} from "../../interfaces";
+import type { TMaterialForm, TMaterialType } from "../../interfaces";
+import useMaterialInit from "./useMaterialInit";
 
 export default function useMaterialForm (formIntance: FormInstance) {
-  const [measurementList, setMeasurementList] = useState<Array<TMeasurements>>([]);
-  const [materialTypeList, setMaterialTypeList] = useState<Array<TMaterialType>>([]);
-  const [sgaClassification, setSgaClassification] = useState<Array<TSGAClassification>>([]);
   const [currentMeasurement, setCurrentMeasurement] = useState<string>("");
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
   const { openNotification, notificationElement } = useNotification();
-  const router = useRouter();
   const { data: sessionData } = useSession();
-
-  useEffect(() => {
-    const getFormData = async () => {
-      const measurementsResponse: TMeasurements[] = await getMeasurements();
-      const materialTypeResponse: TMaterialType[] = await getMaterialTypes();
-      const sgaResponse: TSGAClassification[] = await getSGAClassification();
-      setMeasurementList(measurementsResponse);
-      setMaterialTypeList(materialTypeResponse);
-      setSgaClassification(sgaResponse);
-    };
-
-    void getFormData();
-  }, []);
+  const {
+    materialTypeList,
+    measurementList,
+    sgaClassification,
+  } = useMaterialInit()
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof currentMaterialType === "undefined") return;
-    formIntance.resetFields(variableFields);
+    formIntance.resetFields(variableFields.map((field) => field.id));
   }, [currentMaterialType]);
 
   const handleCurrentMeasurement = (value: string) => {

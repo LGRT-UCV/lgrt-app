@@ -39,6 +39,7 @@ export default function useMaterialForm (formIntance: FormInstance) {
         nfpaYellow,
         materialType,
         measurement,
+        storagePlace,
         sgaClassif,
         weight,
         ...fieldValues
@@ -57,6 +58,9 @@ export default function useMaterialForm (formIntance: FormInstance) {
         },
         measurement: {
           id: measurement,
+        },
+        storagePlace: {
+          id: storagePlace,
         },
         sgaClassif: sgaClassif.map(sga => ({ idSgaClassif: sga })),
         weight: weight?.toString(),

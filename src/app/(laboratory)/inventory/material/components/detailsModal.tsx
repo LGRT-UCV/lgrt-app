@@ -1,7 +1,6 @@
 import { TMaterial } from "../../interfaces";
-import useMaterialInit from "../hooks/useMaterialInit";
 import NFPADiamond from "./nfpaDiamond";
-import NFPAForm from "./nfpaForm";
+import SGAClassification from "./sgaClassification";
 
 interface IDetailsModal {
   material?: TMaterial
@@ -10,8 +9,6 @@ interface IDetailsModal {
 export default function DetailsModal ({
   material,
 }: IDetailsModal) {
-  const { sgaClassification } = useMaterialInit();
-
   if (typeof material === "undefined") return <></>;
   
   return (
@@ -63,7 +60,7 @@ export default function DetailsModal ({
             </div>}
           </div>
           <div className="w-full">
-            <strong>Lugar de Almacenamiento:</strong> {material.storagePlace}
+            <strong>Lugar de Almacenamiento:</strong> {material.storagePlace.description}
           </div>
           {material.observations && (
             <div>
@@ -84,21 +81,7 @@ export default function DetailsModal ({
             <NFPADiamond nfpaData={material.nfpaClassif} />
           </div>
           {material.sgaClassif && material.sgaClassif.length > 0 && (
-            <div>
-              <strong>Clasificación SGA:</strong>
-              <div className="pl-4 space-y-1 grid grid-cols-2">
-                {material.sgaClassif.map((classification, index) => {
-                  const sgaData = sgaClassification.find(sga => String(sga.id) === classification?.idSgaClassif);
-                  return (
-                    <div
-                      key={`sga-${classification?.idSgaClassif}`}
-                      className={index === 0 ? "mt-1" : ""}
-                    >
-                      {sgaData?.description}
-                    </div>
-                )})}
-              </div>
-            </div>
+            <SGAClassification sgaClassif={material.sgaClassif} />
           )}
         </div>
       </div>

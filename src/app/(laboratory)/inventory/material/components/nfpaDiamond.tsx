@@ -2,7 +2,7 @@ import { IMaterial } from "../../interfaces";
 
 export default function NFPADiamond({ nfpaData }: { nfpaData: IMaterial["nfpaClassif"] }) {
   return (
-    <div className="w-1/2 text-2xl py-4">      
+    <div className="text-2xl py-4">      
       <div className="relative w-full h-48 mt-8">
         {/* diamond red */}
         <div

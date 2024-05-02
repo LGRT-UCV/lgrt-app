@@ -4,22 +4,75 @@ import NFPAForm from "./nfpaForm";
 import type { IMaterialForm } from "../../interfaces";
 import useMaterialForm from "../hooks/useMaterialForm";
 import BaseMaterialForm from "./baseMaterialForm";
+import { useMemo } from "react";
+import { FormProps } from "antd/lib";
+import useMaterialInit from "../hooks/useMaterialInit";
 
 export default function MaterialForm ({
-  formIntance
+  formIntance,
+  materialData,
 }: IMaterialForm) {
   const {
     currentMaterialType,
     currentMeasurement,
-    materialTypeList,
-    measurementList,
     notificationElement,
-    sgaClassification,
     handleCurrentMeasurement,
     hasField,
     onFinish,
     setCurrentMaterialType,
   } = useMaterialForm(formIntance);
+  const {
+    materialTypeList,
+    measurementList,
+    sgaClassification,
+    storagePlace,
+  } = useMaterialInit();
+
+  type TMaterialFormated = {
+    [key: string]: string;
+  }
+
+  console.log("materialData", materialData)
+
+  const fields: FormProps["fields"] = useMemo(() => {
+    if (typeof materialData === "undefined") return;
+    const {
+      measurement,
+      materialType,
+      storagePlace,
+      sgaClassif,
+      nfpaClassif,
+      superUse,
+      sensibleMaterial,
+      ...material
+    } = materialData;
+    const materialFormated = material as TMaterialFormated;
+    const fieldData = [
+      {
+      name: "measurement",
+      values: measurement.id,
+      },
+      {
+        name: "materialType",
+        values: materialType.id,
+      },
+      {
+        name: "storagePlace",
+        values: storagePlace.id,
+      },
+    ];
+
+    for (const name in materialFormated) {
+      fieldData.push({
+        name,
+        values: materialFormated[name] ?? "",
+      });
+    }
+
+    console.log("fieldDATA", fieldData)
+
+    return fieldData;
+  }, [materialData]);
 
   return (
     <div className="max-h-full overflow-y-auto p-2">
@@ -30,6 +83,7 @@ export default function MaterialForm ({
         initialValues={{
           remember: true,
         }}
+        fields={fields}
         onFinish={onFinish}
         layout="vertical"
         requiredMark="optional"
@@ -222,19 +276,26 @@ export default function MaterialForm ({
             }
             {hasField("storagePlace") &&
               <Form.Item
-                label="Lugar de almacenamiento"
                 name="storagePlace"
+                label="Lugar de almacenamiento"
+                rules={[{ required: true, message: "Por favor elija una opción" }]}
                 className="w-full md:w-2/3 px-2 mb-4"
-                rules={[
-                  {
-                    type: "string",
-                    required: true,
-                    max: 120,
-                    message: "Por favor verifique el lugar de almacenamiento",
-                  },
-                ]}
               >
-                <Input placeholder="Lugar de almacenamiento" maxLength={120} />
+                <Select
+                  showSearch
+                  placeholder="Lugar de almacenamiento"
+                  optionFilterProp="children"
+                  filterOption={(input, option) => (option?.label.toLowerCase() ?? "").includes(input.toLowerCase())}
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
+                  }
+                  options={storagePlace.map((storage) => {
+                    return {
+                      label: `${storage.name}`,
+                      value: storage.id,
+                    }
+                  })}
+                />
               </Form.Item>
             }
           </div>

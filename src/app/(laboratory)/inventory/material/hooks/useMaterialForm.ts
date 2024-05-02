@@ -7,18 +7,12 @@ import { Routes } from "@/lib/constants";
 import { createMaterial } from "../../utils";
 import { variableFields } from "../utils";
 import type { TMaterialForm, TMaterialType } from "../../interfaces";
-import useMaterialInit from "./useMaterialInit";
 
 export default function useMaterialForm (formIntance: FormInstance) {
   const [currentMeasurement, setCurrentMeasurement] = useState<string>("");
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
-  const {
-    materialTypeList,
-    measurementList,
-    sgaClassification,
-  } = useMaterialInit()
   const router = useRouter();
 
   useEffect(() => {
@@ -88,10 +82,7 @@ export default function useMaterialForm (formIntance: FormInstance) {
   return {
     currentMaterialType,
     currentMeasurement,
-    measurementList,
-    materialTypeList,
     notificationElement,
-    sgaClassification,
     handleCurrentMeasurement,
     hasField,
     onFinish,

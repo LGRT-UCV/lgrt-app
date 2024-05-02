@@ -13,6 +13,7 @@ export const resetPassword = async (
   return await newRequest(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/password/reset?id=${email}`,
     RequestMethods.POST,
+    undefined,
     JSON.stringify({
       token,
       newPassword: password,

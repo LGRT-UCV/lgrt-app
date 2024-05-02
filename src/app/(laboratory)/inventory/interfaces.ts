@@ -62,6 +62,7 @@ export type TCreateMaterial = IMaterial & TMaterialTypeRequest & TMesurementsReq
 
 export interface IMaterialForm {
   formIntance: FormInstance;
+  materialData?: TMaterial;
 };
 
 export type TMaterialTypeRequest = {

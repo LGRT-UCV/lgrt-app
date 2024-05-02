@@ -5,6 +5,7 @@ const MATERIAL_TYPE_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/mater
 const MATERIALS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/materials`;
 const MEASUREMENTS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/measurements`;
 const SGA_CLASSIGICATIONS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/sgaclassifications`;
+const SGA_STORAGE_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/storageplaces`;
 
 export const getMaterialTypes = async () => {
   return newRequest(
@@ -27,6 +28,13 @@ export const getSGAClassification = async () => {
   );
 };
 
+export const getStoragePlaces = async () => {
+  return newRequest(
+    SGA_STORAGE_URI,
+    RequestMethods.GET
+  );
+};
+
 export const deleteMaterial = async () => {
   return newRequest(
     MATERIALS_URI,
@@ -45,6 +53,19 @@ export const getAllMaterials = async (sessionToken: string) => {
     headers,
   );
   return response as Array<TMaterial>;
+};
+
+export const getMaterial = async (sessionToken: string, id: string) => {
+  const headers = {
+    ...API_REQUEST_HEADERS,
+    Authorization: `Bearer ${sessionToken}`
+  };
+  const response = await newRequest(
+    `${MATERIALS_URI}/${id}`,
+    RequestMethods.GET,
+    headers,
+  );
+  return response as TMaterial;
 };
 
 export const createMaterial = async (data: TCreateMaterial, sessionToken: string) => {

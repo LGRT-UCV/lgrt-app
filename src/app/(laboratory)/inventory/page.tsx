@@ -76,7 +76,7 @@ export default function Inventory () {
               <span onClick={() => handleMaterialDetails(record)} className="h-full w-full cursor-pointer">Ver material</span>
               <Divider className="m-2"/>
               <span
-                onClick={() => void router.push(`${Routes.SaveMaterial}?material=${record.id}`)}
+                onClick={() => void router.push(`${Routes.SaveMaterial}?id=${record.id}`)}
                 className="h-full w-full cursor-pointer"
               >
                   Editar

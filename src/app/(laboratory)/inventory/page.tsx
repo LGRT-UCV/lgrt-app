@@ -24,6 +24,7 @@ export default function Inventory () {
   const [materialList, setMaterialList] = useState<Array<TMaterial>>([]);
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
   const [refetchMaterials, setRefetchMaterials] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentMaterial, setCurrentMaterial] = useState<TMaterial>();
   const [searchValue, setSearchValue] = useState("");
   const { data: sessionData } = useSession();
@@ -33,10 +34,13 @@ export default function Inventory () {
     if (!sessionData?.user.token) return;
     const getMaterials = async () => {
       try {
+        setIsLoading(true);
         const materials = await getAllMaterials(sessionData?.user.token ?? "");
         setMaterialList(materials);
       } catch (error) {
         openNotification("error", "Ha ocurrido un error al obtener los materiales", "", "topRight");
+      } finally {
+        setIsLoading(false);
       }
     };
     void getMaterials();
@@ -89,7 +93,7 @@ export default function Inventory () {
               </span>
               <Divider className="m-2"/>
               <span
-                onClick={() => void handleDeleteMaterial(record.id)}
+                onClick={() => void handleDeleteMaterial(record)}
                 className="h-full w-full cursor-pointer"
               >
                 Eliminar
@@ -155,15 +159,26 @@ export default function Inventory () {
     setOpenModal(show);
   };
 
-  const handleDeleteMaterial = async (id: string) => {
+  const handleDeleteMaterial = async (materialData?: TMaterial) => {
+    if (typeof materialData === "undefined") {
+      openNotification("error", "No se ha seleccionado material a eliminar", "", "topRight");
+      return;
+    }
+
     try {
       await deleteMaterial(
         sessionData?.user.token ?? "",
-        id
+        materialData.id
       );
       setRefetchMaterials(!refetchMaterials);
       setCurrentMaterial(undefined);
       setOpenModal(false);
+      openNotification(
+        "success",
+        "Material eliminado",
+        `Se ha eliminado el material ${materialData.name}`,
+        "topRight"
+      );
     } catch (error) {
       openNotification("error", "Ha ocurrido un error al eliminar el material", "", "topRight");
     }
@@ -186,6 +201,7 @@ export default function Inventory () {
       <Table
         columns={columns}
         data={tableData}
+        isLoading={isLoading}
       />
 
       <Modal
@@ -200,8 +216,9 @@ export default function Inventory () {
         }}
         footer={[
           <Button
+            key="delete"
             className="bg-red-500 hover:!bg-red-400 !text-white border-none"
-            onClick={() => void handleDeleteMaterial(currentMaterial?.id ?? "")}
+            onClick={() => void handleDeleteMaterial(currentMaterial)}
           >
             Eliminar material
           </Button>

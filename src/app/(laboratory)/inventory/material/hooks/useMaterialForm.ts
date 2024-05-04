@@ -6,9 +6,9 @@ import useNotification from "@/hooks/useNotification";
 import { Routes } from "@/lib/constants";
 import { createMaterial } from "../../utils";
 import { variableFields } from "../utils";
-import type { TMaterialForm, TMaterialType } from "../../interfaces";
+import type { TMaterial, TMaterialForm, TMaterialType } from "../../interfaces";
 
-export default function useMaterialForm (formIntance: FormInstance) {
+export default function useMaterialForm (formIntance: FormInstance, materialData?: TMaterial) {
   const [currentMeasurement, setCurrentMeasurement] = useState<string>("");
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
   const { openNotification, notificationElement } = useNotification();
@@ -19,6 +19,37 @@ export default function useMaterialForm (formIntance: FormInstance) {
     if (typeof currentMaterialType === "undefined") return;
     formIntance.resetFields(variableFields.map((field) => field.id));
   }, [currentMaterialType]);
+
+  useEffect(() => {
+    if (
+      typeof materialData === "undefined" ||
+      typeof formIntance === "undefined"
+    ) return;
+    
+    const {
+      measurement,
+      materialType,
+      storagePlace,
+      sgaClassif,
+      nfpaClassif,
+      superUse,
+      sensibleMaterial,
+      ...material
+    } = materialData;
+
+    const fieldData = {
+      measurement: measurement.id,
+      materialType: JSON.stringify(materialType),
+      storagePlace: storagePlace.id,
+      ...material,
+    };
+
+    setCurrentMaterialType(materialType);
+    handleCurrentMeasurement(
+      `${measurement.description} (${measurement.name})`
+    );
+    formIntance.setFieldsValue(fieldData);
+  }, [materialData]);
 
   const handleCurrentMeasurement = (value: string) => {
     setCurrentMeasurement(value);

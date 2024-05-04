@@ -21,7 +21,10 @@ export default function NewMaterial () {
   }, [searchParams]);
 
   useEffect(() => {
-    if (!materialId) return;
+    if (!materialId) {
+      form.resetFields();
+      return;
+    }
     
     const getMaterialData = async () => {
       const materialResponse = await getMaterial(

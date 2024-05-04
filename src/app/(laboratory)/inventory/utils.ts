@@ -35,10 +35,15 @@ export const getStoragePlaces = async () => {
   );
 };
 
-export const deleteMaterial = async () => {
+export const deleteMaterial = async (sessionToken: string, id: string) => {
+  const headers = {
+    ...API_REQUEST_HEADERS,
+    Authorization: `Bearer ${sessionToken}`
+  };
   return newRequest(
-    MATERIALS_URI,
-    RequestMethods.DELETE
+    `${MATERIALS_URI}/${id}`,
+    RequestMethods.DELETE,
+    headers,
   );
 };
 

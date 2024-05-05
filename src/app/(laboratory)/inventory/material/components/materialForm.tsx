@@ -1,25 +1,31 @@
+import { useEffect } from "react";
 import { Select, Form, Input, InputNumber, DatePicker, Checkbox } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import NFPAForm from "./nfpaForm";
 import type { IMaterialForm } from "../../interfaces";
 import useMaterialForm from "../hooks/useMaterialForm";
 import BaseMaterialForm from "./baseMaterialForm";
+import useMaterialInit from "../hooks/useMaterialInit";
 
 export default function MaterialForm ({
-  formIntance
+  formIntance,
+  materialData,
 }: IMaterialForm) {
   const {
     currentMaterialType,
     currentMeasurement,
-    materialTypeList,
-    measurementList,
     notificationElement,
-    sgaClassification,
     handleCurrentMeasurement,
     hasField,
     onFinish,
     setCurrentMaterialType,
-  } = useMaterialForm(formIntance);
+  } = useMaterialForm(formIntance, materialData);
+  const {
+    materialTypeList,
+    measurementList,
+    sgaClassification,
+    storagePlace,
+  } = useMaterialInit();
 
   return (
     <div className="max-h-full overflow-y-auto p-2">
@@ -27,9 +33,6 @@ export default function MaterialForm ({
       <Form
         name="materialForm"
         form={formIntance}
-        initialValues={{
-          remember: true,
-        }}
         onFinish={onFinish}
         layout="vertical"
         requiredMark="optional"
@@ -176,7 +179,6 @@ export default function MaterialForm ({
                 className="w-full md:w-1/3 px-2 mb-4"
                 rules={[
                   {
-                    type:"number",
                     min: 0,
                     max: 100,
                     message: "Por favor verifique la concentración",
@@ -200,7 +202,7 @@ export default function MaterialForm ({
                   },
                 ]}
               >
-                <DatePicker className="w-full" />
+                <DatePicker className="w-full" format="DD/MM/YYYY" />
               </Form.Item>
             }
             {hasField("condition") &&
@@ -222,19 +224,26 @@ export default function MaterialForm ({
             }
             {hasField("storagePlace") &&
               <Form.Item
-                label="Lugar de almacenamiento"
                 name="storagePlace"
-                className="w-full md:w-2/3 px-2 mb-4"
-                rules={[
-                  {
-                    type: "string",
-                    required: true,
-                    max: 120,
-                    message: "Por favor verifique el lugar de almacenamiento",
-                  },
-                ]}
+                label="Lugar de almacenamiento"
+                rules={[{ required: true, message: "Por favor elija una opción" }]}
+                className={`w-full md:w-2/3 px-2 mb-4 ${hasField("storagePlace") ? "" : "hidden"}`}
               >
-                <Input placeholder="Lugar de almacenamiento" maxLength={120} />
+                <Select
+                  showSearch
+                  placeholder="Lugar de almacenamiento"
+                  optionFilterProp="children"
+                  filterOption={(input, option) => (option?.label.toLowerCase() ?? "").includes(input.toLowerCase())}
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
+                  }
+                  options={storagePlace.map((storage) => {
+                    return {
+                      label: `${storage.name}`,
+                      value: storage.id,
+                    }
+                  })}
+                />
               </Form.Item>
             }
           </div>

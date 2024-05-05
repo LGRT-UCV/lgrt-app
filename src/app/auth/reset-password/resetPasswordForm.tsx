@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation";
 import Text from "antd/es/typography";
 import Title from "antd/es/typography/Title";
 import { Button, Form, Input } from "antd";

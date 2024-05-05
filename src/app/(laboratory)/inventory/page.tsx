@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Divider, Popover, Modal, type TableColumnsType } from "antd";
+import { useSession } from "next-auth/react";
+import { Divider, Popover, Modal, type TableColumnsType, Button } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { AnyObject } from "antd/es/_util/type";
 import TableFilter, { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
@@ -11,10 +12,9 @@ import Header from "@/components/layout/header";
 import { Routes } from "@/lib/constants";
 import useMaterialInit from "./material/hooks/useMaterialInit";
 import type { TMaterial, TMaterialType } from "./interfaces";
-import { getAllMaterials } from "./utils";
+import { deleteMaterial, getAllMaterials } from "./utils";
 import { fieldsToList } from "./material/utils";
 import useNotification from "@/hooks/useNotification";
-import { useSession } from "next-auth/react";
 import DetailsModal from "./material/components/detailsModal";
 
 export default function Inventory () {
@@ -23,6 +23,8 @@ export default function Inventory () {
   const [openModal, setOpenModal] = useState(false);
   const [materialList, setMaterialList] = useState<Array<TMaterial>>([]);
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
+  const [refetchMaterials, setRefetchMaterials] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentMaterial, setCurrentMaterial] = useState<TMaterial>();
   const [searchValue, setSearchValue] = useState("");
   const { data: sessionData } = useSession();
@@ -32,14 +34,17 @@ export default function Inventory () {
     if (!sessionData?.user.token) return;
     const getMaterials = async () => {
       try {
+        setIsLoading(true);
         const materials = await getAllMaterials(sessionData?.user.token ?? "");
         setMaterialList(materials);
       } catch (error) {
         openNotification("error", "Ha ocurrido un error al obtener los materiales", "", "topRight");
+      } finally {
+        setIsLoading(false);
       }
     };
     void getMaterials();
-  }, [sessionData]);
+  }, [sessionData, refetchMaterials]);
 
   useEffect(() => {
     if (
@@ -73,16 +78,26 @@ export default function Inventory () {
           content={(
             <div className="text-center">
               <Divider className="m-2"/>
-              <span onClick={() => handleMaterialDetails(record)} className="h-full w-full cursor-pointer">Ver material</span>
+              <span
+                onClick={() => handleMaterialDetails(record)}
+                className="h-full w-full cursor-pointer"
+              >
+                Ver material
+              </span>
               <Divider className="m-2"/>
               <span
-                onClick={() => void router.push(`${Routes.SaveMaterial}?material=${record.id}`)}
+                onClick={() => void router.push(`${Routes.SaveMaterial}?id=${record.id}`)}
                 className="h-full w-full cursor-pointer"
               >
                   Editar
               </span>
               <Divider className="m-2"/>
-              <span className="h-full w-full cursor-pointer">Eliminar</span>
+              <span
+                onClick={() => void handleDeleteMaterial(record)}
+                className="h-full w-full cursor-pointer"
+              >
+                Eliminar
+              </span>
             </div>
           )}
           title="Opciones"
@@ -144,6 +159,31 @@ export default function Inventory () {
     setOpenModal(show);
   };
 
+  const handleDeleteMaterial = async (materialData?: TMaterial) => {
+    if (typeof materialData === "undefined") {
+      openNotification("error", "No se ha seleccionado material a eliminar", "", "topRight");
+      return;
+    }
+
+    try {
+      await deleteMaterial(
+        sessionData?.user.token ?? "",
+        materialData.id
+      );
+      setRefetchMaterials(!refetchMaterials);
+      setCurrentMaterial(undefined);
+      setOpenModal(false);
+      openNotification(
+        "success",
+        "Material eliminado",
+        `Se ha eliminado el material ${materialData.name}`,
+        "topRight"
+      );
+    } catch (error) {
+      openNotification("error", "Ha ocurrido un error al eliminar el material", "", "topRight");
+    }
+  } 
+
   return (
     <>
       {notificationElement}
@@ -160,7 +200,8 @@ export default function Inventory () {
       
       <Table
         columns={columns}
-        data={tableData}
+        data={tableData.reverse()}
+        isLoading={isLoading}
       />
 
       <Modal
@@ -168,12 +209,20 @@ export default function Inventory () {
         centered
         open={openModal}
         okText={"Editar"}
-        cancelText={"Cerrar"}
         onOk={() => handleMaterialDetails()}
-        onCancel={() => handleMaterialDetails(undefined, false)}
+        onCancel={() => setOpenModal(false)}
         okButtonProps={{
           className: "bg-blue-500"
         }}
+        footer={[
+          <Button
+            key="delete"
+            className="bg-red-500 hover:!bg-red-400 !text-white border-none"
+            onClick={() => void handleDeleteMaterial(currentMaterial)}
+          >
+            Eliminar material
+          </Button>
+        ]}
       >
         <DetailsModal material={currentMaterial} />
       </Modal>

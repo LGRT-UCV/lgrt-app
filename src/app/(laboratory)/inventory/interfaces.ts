@@ -48,7 +48,6 @@ export interface IMaterial {
   brand?: string;
   batch?: string;
   concentration?: string;
-  storagePlace: string;
   expirationDate?: string;
   observations?: string;
   condition?: string;
@@ -58,11 +57,12 @@ export interface IMaterial {
   code?: string;
 };
 
-export type TMaterial = IMaterial & IGenericId & { measurement: TMeasurements } & { materialType: TMaterialType };
-export type TCreateMaterial = IMaterial & TMaterialTypeRequest & TMesurementsRequest;
+export type TMaterial = IMaterial & IGenericId & { measurement: TMeasurements } & { materialType: TMaterialType } & { storagePlace: TStoragePlace };
+export type TCreateMaterial = IMaterial & TMaterialTypeRequest & TMesurementsRequest & TStoragePlaceRequest;
 
 export interface IMaterialForm {
   formIntance: FormInstance;
+  materialData?: TMaterial;
 };
 
 export type TMaterialTypeRequest = {
@@ -73,21 +73,32 @@ export type TMesurementsRequest = {
   measurement: IGenericId;
 };
 
+export type TStoragePlaceRequest = {
+  storagePlace: IGenericId;
+};
+
 export type TMaterialType = {
+  id: string;
   name: string;
   fields: string;
-  id: string;
 };
 
 
 export type TMeasurements = {
+  id: string;
   name: string;
   description: string;
-  id: string;
 }
 
 export type TSGAClassification = {
+  id: number;
   name: string;
   description: string;
-  id: number;
+  iconImage: string;
+};
+
+export type TStoragePlace = {
+  id: string;  
+  name: string;
+  description: string;
 };

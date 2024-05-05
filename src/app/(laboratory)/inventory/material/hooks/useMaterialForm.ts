@@ -2,29 +2,51 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd/lib";
+import dayjs from "dayjs";
 import useNotification from "@/hooks/useNotification";
 import { Routes } from "@/lib/constants";
-import { createMaterial } from "../../utils";
-import { variableFields } from "../utils";
-import type { TMaterialForm, TMaterialType } from "../../interfaces";
-import useMaterialInit from "./useMaterialInit";
+import { createMaterial, updateMaterial } from "../../utils";
+import type { TMaterial, TMaterialForm, TMaterialType } from "../../interfaces";
 
-export default function useMaterialForm (formIntance: FormInstance) {
+export default function useMaterialForm (formIntance: FormInstance, materialData?: TMaterial) {
   const [currentMeasurement, setCurrentMeasurement] = useState<string>("");
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
-  const {
-    materialTypeList,
-    measurementList,
-    sgaClassification,
-  } = useMaterialInit()
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof currentMaterialType === "undefined") return;
-    formIntance.resetFields(variableFields.map((field) => field.id));
-  }, [currentMaterialType]);
+    if (
+      typeof materialData === "undefined" ||
+      typeof formIntance === "undefined"
+    ) return;
+    
+    const {
+      measurement,
+      materialType,
+      storagePlace,
+      sgaClassif,
+      nfpaClassif,
+      expirationDate,
+      ...material
+    } = materialData;
+
+    const fieldData = {
+      measurement: measurement.id,
+      materialType: JSON.stringify(materialType),
+      storagePlace: storagePlace.id,
+      sgaClassif: sgaClassif.map((sga) => (sga?.idSgaClassif ?? "")),
+      expirationDate: dayjs(expirationDate),
+      ...nfpaClassif,
+      ...material,
+    };
+
+    formIntance.setFieldsValue(fieldData);
+    setCurrentMaterialType(materialType);
+    handleCurrentMeasurement(
+      `${measurement.description} (${measurement.name})`
+    );
+  }, [materialData]);
 
   const handleCurrentMeasurement = (value: string) => {
     setCurrentMeasurement(value);
@@ -39,13 +61,15 @@ export default function useMaterialForm (formIntance: FormInstance) {
         nfpaYellow,
         materialType,
         measurement,
+        storagePlace,
         sgaClassif,
         weight,
+        superUse,
+        sensibleMaterial,
         ...fieldValues
       } = values;
       const materialTypeParsed = JSON.parse(materialType) as TMaterialType;
-
-      await createMaterial({
+      const materialToSave = {
         nfpaClassif: {
           nfpaBlue,
           nfpaRed,
@@ -58,13 +82,28 @@ export default function useMaterialForm (formIntance: FormInstance) {
         measurement: {
           id: measurement,
         },
+        storagePlace: {
+          id: storagePlace,
+        },
         sgaClassif: sgaClassif.map(sga => ({ idSgaClassif: sga })),
         weight: weight?.toString(),
+        superUse: !!superUse,
+        sensibleMaterial: !!sensibleMaterial,
         ...fieldValues,
-      }, sessionData?.user.token ?? "");
+      };
+      const sessionToken = sessionData?.user.token;
+
+      if (typeof sessionToken === "undefined") throw new Error("Sesión vencida");
+
+      if (!!materialData) {
+        await updateMaterial(materialData.id, materialToSave, sessionToken);
+      } else {
+        await createMaterial(materialToSave, sessionToken);
+      }
+
       openNotification(
         "success",
-        "Material creado con exito",
+        "Material guardado con exito",
         `El material ${values.name} ha sido creado con exito.`,
         "topRight"
       );
@@ -84,10 +123,7 @@ export default function useMaterialForm (formIntance: FormInstance) {
   return {
     currentMaterialType,
     currentMeasurement,
-    measurementList,
-    materialTypeList,
     notificationElement,
-    sgaClassification,
     handleCurrentMeasurement,
     hasField,
     onFinish,

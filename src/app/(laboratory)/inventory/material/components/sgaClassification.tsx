@@ -5,9 +5,9 @@ import useMaterialInit from "../hooks/useMaterialInit";
 import { IMaterial } from "../../interfaces";
 
 export default function SGAClassification ({ sgaClassif }: { sgaClassif: IMaterial["sgaClassif"] }) {
-  const { sgaClassification } = useMaterialInit(["sgaClassification"]);
+  const { sgaClassification, isLoading } = useMaterialInit(["sgaClassification"]);
 
-  if (sgaClassification.length === 0) return (
+  if (isLoading) return (
     <div className="w-full text-center pt-4">
       <LoadingOutlined className="text-3xl" />
     </div>

@@ -1,57 +1,38 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { Divider, Popover, Modal, type TableColumnsType, Button } from "antd";
+import { Modal, Button, Divider, Popover, type TableColumnsType  } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
-import { AnyObject } from "antd/es/_util/type";
-import TableFilter, { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
+import type { AnyObject } from "antd/es/_util/type";
+import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
+import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
 import { Routes } from "@/lib/constants";
-import useMaterialInit from "./material/hooks/useMaterialInit";
-import type { TMaterial, TMaterialType } from "./interfaces";
-import { deleteMaterial, getAllMaterials } from "./utils";
-import { fieldsToList } from "./material/utils";
-import useNotification from "@/hooks/useNotification";
 import DetailsModal from "./material/components/detailsModal";
-import { useQuery } from "@tanstack/react-query";
+import { fieldsToList } from "./material/utils";
+import useInventory from "./useInventory";
+import type { TMaterial } from "./interfaces";
+
 
 export default function Inventory () {
-  const { materialTypeList } = useMaterialInit(["materialType"]);
-  const { openNotification, notificationElement } = useNotification();
-  const [openModal, setOpenModal] = useState(false);
-  const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
-  const [refetchMaterials, setRefetchMaterials] = useState(false);
-  const [currentMaterial, setCurrentMaterial] = useState<TMaterial>();
-  const [searchValue, setSearchValue] = useState("");
-  const { data: sessionData } = useSession();
   const router = useRouter();
-  
-  const { data: materialList= [], isLoading } = useQuery({
-    queryKey: ["materials"],
-    queryFn: async () => {
-      try {
-        return await getAllMaterials(sessionData?.user.token ?? "");
-      } catch (error) {
-        openNotification("error", "Ha ocurrido un error al obtener los materiales", "", "topRight");
-        return [];
-      }
-    },
-    enabled: !!sessionData?.user.token,
-  });
+  const {
+    openModal,
+    materialTypeList,
+    tableData,
+    currentMaterial,
+    currentMaterialType,
+    notificationElement,
+    isLoading,
+    handleMaterialDetails,
+    handleDeleteMaterial,
+    setCurrentMaterialType,
+    setSearchValue,
+    setOpenModal,
+  } = useInventory();
 
-  useEffect(() => {
-    if (
-      typeof materialTypeList[0] === "undefined" ||
-      typeof currentMaterialType !== "undefined"
-    ) return;
-    
-    setCurrentMaterialType(materialTypeList[0]);
-  }, [materialTypeList, currentMaterialType]);
-
-  // Example data
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     if (typeof currentMaterialType === "undefined") return [];
 
@@ -128,57 +109,6 @@ export default function Inventory () {
       },
     },
   ];
-
-  const tableData: Array<AnyObject> = useMemo(() => {
-    const currentMaterials = materialList.filter((material) => 
-      material.materialType.id === currentMaterialType?.id &&
-      material.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
-    );
-    return currentMaterials?.map((material, index) => ({
-      ...material,
-      key: `material-${index}`,
-      materialType: currentMaterialType?.name,
-      weight: `${material.weight} ${material.measurement.name}`,
-      capacity: !!material.capacity ? `${material.capacity} ${material.measurement.name}` : "",
-      quantity: !!material.quantity ? `${material.quantity} ${material.measurement.name}` : "",
-      presentation: !!material.presentation ? `${material.presentation} ${material.measurement.name}` : "",
-      sensibleMaterial: material.sensibleMaterial ? "Si" : "No",
-      superUse: material.superUse ? "Si" : "No",
-      expirationDate: material.expirationDate ?
-        new Date(material.expirationDate).toLocaleDateString("es-VE") :
-        "",
-    })) ?? [];
-  }, [currentMaterialType, materialList, searchValue]);
-
-  const handleMaterialDetails = (materialData?: TMaterial, show = true) => {
-    setCurrentMaterial(materialData)
-    setOpenModal(show);
-  };
-
-  const handleDeleteMaterial = async (materialData?: TMaterial) => {
-    if (typeof materialData === "undefined") {
-      openNotification("error", "No se ha seleccionado material a eliminar", "", "topRight");
-      return;
-    }
-
-    try {
-      await deleteMaterial(
-        sessionData?.user.token ?? "",
-        materialData.id
-      );
-      setRefetchMaterials(!refetchMaterials);
-      setCurrentMaterial(undefined);
-      setOpenModal(false);
-      openNotification(
-        "success",
-        "Material eliminado",
-        `Se ha eliminado el material ${materialData.name}`,
-        "topRight"
-      );
-    } catch (error) {
-      openNotification("error", "Ha ocurrido un error al eliminar el material", "", "topRight");
-    }
-  } 
 
   return (
     <>

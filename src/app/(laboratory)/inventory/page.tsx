@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Divider, Popover, Modal, type TableColumnsType, Button } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { AnyObject } from "antd/es/_util/type";
@@ -14,7 +15,6 @@ import type { TMaterial, TMaterialType } from "./interfaces";
 import { deleteMaterial, getAllMaterials } from "./utils";
 import { fieldsToList } from "./material/utils";
 import useNotification from "@/hooks/useNotification";
-import { useSession } from "next-auth/react";
 import DetailsModal from "./material/components/detailsModal";
 
 export default function Inventory () {
@@ -200,7 +200,7 @@ export default function Inventory () {
       
       <Table
         columns={columns}
-        data={tableData}
+        data={tableData.reverse()}
         isLoading={isLoading}
       />
 

@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd/lib";
 import useNotification from "@/hooks/useNotification";
 import { Routes } from "@/lib/constants";
-import { createMaterial } from "../../utils";
-import { variableFields } from "../utils";
+import { createMaterial, updateMaterial } from "../../utils";
 import type { TMaterial, TMaterialForm, TMaterialType } from "../../interfaces";
 
 export default function useMaterialForm (formIntance: FormInstance, materialData?: TMaterial) {
@@ -14,11 +13,6 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
   const router = useRouter();
-
-  useEffect(() => {
-    if (typeof currentMaterialType === "undefined") return;
-    formIntance.resetFields(variableFields.map((field) => field.id));
-  }, [currentMaterialType]);
 
   useEffect(() => {
     if (
@@ -32,23 +26,23 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
       storagePlace,
       sgaClassif,
       nfpaClassif,
-      superUse,
-      sensibleMaterial,
       ...material
     } = materialData;
 
-    const fieldData = {
+    const fieldData: TMaterialForm = {
       measurement: measurement.id,
       materialType: JSON.stringify(materialType),
       storagePlace: storagePlace.id,
+      sgaClassif: sgaClassif.map((sga) => (sga?.idSgaClassif ?? "")),
+      ...nfpaClassif,
       ...material,
     };
 
+    formIntance.setFieldsValue(fieldData);
     setCurrentMaterialType(materialType);
     handleCurrentMeasurement(
       `${measurement.description} (${measurement.name})`
     );
-    formIntance.setFieldsValue(fieldData);
   }, [materialData]);
 
   const handleCurrentMeasurement = (value: string) => {
@@ -67,11 +61,12 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
         storagePlace,
         sgaClassif,
         weight,
+        superUse,
+        sensibleMaterial,
         ...fieldValues
       } = values;
       const materialTypeParsed = JSON.parse(materialType) as TMaterialType;
-
-      await createMaterial({
+      const materialToSave = {
         nfpaClassif: {
           nfpaBlue,
           nfpaRed,
@@ -89,11 +84,23 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
         },
         sgaClassif: sgaClassif.map(sga => ({ idSgaClassif: sga })),
         weight: weight?.toString(),
+        superUse: !!superUse,
+        sensibleMaterial: !!sensibleMaterial,
         ...fieldValues,
-      }, sessionData?.user.token ?? "");
+      };
+      const sessionToken = sessionData?.user.token;
+
+      if (typeof sessionToken === "undefined") throw new Error("Sesión vencida");
+
+      if (!!materialData) {
+        await updateMaterial(materialData.id, materialToSave, sessionToken);
+      } else {
+        await createMaterial(materialToSave, sessionToken);
+      }
+
       openNotification(
         "success",
-        "Material creado con exito",
+        "Material guardado con exito",
         `El material ${values.name} ha sido creado con exito.`,
         "topRight"
       );

@@ -47,7 +47,14 @@ export default function Header ({
       <div className={`flex justify-between p-2 items-center ${fixed ? "fixed z-10" : ""}`}>
         <h1 className="text-base font-bold md:text-4xl">{title}</h1>
         {!!btn && (
-          <Button type={btn.type} icon={btn.icon} onClick={btn.onClick}>{btn.label}</Button>
+          <Button
+            type={btn.type ?? "default"}
+            icon={btn.icon}
+            onClick={btn.onClick}
+            className={btn.type === "primary" ? "bg-blue-500 text-white" : ""}
+          >
+            {btn.label}
+          </Button>
         )}
       </div>
     </div>

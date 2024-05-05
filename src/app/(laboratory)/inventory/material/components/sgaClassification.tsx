@@ -1,9 +1,16 @@
 import Image from "next/image";
+import { LoadingOutlined } from "@ant-design/icons";
 import useMaterialInit from "../hooks/useMaterialInit";
 import { IMaterial } from "../../interfaces";
 
 export default function SGAClassification ({ sgaClassif }: { sgaClassif: IMaterial["sgaClassif"] }) {
   const { sgaClassification } = useMaterialInit();
+
+  if (sgaClassification.length === 0) return (
+    <div className="w-full text-center pt-4">
+      <LoadingOutlined className="text-3xl" />
+    </div>
+  );
 
   return (
     <div>

@@ -40,11 +40,12 @@ export default function NewMaterial () {
   return (
     <>
       <Header
-        title="Nuevo elemento"
+        title={!!materialId ? "Editar material" : "Nuevo material"}
         btn={{
-          label: "Guardar",
+          label: !!materialId ? "Actualizar" : "Guardar",
           icon: <SaveOutlined />,
-          onClick: form.submit
+          type: "primary",
+          onClick: form.submit,
         }}
       />
 

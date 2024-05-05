@@ -85,3 +85,16 @@ export const createMaterial = async (data: TCreateMaterial, sessionToken: string
     JSON.stringify(data)
   );
 };
+
+export const updateMaterial = async (id: string, data: TCreateMaterial, sessionToken: string) => {
+  const headers = {
+    ...API_REQUEST_HEADERS,
+    Authorization: `Bearer ${sessionToken}`
+  };
+  return newRequest(
+    `${MATERIALS_URI}/${id}`,
+    RequestMethods.PUT,
+    headers,
+    JSON.stringify(data)
+  );
+};

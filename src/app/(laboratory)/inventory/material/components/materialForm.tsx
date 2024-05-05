@@ -179,7 +179,6 @@ export default function MaterialForm ({
                 className="w-full md:w-1/3 px-2 mb-4"
                 rules={[
                   {
-                    type:"number",
                     min: 0,
                     max: 100,
                     message: "Por favor verifique la concentración",
@@ -203,7 +202,7 @@ export default function MaterialForm ({
                   },
                 ]}
               >
-                <DatePicker className="w-full" />
+                <DatePicker className="w-full" format="DD/MM/YYYY" />
               </Form.Item>
             }
             {hasField("condition") &&

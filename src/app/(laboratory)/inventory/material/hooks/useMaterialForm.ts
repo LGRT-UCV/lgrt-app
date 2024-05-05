@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import type { FormInstance } from "antd/lib";
+import dayjs from "dayjs";
 import useNotification from "@/hooks/useNotification";
 import { Routes } from "@/lib/constants";
 import { createMaterial, updateMaterial } from "../../utils";
@@ -26,14 +27,16 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
       storagePlace,
       sgaClassif,
       nfpaClassif,
+      expirationDate,
       ...material
     } = materialData;
 
-    const fieldData: TMaterialForm = {
+    const fieldData = {
       measurement: measurement.id,
       materialType: JSON.stringify(materialType),
       storagePlace: storagePlace.id,
       sgaClassif: sgaClassif.map((sga) => (sga?.idSgaClassif ?? "")),
+      expirationDate: dayjs(expirationDate),
       ...nfpaClassif,
       ...material,
     };

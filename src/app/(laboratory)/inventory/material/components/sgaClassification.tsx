@@ -5,7 +5,7 @@ import useMaterialInit from "../hooks/useMaterialInit";
 import { IMaterial } from "../../interfaces";
 
 export default function SGAClassification ({ sgaClassif }: { sgaClassif: IMaterial["sgaClassif"] }) {
-  const { sgaClassification } = useMaterialInit();
+  const { sgaClassification } = useMaterialInit(["sgaClassification"]);
 
   if (sgaClassification.length === 0) return (
     <div className="w-full text-center pt-4">

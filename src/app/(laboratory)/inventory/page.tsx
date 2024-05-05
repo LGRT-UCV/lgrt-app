@@ -16,35 +16,31 @@ import { deleteMaterial, getAllMaterials } from "./utils";
 import { fieldsToList } from "./material/utils";
 import useNotification from "@/hooks/useNotification";
 import DetailsModal from "./material/components/detailsModal";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Inventory () {
-  const { materialTypeList } = useMaterialInit();
+  const { materialTypeList } = useMaterialInit(["materialType"]);
   const { openNotification, notificationElement } = useNotification();
   const [openModal, setOpenModal] = useState(false);
-  const [materialList, setMaterialList] = useState<Array<TMaterial>>([]);
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
   const [refetchMaterials, setRefetchMaterials] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [currentMaterial, setCurrentMaterial] = useState<TMaterial>();
   const [searchValue, setSearchValue] = useState("");
   const { data: sessionData } = useSession();
   const router = useRouter();
-
-  useEffect(() => {
-    if (!sessionData?.user.token) return;
-    const getMaterials = async () => {
+  
+  const { data: materialList= [], isLoading } = useQuery({
+    queryKey: ["materials"],
+    queryFn: async () => {
       try {
-        setIsLoading(true);
-        const materials = await getAllMaterials(sessionData?.user.token ?? "");
-        setMaterialList(materials);
+        return await getAllMaterials(sessionData?.user.token ?? "");
       } catch (error) {
         openNotification("error", "Ha ocurrido un error al obtener los materiales", "", "topRight");
-      } finally {
-        setIsLoading(false);
+        return [];
       }
-    };
-    void getMaterials();
-  }, [sessionData, refetchMaterials]);
+    },
+    enabled: !!sessionData?.user.token,
+  });
 
   useEffect(() => {
     if (
@@ -138,7 +134,7 @@ export default function Inventory () {
       material.materialType.id === currentMaterialType?.id &&
       material.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
     );
-    return currentMaterials.map((material, index) => ({
+    return currentMaterials?.map((material, index) => ({
       ...material,
       key: `material-${index}`,
       materialType: currentMaterialType?.name,
@@ -151,7 +147,7 @@ export default function Inventory () {
       expirationDate: material.expirationDate ?
         new Date(material.expirationDate).toLocaleDateString("es-VE") :
         "",
-    }));
+    })) ?? [];
   }, [currentMaterialType, materialList, searchValue]);
 
   const handleMaterialDetails = (materialData?: TMaterial, show = true) => {

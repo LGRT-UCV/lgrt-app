@@ -1,5 +1,5 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
-import { TCreateMaterial, TMaterial } from "./interfaces";
+import { TCreateMaterial, TMaterial, TMaterialType, TMeasurements, TSGAClassification, TStoragePlace } from "./interfaces";
 
 const MATERIAL_TYPE_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/materialtypes`;
 const MATERIALS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/materials`;
@@ -8,31 +8,35 @@ const SGA_CLASSIGICATIONS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory
 const SGA_STORAGE_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/storageplaces`;
 
 export const getMaterialTypes = async () => {
-  return newRequest(
+  const response = await newRequest(
     MATERIAL_TYPE_URI,
     RequestMethods.GET
   );
+  return response as Array<TMaterialType>;
 };
 
 export const getMeasurements = async () => {
-  return newRequest(
+  const response = await newRequest(
     MEASUREMENTS_URI,
     RequestMethods.GET
   );
+  return response as Array<TMeasurements>;
 };
 
 export const getSGAClassification = async () => {
-  return newRequest(
+  const response = await newRequest(
     SGA_CLASSIGICATIONS_URI,
     RequestMethods.GET
   );
+  return response as Array<TSGAClassification>;
 };
 
 export const getStoragePlaces = async () => {
-  return newRequest(
+  const response = await newRequest(
     SGA_STORAGE_URI,
     RequestMethods.GET
   );
+  return response as Array<TStoragePlace>;
 };
 
 export const deleteMaterial = async (sessionToken: string, id: string) => {

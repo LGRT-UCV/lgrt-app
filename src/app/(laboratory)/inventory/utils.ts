@@ -1,5 +1,12 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
-import { TCreateMaterial, TMaterial, TMaterialType, TMeasurements, TSGAClassification, TStoragePlace } from "./interfaces";
+import type {
+  TSaveMaterial,
+  TMaterial,
+  TMaterialType,
+  TMeasurements,
+  TSGAClassification,
+  TStoragePlace
+} from "./interfaces";
 
 const MATERIAL_TYPE_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/materialtypes`;
 const MATERIALS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/materials`;
@@ -77,7 +84,7 @@ export const getMaterial = async (sessionToken: string, id: string) => {
   return response as TMaterial;
 };
 
-export const createMaterial = async (data: TCreateMaterial, sessionToken: string) => {
+export const createMaterial = async (data: TSaveMaterial, sessionToken: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`
@@ -90,7 +97,7 @@ export const createMaterial = async (data: TCreateMaterial, sessionToken: string
   );
 };
 
-export const updateMaterial = async (id: string, data: TCreateMaterial, sessionToken: string) => {
+export const updateMaterial = async (id: string, data: TSaveMaterial, sessionToken: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`

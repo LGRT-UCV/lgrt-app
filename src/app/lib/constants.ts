@@ -4,6 +4,7 @@ export enum Routes {
   Login = "/auth/login",
   SaveMaterial = "/inventory/material",
   Projects = "/projects",
+  SaveProjects = "/projects/project",
   Requests = "/requests",
   RequestResetPassword = "/auth/request-reset",
   ResetPassword = "/auth/reset-password",

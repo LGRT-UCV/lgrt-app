@@ -12,12 +12,11 @@ export default function useInventory () {
   const { materialTypeList } = useMaterialInit(["materialType"]);
   const { openNotification, notificationElement } = useNotification();
   const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
-  const [refetchMaterials, setRefetchMaterials] = useState(false);
   const [currentMaterial, setCurrentMaterial] = useState<TMaterial>();
   const [searchValue, setSearchValue] = useState("");
   const { data: sessionData } = useSession();
   
-  const { data: materialList= [], isLoading } = useQuery({
+  const { data: materialList= [], isLoading, refetch } = useQuery({
     queryKey: ["materials"],
     queryFn: async () => {
       try {
@@ -76,7 +75,7 @@ export default function useInventory () {
         sessionData?.user.token ?? "",
         materialData.id
       );
-      setRefetchMaterials(!refetchMaterials);
+      refetch();
       setCurrentMaterial(undefined);
       setOpenModal(false);
       openNotification(

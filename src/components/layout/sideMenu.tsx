@@ -59,7 +59,13 @@ export default function SideMenu () {
           getItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveMaterial))
         ]
       : undefined),
-    getItem("Proyectos", "2", <ProjectOutlined />),
+    getItem("Proyectos", "2", <ProjectOutlined />,
+      [Roles.Admin, Roles.Internal].includes(role) ?
+        [
+          getItem("Ver todos", "proj-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Projects)),
+          getItem("Añadir nuevo", "proj-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveProjects))
+        ]
+      : undefined),
     getItem("Solicitudes", "3", <FileSearchOutlined />),
     getItem("Usuarios", "4", <TeamOutlined />),
     getItem("Archivos", "5", <FileOutlined />),

@@ -58,7 +58,7 @@ export interface IMaterial {
 };
 
 export type TMaterial = IMaterial & IGenericId & { measurement: TMeasurements } & { materialType: TMaterialType } & { storagePlace: TStoragePlace };
-export type TCreateMaterial = IMaterial & TMaterialTypeRequest & TMesurementsRequest & TStoragePlaceRequest;
+export type TSaveMaterial = IMaterial & TMaterialTypeRequest & TMesurementsRequest & TStoragePlaceRequest;
 
 export interface IMaterialForm {
   formIntance: FormInstance;
@@ -82,7 +82,6 @@ export type TMaterialType = {
   name: string;
   fields: string;
 };
-
 
 export type TMeasurements = {
   id: string;

@@ -85,11 +85,18 @@ export default function Inventory () {
                   onClick={() => handleProjectDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
+                  Vista previa
+                </span>
+                <Divider className="m-2"/>
+                <span
+                  onClick={() => handleProjectDetails(record)}
+                  className="h-full w-full cursor-pointer"
+                >
                   Ver proyecto
                 </span>
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => void router.push(`${Routes.SaveProjects}?id=${record.id}`)}
+                  onClick={() => void router.push(`${Routes.SaveProject}?id=${record.id}`)}
                   className="h-full w-full cursor-pointer"
                 >
                     Editar
@@ -132,7 +139,7 @@ export default function Inventory () {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => void router.push(Routes.SaveMaterial),
+          onClick: () => void router.push(Routes.SaveProject),
         }}
       />
 

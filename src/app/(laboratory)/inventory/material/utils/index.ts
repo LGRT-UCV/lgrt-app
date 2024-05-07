@@ -66,6 +66,10 @@ export const variableFields = [
 ];
 
 export const baseFields = [
+  {
+    id: "id",
+    label: "#",
+  },
   { 
     id: "name",
     label: "Nombre",

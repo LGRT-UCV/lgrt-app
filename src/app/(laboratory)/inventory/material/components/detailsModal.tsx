@@ -15,7 +15,7 @@ export default function DetailsModal ({
     <div className="mx-auto p-4 max-h-[calc(100vh-200px)] overflow-auto">
       <div>
         <div className="p-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold">{material.name}</h2>
+          <h2 className="text-xl font-bold">{material.name} #{material.id}</h2>
         </div>
         <div className="p-4 space-y-4">
           <div className="w-full flex justify-around">

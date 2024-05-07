@@ -1,17 +1,28 @@
-import { Form, Input, Upload } from "antd";
+import { Form, Input, TreeSelect, Upload } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
-import { PlusOutlined } from "@ant-design/icons";
+import useProjectForm from "../hooks/useProjectForm";
 import type { IProjectForm } from "../../interfaces";
-
 
 export default function ProjectForm ({
   formIntance,
   projectData,
 }: IProjectForm) {
+  const {
+    materialList,
+    isLoading,
+    notificationElement,
+  } = useProjectForm(formIntance, projectData);
+
+  if (isLoading) return (
+    <div className="w-full text-center pt-4">
+      <LoadingOutlined className="text-3xl" />
+    </div>
+  );
 
   return (
     <div className="max-h-full overflow-y-auto p-2">
-      {/* {notificationElement} */}
+      {notificationElement}
       <Form
         name="projectForm"
         form={formIntance}
@@ -44,7 +55,6 @@ export default function ProjectForm ({
             rules={[
               {
                 type: "string",
-                required: true,
                 max: 120,
                 message: "Por favor verifique el responsable del proyecto",
               },
@@ -74,16 +84,31 @@ export default function ProjectForm ({
             className="w-full md:w-1/2 px-2 mb-4"
             rules={[
               {
-                type: "string",
-                required: true,
-                max: 120,
+                type: "url",
+                max: 300,
+                min: 6,
                 message: "Por favor verifique el link del archivo",
               },
             ]}
           >
-            <Input type="url" placeholder="Link del proyecto" maxLength={120} />
+            <Input placeholder="Link del proyecto" minLength={6} maxLength={300} />
           </Form.Item>
           <Form.Item
+            label="Materiales a usar"
+            name="projectMaterial"
+            className="w-full md:w-1/2 px-2 mb-4"
+            shouldUpdate
+          >
+            <TreeSelect
+              showSearch
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              placeholder="Please select"
+              allowClear
+              multiple
+              treeData={materialList}
+            />
+          </Form.Item>
+          {/* <Form.Item
             label="Archivos"
             name="file"
             className="w-full md:w-1/2 px-2 mb-4"
@@ -102,7 +127,7 @@ export default function ProjectForm ({
                 <div style={{ marginTop: 8 }}>Subir archivo</div>
               </button>
           </Upload>
-          </Form.Item>
+          </Form.Item> */}
         </div>
       </Form>
     </div>

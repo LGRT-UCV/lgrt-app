@@ -89,7 +89,7 @@ export default function Inventory () {
                 </span>
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => void router.push(`${Routes.SaveMaterial}?id=${record.id}`)}
+                  onClick={() => void router.push(`${Routes.SaveProjects}?id=${record.id}`)}
                   className="h-full w-full cursor-pointer"
                 >
                     Editar

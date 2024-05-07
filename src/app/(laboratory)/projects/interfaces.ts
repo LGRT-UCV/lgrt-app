@@ -1,3 +1,4 @@
+import type { FormInstance } from "antd/lib";
 
 export type TSaveProject = {
   name: string,
@@ -25,4 +26,9 @@ export interface IProject {
   projectManager: string,
   file: string | null,
   projectMaterial: Array<TProjectMaterial>,
+};
+
+export interface IProjectForm {
+  formIntance: FormInstance;
+  projectData?: IProject;
 };

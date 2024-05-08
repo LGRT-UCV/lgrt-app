@@ -1,41 +1,52 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { SaveOutlined } from "@ant-design/icons";
+import { SaveOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
 import Header from "@/components/layout/header";
 import ProjectForm from "./components/projectForm";
-import type { IProject } from "../interfaces";
 import { getProject } from "../utils";
+import useNotification from "@/hooks/useNotification";
 
 export default function NewProject () {
   const [form] = useForm();
-  const [currentProject, setCurrentProject] = useState<IProject>();
   const searchParams = useSearchParams();
   const { data: sessionData } = useSession();
+  const { openNotification, notificationElement } = useNotification();
 
   const projectId = useMemo(() => {
     return searchParams.get("id");
   }, [searchParams]);
 
-  useEffect(() => {
-    if (!projectId) {
-      form.resetFields();
-      return;
-    }
-    
-    const getProjectData = async () => {
-      const projectResponse = await getProject(
-        sessionData?.user.token ?? "",
-        projectId
-      );
-      setCurrentProject(projectResponse);
-    };
+  const { data: currentProject, isLoading } = useQuery({
+    queryKey: ["project"],
+    queryFn: async () => {
+      try {
+        if (!projectId) {
+          form.resetFields();
+          return;
+        }
 
-    void getProjectData();
-  }, [projectId]);
+        return await await getProject(
+          sessionData?.user.token ?? "",
+          projectId
+        );
+      } catch (error) {
+        openNotification("error", "Ha ocurrido un error al obtener el material", "", "topRight");
+        return;
+      }
+    },
+    enabled: !!sessionData?.user.token,
+  });
+
+  if (isLoading) return (
+    <div className="w-full text-center pt-4">
+      <LoadingOutlined className="text-3xl" />
+    </div>
+  );
 
   return (
     <>

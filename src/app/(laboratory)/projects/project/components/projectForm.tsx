@@ -12,6 +12,7 @@ export default function ProjectForm ({
     materialList,
     isLoading,
     notificationElement,
+    onFinish,
   } = useProjectForm(formIntance, projectData);
 
   if (isLoading) return (
@@ -26,7 +27,7 @@ export default function ProjectForm ({
       <Form
         name="projectForm"
         form={formIntance}
-        //onFinish={onFinish}
+        onFinish={onFinish}
         layout="vertical"
         requiredMark="optional"
         size="large"

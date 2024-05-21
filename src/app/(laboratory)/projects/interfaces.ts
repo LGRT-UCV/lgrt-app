@@ -3,12 +3,12 @@ import type { FormInstance } from "antd/lib";
 export type TSaveProject = {
   name: string,
   description: string,
-  comments: string,
   status: string,
   fileUri: string,
   projectManager: string,
-  file: Array<string>,
   projectMaterial: Array<TProjectMaterial>,
+  comments?: string,
+  file?: Array<string>,
 };
 
 export type TProjectMaterial = {

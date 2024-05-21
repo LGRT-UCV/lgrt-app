@@ -21,32 +21,32 @@ export default function NewProject () {
     return searchParams.get("id");
   }, [searchParams]);
 
-  const { data: currentProject, isLoading } = useQuery({
-    queryKey: ["project"],
-    queryFn: async () => {
-      try {
-        if (!projectId) {
-          form.resetFields();
-          return;
-        }
+  // const { data: currentProject, isLoading } = useQuery({
+  //   queryKey: ["project"],
+  //   queryFn: async () => {
+  //     try {
+  //       if (!projectId) {
+  //         form.resetFields();
+  //         return;
+  //       }
 
-        return await await getProject(
-          sessionData?.user.token ?? "",
-          projectId
-        );
-      } catch (error) {
-        openNotification("error", "Ha ocurrido un error al obtener el material", "", "topRight");
-        return;
-      }
-    },
-    enabled: !!sessionData?.user.token,
-  });
+  //       return await getProject(
+  //         sessionData?.user.token ?? "",
+  //         projectId
+  //       );
+  //     } catch (error) {
+  //       openNotification("error", "Ha ocurrido un error al obtener el material", "", "topRight");
+  //       return;
+  //     }
+  //   },
+  //   enabled: !!sessionData?.user.token,
+  // });
 
-  if (isLoading) return (
-    <div className="w-full text-center pt-4">
-      <LoadingOutlined className="text-3xl" />
-    </div>
-  );
+  // if (isLoading) return (
+  //   <div className="w-full text-center pt-4">
+  //     <LoadingOutlined className="text-3xl" />
+  //   </div>
+  // );
 
   return (
     <>
@@ -61,7 +61,7 @@ export default function NewProject () {
       />
 
       <div className="h-[calc(100vh-250px)] overflow-y-auto p-4">
-        <ProjectForm formIntance={form} projectData={currentProject} />
+        <ProjectForm formIntance={form} />
       </div>
     </>
   );

@@ -6,7 +6,7 @@ export type TSaveProject = {
   status: string,
   fileUri: string,
   projectManager: string,
-  projectMaterial: Array<TProjectMaterial>,
+  projectMaterial?: Array<TProjectMaterial>;
   comments?: string,
   file?: Array<string>,
 };

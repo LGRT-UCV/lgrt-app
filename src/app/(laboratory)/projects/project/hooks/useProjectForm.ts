@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { FormInstance } from "antd";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -10,12 +11,13 @@ import { createProject } from "../../utils";
 import { Routes } from "@/lib/constants";
 
 export default function useProjectForm (formIntance: FormInstance, projectData?: IProject) {
+  const [measurements, setMeasurements] = useState<Array<string>>([]);
   const { openNotification, notificationElement } = useNotification();
   const { materialTypeList, isLoading: isMaterialInitLoading } = useMaterialInit(["materialType"]);
   const { data: sessionData } = useSession();
   const router = useRouter();
 
-  const { data: materialList = [], isLoading: isMaterialLoading } = useQuery({
+  const { data: materialList, isLoading: isMaterialLoading } = useQuery({
     queryKey: ["material"],
     queryFn: async () => {
       try {
@@ -34,10 +36,13 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
             })),
           });
         }
-        return materialsToList;
+        return {
+          materials,
+          materialsToList,
+        };
       } catch (error) {
         openNotification("error", "Ha ocurrido un error al obtener los materiales", "", "topRight");
-        return [];
+        return;
       }
     },
     enabled: !!sessionData?.user.token && materialTypeList.length > 0,
@@ -46,9 +51,8 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
   const onFinish = async (values: TSaveProject) => {
     try {
       const sessionToken = sessionData?.user.token;
-
+      console.log("projectData: ", values)
       if (typeof sessionToken === "undefined") throw new Error("Sesión vencida");
-
 
       await createProject(values, sessionToken);
 
@@ -65,10 +69,17 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
     }
   };
 
+  const handleMeasurements = (id: string) => {
+    const materialData = materialList?.materials?.find((material) => material.id === id);
+    setMeasurements([...measurements, materialData?.measurement.description ?? ""]);
+  };
+
   return {
-    materialList,
+    materialList: materialList?.materialsToList,
+    measurements,
     isLoading: isMaterialLoading || isMaterialInitLoading,
     notificationElement,
     onFinish,
+    handleMeasurements,
   };
 };

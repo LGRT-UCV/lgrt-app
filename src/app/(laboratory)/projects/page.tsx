@@ -68,7 +68,7 @@ export default function Inventory () {
         align: "center",
         width: 30,
         render: (record: IProject & { key: string }) => (
-          <p className="text-center">{record.comments.length}</p>
+          <p className="text-center">{record.comments?.length}</p>
         )
       },
       {

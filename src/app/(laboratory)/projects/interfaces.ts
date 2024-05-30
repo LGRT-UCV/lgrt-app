@@ -13,7 +13,7 @@ export type TSaveProject = {
 
 export type TProjectMaterial = {
   idMaterial: string,
-  quantity: string,
+  quantity: string | number,
 };
 
 export interface IProject {

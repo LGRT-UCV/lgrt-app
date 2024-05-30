@@ -51,10 +51,19 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
   const onFinish = async (values: TSaveProject) => {
     try {
       const sessionToken = sessionData?.user.token;
-      console.log("projectData: ", values)
+      console.log("projectData: ", values, sessionToken)
       if (typeof sessionToken === "undefined") throw new Error("Sesión vencida");
 
-      await createProject(values, sessionToken);
+      const projectMaterial = values.projectMaterial?.map(material => ({
+        idMaterial: material.idMaterial,
+        quantity: material.quantity.toString(),
+      }));
+
+      await createProject({
+        ...values,
+        projectMaterial,
+        file: []
+      } , sessionToken);
 
       openNotification(
         "success",

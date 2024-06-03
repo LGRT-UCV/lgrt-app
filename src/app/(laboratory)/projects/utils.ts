@@ -55,7 +55,7 @@ export const createProject = async (data: TSaveProject, sessionToken: string) =>
     Authorization: `Bearer ${sessionToken}`
   };
   return newRequest(
-    PROJECT_URI,
+    PROJECT_URI + "/",
     RequestMethods.POST,
     headers,
     JSON.stringify(data)

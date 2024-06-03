@@ -37,13 +37,14 @@ export default function Inventory () {
     if (typeof currentMaterialType === "undefined") return [];
 
     const materialFileds = currentMaterialType.fields?.split(";") ?? [];
+    materialFileds.push("id");
     const columsList = fieldsToList.filter((field) => materialFileds.includes(field.id));
     const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
       title: column.label,
-      width: 100,
+      width: column.id === "id" ? 30 : 100,
       dataIndex: column.id,
       key: column.id,
-      fixed: column.id === "name" ? "left" : undefined,
+      fixed: ["id", "name"].includes(column.id) ? "left" : undefined,
       align: "center",
     }));
     columnToShow.push(({

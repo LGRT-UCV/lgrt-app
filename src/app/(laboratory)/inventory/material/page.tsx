@@ -1,44 +1,57 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { SaveOutlined } from "@ant-design/icons";
+import { SaveOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
 import Header from "@/components/layout/header";
 import MaterialForm from "./components/materialForm";
 import { getMaterial } from "../utils";
-import type { TMaterial } from "../interfaces";
+import { useQuery } from "@tanstack/react-query";
+import useNotification from "@/hooks/useNotification";
 
 export default function NewMaterial () {
   const [form] = useForm();
-  const [currentMaterial, setCurrentMaterial] = useState<TMaterial>();
   const searchParams = useSearchParams();
   const { data: sessionData } = useSession();
+  const { openNotification, notificationElement } = useNotification();
 
   const materialId = useMemo(() => {
     return searchParams.get("id");
   }, [searchParams]);
 
-  useEffect(() => {
-    if (!materialId) {
-      form.resetFields();
-      return;
-    }
-    
-    const getMaterialData = async () => {
-      const materialResponse = await getMaterial(
-        sessionData?.user.token ?? "",
-        materialId
-      );
-      setCurrentMaterial(materialResponse);
-    };
+  const { data: currentMaterial, isLoading } = useQuery({
+    queryKey: ["material"],
+    queryFn: async () => {
+      try {
+        if (!materialId) {
+          form.resetFields();
+          return;
+        }
 
-    void getMaterialData();
-  }, [materialId]);
+        return await await getMaterial(
+          sessionData?.user.token ?? "",
+          materialId
+        );
+      } catch (error) {
+        openNotification("error", "Ha ocurrido un error al obtener el material", "", "topRight");
+        return;
+      }
+    },
+    enabled: !!sessionData?.user.token,
+  });
+
+
+  if (isLoading) return (
+    <div className="w-full text-center pt-4">
+      <LoadingOutlined className="text-3xl" />
+    </div>
+  );
 
   return (
     <>
+      {notificationElement}
       <Header
         title={!!materialId ? "Editar material" : "Nuevo material"}
         btn={{

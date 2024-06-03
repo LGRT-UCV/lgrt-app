@@ -51,7 +51,7 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
   const onFinish = async (values: TSaveProject) => {
     try {
       const sessionToken = sessionData?.user.token;
-      console.log("projectData: ", values, sessionToken)
+
       if (typeof sessionToken === "undefined") throw new Error("Sesión vencida");
 
       const projectMaterial = values.projectMaterial?.map(material => ({
@@ -67,8 +67,8 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
 
       openNotification(
         "success",
-        "Material guardado con exito",
-        `El material ${values.name} ha sido creado con exito.`,
+        "Proyecto guardado con exito",
+        `El proyecto ${values.name} ha sido creado con exito.`,
         "topRight"
       );
       void router.push(Routes.Inventory);

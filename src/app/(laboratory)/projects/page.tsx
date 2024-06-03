@@ -30,13 +30,28 @@ export default function Inventory () {
     setOpenModal,
   } = useProject();
 
+  const getStatus = (status: string) => {
+    switch (status) {
+      case "active":
+        return {
+          status: "Activo",
+          statusColor: "green",
+        };
+      default:
+        return {
+          status: "Inactivo",
+          statusColor: "red",
+        };
+    };
+  };
+
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columsList = fieldsProject.filter(
-      field => !["comments", "file", "projectMaterial", "fileUri", "status"].includes(field.id)
+      field => !["comments", "projectMaterial", "fileUri", "file", "status"].includes(field.id)
     );
     const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
       title: column.label,
-      width: "description" === column.id ? 80 : 25,
+      width: "description" === column.id ? 50 : 20,
       dataIndex: column.id,
       key: column.id,
       fixed: column.id === "name" ? "left" : undefined,
@@ -46,15 +61,15 @@ export default function Inventory () {
       {
         title: "Status",
         align: "center",
-        width: 30,
+        width: 20,
         render: (record: IProject & { key: string }) => (
-          <Tag color="green" className="mx-auto">{record.status}</Tag>
+          <Tag color={getStatus(record.status).statusColor} className="mx-auto">{getStatus(record.status).status}</Tag>
         )
       },
       {
         title: "Archivo",
         align: "center",
-        width: 30,
+        width: 20,
         render: (record: IProject & { key: string }) => (
           <div className="text-center mx-auto">
             <a href={record.fileUri} target="_blank">
@@ -66,9 +81,9 @@ export default function Inventory () {
       {
         title: "Comentarios",
         align: "center",
-        width: 30,
+        width: 10,
         render: (record: IProject & { key: string }) => (
-          <p className="text-center">{record.comments?.length}</p>
+          <p className="text-center">{record.comments?.length ?? 0}</p>
         )
       },
       {
@@ -85,21 +100,7 @@ export default function Inventory () {
                   onClick={() => handleProjectDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
-                  Vista previa
-                </span>
-                <Divider className="m-2"/>
-                <span
-                  onClick={() => handleProjectDetails(record)}
-                  className="h-full w-full cursor-pointer"
-                >
                   Ver proyecto
-                </span>
-                <Divider className="m-2"/>
-                <span
-                  onClick={() => void router.push(`${Routes.SaveProject}?id=${record.id}`)}
-                  className="h-full w-full cursor-pointer"
-                >
-                    Editar
                 </span>
                 <Divider className="m-2"/>
                 <span

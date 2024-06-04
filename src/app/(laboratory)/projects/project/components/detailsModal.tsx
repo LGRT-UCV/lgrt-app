@@ -1,21 +1,26 @@
 import { Button, Select, Tag } from "antd";
 import type { IProject, TUpdateProject } from "../../interfaces";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SelectProps } from "antd/lib";
 import { updateProject } from "../../utils";
 import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
+import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
+import { getMaterial } from "@/(laboratory)/inventory/utils";
 
 type TagRender = SelectProps["tagRender"];
 
 interface IDetailsModal {
-  project?: IProject
+  project?: IProject;
+  closeModal: () => void;
 };
 
 export default function DetailsModal ({
   project,
+  closeModal,
 }: IDetailsModal) {
   const [statusSelected, setStatusSelected] = useState<string>();
+  const [currentMaterials, setCurrentMaterials] = useState<Array<TMaterial>>([]);
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
@@ -35,6 +40,20 @@ export default function DetailsModal ({
         };
     }
   }, [project.status]);
+
+  useEffect(() => {
+    const getMaterials = async () => {
+      const materials: Array<TMaterial> = [];
+      const sessionToken = sessionData?.user.token ?? "";
+      for (const material of project.projectMaterial) {
+        const materialData = await getMaterial(sessionToken, material.idMaterial);
+        materials.push({ ...materialData, quantity: material.quantity.toString() });
+      }
+      setCurrentMaterials([...materials]);
+    };
+
+    void getMaterials();
+  }, []);
 
   const tagRender: TagRender = (props) => {
     const { label, value, closable, onClose } = props;
@@ -67,6 +86,7 @@ export default function DetailsModal ({
         `El status ${statusSelected} ha sido guardado con exito.`,
         "topRight"
       );
+      closeModal();
     } catch (error) {
       openNotification(
         "error",
@@ -101,36 +121,52 @@ export default function DetailsModal ({
             <a href={project.fileUri} target="_blank"><strong>Ver Archivo</strong></a>
           </div>
         </div>
-        <div className="w-full grid grid-cols-2 space-y-4">
-          <div className="flex gap-2 items-center">
-            <strong>Cambiar status:</strong>
-            <Select
-              tagRender={tagRender}
-              defaultValue={[project.status ?? "inactive"]}
-              onSelect={value => setStatusSelected(value)}
-              style={{ width: "100%" }}
-              options={[
-                {
-                  label: "Activo",
-                  value: "active",
-                },
-                {
-                  label: "Inactivo",
-                  value: "inactive",
-                },
-                {
-                  label: "En revisión",
-                  value: "reviewing",
-                },
-                {
-                  label: "Finalizado",
-                  value: "done",
-                },
-              ]}
-            />
+
+        <div className="w-full flex flex-col gap-1">
+          <strong>Materiales:</strong>
+          {currentMaterials.map((material, index) => (
+            <div key={`material-${index}`} className="w-full grid grid-cols-2">
+              <p>
+                {material.name}
+              </p>
+              <p>
+                {material.quantity}{material.measurement.name}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="w-full flex flex-col gap-1">
+          <strong>Cambiar status:</strong>
+          <div className="w-full grid grid-cols-2 items-center space-x-4">
+            <div className="flex gap-2 items-center">
+              <Select
+                tagRender={tagRender}
+                defaultValue={[project.status ?? "inactive"]}
+                onSelect={value => setStatusSelected(value)}
+                style={{ width: "100%" }}
+                options={[
+                  {
+                    label: "Activo",
+                    value: "active",
+                  },
+                  {
+                    label: "Inactivo",
+                    value: "inactive",
+                  },
+                  {
+                    label: "En revisión",
+                    value: "reviewing",
+                  },
+                  {
+                    label: "Finalizado",
+                    value: "done",
+                  },
+                ]}
+              />
+            </div>
+            <Button onClick={onChangeStatus}>Cambiar</Button>
           </div>
-            
-          <Button onClick={onChangeStatus}>Cambiar</Button>
         </div>
       </div>
     </div>

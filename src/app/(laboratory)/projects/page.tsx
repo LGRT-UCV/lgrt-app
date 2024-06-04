@@ -28,6 +28,7 @@ export default function Inventory () {
     handleDeleteProject,
     setSearchValue,
     setOpenModal,
+    handleUpdateProject,
   } = useProject();
 
   const getStatus = (status: string) => {
@@ -87,7 +88,7 @@ export default function Inventory () {
         )
       },
       {
-        width: 10,
+        width: 5,
         fixed: "right",
         align: "center",
         render: (record: IProject & { key: string }) => (
@@ -172,7 +173,7 @@ export default function Inventory () {
           </Button>
         ]}
       >
-        <DetailsModal project={currentProject} />
+        <DetailsModal project={currentProject} closeModal={handleUpdateProject} />
       </Modal>
     </>
   )

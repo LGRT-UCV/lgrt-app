@@ -31,6 +31,11 @@ export default function useProject () {
     enabled: !!sessionData?.user.token,
   });
 
+  const handleUpdateProject = () => {
+    setOpenModal(false);
+    void refetch();
+  };
+
   const handleDeleteProject = async (project?: IProject) => {
     if (typeof project === "undefined") {
       openNotification("error", "No se ha seleccionado material a eliminar", "", "topRight");
@@ -80,5 +85,6 @@ export default function useProject () {
     handleProjectDetails,
     setOpenModal,
     setSearchValue,
+    handleUpdateProject,
   };
 };

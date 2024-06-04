@@ -11,6 +11,11 @@ export type TSaveProject = {
   file?: Array<string>,
 };
 
+export type TUpdateProject = {
+  status?: string,
+  comments?: string,
+};
+
 export type TProjectMaterial = {
   idMaterial: string,
   quantity: string | number,

@@ -1,5 +1,5 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
-import type { IProject, TSaveProject } from "./interfaces";
+import type { IProject, TSaveProject, TUpdateProject } from "./interfaces";
 
 export const PROJECT_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/project/projects`;
 
@@ -62,7 +62,7 @@ export const createProject = async (data: TSaveProject, sessionToken: string) =>
   );
 };
 
-export const updateProject = async (id: string, data: TSaveProject, sessionToken: string) => {
+export const updateProject = async (id: string, data: TUpdateProject, sessionToken: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`

@@ -16,7 +16,7 @@ import { fieldsProject } from "./utils";
 import DetailsModal from "./project/components/detailsModal";
 
 
-export default function Inventory () {
+export default function Projects () {
   const router = useRouter();
   const {
     openModal,
@@ -154,7 +154,7 @@ export default function Inventory () {
       />
 
       <Modal
-        title="Detalles del material"
+        title="Detalles del project"
         centered
         open={openModal}
         okText={"Editar"}
@@ -164,6 +164,13 @@ export default function Inventory () {
           className: "bg-blue-500"
         }}
         footer={[
+          <Button
+            key="delete"
+            className="bg-red-500 hover:!bg-red-400 !text-white border-none"
+            onClick={() => void handleDeleteProject(currentProject)}
+          >
+            Solicitar materiales
+          </Button>,
           <Button
             key="delete"
             className="bg-red-500 hover:!bg-red-400 !text-white border-none"

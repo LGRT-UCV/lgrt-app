@@ -21,7 +21,7 @@ export default function useProject () {
       } catch (error) {
         openNotification(
           "error",
-          "Ha ocurrido un error al obtener los materiales",
+          "Ha ocurrido un error al obtener los proyectos",
           "",
           "topRight"
         );
@@ -38,7 +38,7 @@ export default function useProject () {
 
   const handleDeleteProject = async (project?: IProject) => {
     if (typeof project === "undefined") {
-      openNotification("error", "No se ha seleccionado material a eliminar", "", "topRight");
+      openNotification("error", "No se ha seleccionado un projecto a eliminar", "", "topRight");
       return;
     }
   
@@ -53,17 +53,21 @@ export default function useProject () {
       openNotification(
         "success",
         "Material eliminado",
-        `Se ha eliminado el material ${project.name}`,
+        `Se ha eliminado el proyecto ${project.name}`,
         "topRight"
       );
     } catch (error) {
-      openNotification("error", "Ha ocurrido un error al eliminar el material", "", "topRight");
+      openNotification("error", "Ha ocurrido un error al eliminar el projecto", "", "topRight");
     }
   };
 
   const handleProjectDetails = (project?: IProject, show = true) => {
     setCurrentProject(project)
     setOpenModal(show);
+  };
+
+  const handleRequestMaterials = (project?: IProject) => {
+    
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
@@ -86,5 +90,6 @@ export default function useProject () {
     setOpenModal,
     setSearchValue,
     handleUpdateProject,
+    handleRequestMaterials,
   };
 };

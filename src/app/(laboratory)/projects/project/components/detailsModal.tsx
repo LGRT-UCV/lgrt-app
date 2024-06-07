@@ -28,7 +28,7 @@ export default function DetailsModal ({
 
   const { status, statusColor } = useMemo(() => {
     switch (project.status) {
-      case "active":
+      case "A":
         return {
           status: "Activo",
           statusColor: "green",
@@ -142,25 +142,25 @@ export default function DetailsModal ({
             <div className="flex gap-2 items-center">
               <Select
                 tagRender={tagRender}
-                defaultValue={[project.status ?? "inactive"]}
+                defaultValue={[project.status ?? "I"]}
                 onSelect={value => setStatusSelected(value)}
                 style={{ width: "100%" }}
                 options={[
                   {
                     label: "Activo",
-                    value: "active",
+                    value: "A",
                   },
                   {
                     label: "Inactivo",
-                    value: "inactive",
+                    value: "I",
                   },
                   {
                     label: "En revisión",
-                    value: "reviewing",
+                    value: "R",
                   },
                   {
                     label: "Finalizado",
-                    value: "done",
+                    value: "D",
                   },
                 ]}
               />

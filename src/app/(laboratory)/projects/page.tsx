@@ -33,7 +33,7 @@ export default function Projects () {
 
   const getStatus = (status: string) => {
     switch (status) {
-      case "active":
+      case "A":
         return {
           status: "Activo",
           statusColor: "green",

@@ -8,7 +8,6 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { Routes } from "@/lib/constants";
 import useRequest from "./useRequest";
 import { requestFields } from "./utils";
 import { IRequest } from "./interfaces";
@@ -29,26 +28,42 @@ export default function Requests () {
 
   const getStatus = (status: string) => {
     switch (status) {
-      case "active":
+      case "A":
         return {
-          status: "Activo",
+          status: "Aprobado",
+          statusColor: "green",
+        };
+      case "R":
+        return {
+          status: "Rechazado",
+          statusColor: "red",
+        };
+      case "E":
+        return {
+          status: "Entregado",
+          statusColor: "green",
+        };
+      case "D":
+        return {
+          status: "Devuelto",
           statusColor: "green",
         };
       default:
         return {
-          status: "Inactivo",
-          statusColor: "red",
+          status: "Pendiente",
+          statusColor: "orange",
         };
     };
   };
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columnToShow: TableColumnsType<AnyObject> = requestFields.map((column) => ({
+    const columsList = requestFields.filter(fields => "status" !== fields.id);
+    const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
       title: column.label,
       width: "requester" === column.id ? 50 : 20,
       dataIndex: column.id,
       key: column.id,
-      fixed: column.id === "requester" ? "left" : undefined,
+      fixed: ["id", "idRequester"].includes(column.id) ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
@@ -61,7 +76,7 @@ export default function Requests () {
         )
       },
       {
-        width: 5,
+        width: 10,
         fixed: "right",
         align: "center",
         render: (record: IRequest & { key: string }) => (
@@ -124,6 +139,7 @@ export default function Requests () {
         columns={columns}
         data={tableData.reverse()}
         isLoading={isLoading}
+        scrollX={1000}
       />
 
       <Modal

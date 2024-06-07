@@ -80,14 +80,13 @@ export const updateRequestStatus = async (id: string, data: TUpdateRequestStatus
   );
 };
 
-
 export const requestFields = [
   {
     id: "id",
     label: "#",
   },
   { 
-    id: "requester",
+    id: "idRequester",
     label: "Nombre del solicitante",
   },
   { 

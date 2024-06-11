@@ -80,6 +80,36 @@ export const updateRequestStatus = async (id: string, data: TUpdateRequestStatus
   );
 };
 
+export const getStatus = (status: string) => {
+  switch (status) {
+    case "A":
+      return {
+        status: "Aprobado",
+        statusColor: "green",
+      };
+    case "R":
+      return {
+        status: "Rechazado",
+        statusColor: "red",
+      };
+    case "E":
+      return {
+        status: "Entregado",
+        statusColor: "green",
+      };
+    case "D":
+      return {
+        status: "Devuelto",
+        statusColor: "green",
+      };
+    default:
+      return {
+        status: "Pendiente",
+        statusColor: "orange",
+      };
+  };
+};
+
 export const requestFields = [
   {
     id: "id",

@@ -9,8 +9,9 @@ import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
 import useRequest from "./useRequest";
-import { requestFields } from "./utils";
+import { getStatus, requestFields } from "./utils";
 import { IRequest } from "./interfaces";
+import DetailsModal from "./components/modals/detailsModal";
 
 export default function Requests () {
   const {
@@ -26,41 +27,11 @@ export default function Requests () {
     handleUpdateRequest,
   } = useRequest();
 
-  const getStatus = (status: string) => {
-    switch (status) {
-      case "A":
-        return {
-          status: "Aprobado",
-          statusColor: "green",
-        };
-      case "R":
-        return {
-          status: "Rechazado",
-          statusColor: "red",
-        };
-      case "E":
-        return {
-          status: "Entregado",
-          statusColor: "green",
-        };
-      case "D":
-        return {
-          status: "Devuelto",
-          statusColor: "green",
-        };
-      default:
-        return {
-          status: "Pendiente",
-          statusColor: "orange",
-        };
-    };
-  };
-
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columsList = requestFields.filter(fields => "status" !== fields.id);
     const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
       title: column.label,
-      width: "requester" === column.id ? 50 : 20,
+      width: "idRequester" === column.id ? 50 : 20,
       dataIndex: column.id,
       key: column.id,
       fixed: ["id", "idRequester"].includes(column.id) ? "left" : undefined,
@@ -162,7 +133,7 @@ export default function Requests () {
           </Button>
         ]}
       >
-        {/* <DetailsModal project={currentRequest} closeModal={handleUpdateRequest} /> */}
+        <DetailsModal request={currentRequest} closeModal={handleUpdateRequest} />
       </Modal>
     </>
   )

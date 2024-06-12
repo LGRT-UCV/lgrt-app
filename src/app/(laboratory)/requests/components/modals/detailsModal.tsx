@@ -98,7 +98,7 @@ export default function DetailsModal ({
       </div>
       <div className="p-4">
         <p className="w-full">
-          <strong>Nombre del solicitante:</strong> {request.idRequester}
+          <strong>Nombre del solicitante:</strong> {`${request.idRequester.name} ${request.idRequester.lastName}`}
         </p>
 
         <div className="w-full flex flex-col gap-1">
@@ -117,11 +117,11 @@ export default function DetailsModal ({
 
         <div className="w-full grid grid-cols-2 space-y-4">
           {!!request.idResponsibleDrop && <p className="mt-4">
-            <strong>Entregado por:</strong> {request.idResponsibleDrop}
+            <strong>Entregado por:</strong> {`${request.idResponsibleDrop.name} ${request.idResponsibleDrop.lastName}`}
           </p>}
 
           {!!request.idResponsibleReturn && <p className="mt-4">
-            <strong>Recibido por:</strong> {request.idResponsibleReturn}
+            <strong>Recibido por:</strong> {`${request.idResponsibleReturn.name} ${request.idResponsibleReturn.lastName}`}
           </p>}
         </div>
 

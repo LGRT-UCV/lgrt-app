@@ -7,10 +7,10 @@ export type TSaveRequest = {
   returnDate?: string;
   commentsRequesterReturn?: string;
   commentsResponsibleReturn?: string;
-  idRequester?: string;
-  idResponsibleDrop?: string;
-  requesterReturn?: string;
-  idResponsibleReturn?: string;
+  idRequester?: TUser;
+  idResponsibleDrop?: TUser;
+  requesterReturn?: TUser;
+  idResponsibleReturn?: TUser;
   status?: string;
   materialRequestMaterial?: Array<TRequestMaterial>;
 };
@@ -24,6 +24,20 @@ export type TRequestMaterial = {
   quantity: string | number;
 };
 
+export type TLaboratory = {
+  id: string;
+  name: string;
+};
+
+export interface IUser {
+  id: string;
+  name: string;
+  lastName: string;
+  laboratory: TLaboratory;
+};
+
+export type TUser = IUser;
+
 export interface IRequest {
   id: string;
   commentsRequester: string;
@@ -32,12 +46,13 @@ export interface IRequest {
   returnDate: string;
   commentsRequesterReturn: string;
   commentsResponsibleReturn: string;
-  idRequester: string;
-  idResponsibleDrop: string;
-  requesterReturn: string;
-  idResponsibleReturn: string;
+  idRequester: TUser;
+  idResponsibleDrop: TUser | null;
+  requesterReturn: TUser | null;
+  idResponsibleReturn: TUser | null;
   status: string;
   materialRequestMaterial: Array<TRequestMaterial>;
+  dateupd: string;
 };
 
 export interface IRequestForm {

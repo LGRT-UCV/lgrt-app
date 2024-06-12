@@ -74,7 +74,8 @@ export default function useRequest () {
     return requestList.map((request, index) => ({
       ...request,
       key: `request-${index}`,
-      dropDate: new Date(request.dropDate).toLocaleDateString('es-VE'),
+      requester: `${request.idRequester.name} ${request.idRequester.lastName}`,
+      dateupd: new Date(request.dateupd).toLocaleDateString('es-VE'),
     })) ?? [];
   }, [requestList, searchValue]);
 

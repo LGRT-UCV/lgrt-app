@@ -116,7 +116,7 @@ export const requestFields = [
     label: "#",
   },
   { 
-    id: "idRequester",
+    id: "requester",
     label: "Nombre del solicitante",
   },
   { 
@@ -124,7 +124,7 @@ export const requestFields = [
     label: "Status",
   },
   { 
-    id: "updateDate",
-    label: "Fecha de actualización",
+    id: "dateupd",
+    label: "Última actualización",
   },
 ];

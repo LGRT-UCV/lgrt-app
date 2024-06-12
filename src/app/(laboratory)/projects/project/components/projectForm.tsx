@@ -82,7 +82,7 @@ export default function ProjectForm ({
         </Form.Item>
         <Form.Item
           label="Link del archivo (opcional)"
-          name="fileUri"
+          name="projectUri"
           className="w-full px-2 mb-4"
           rules={[
             {

@@ -93,7 +93,7 @@ export const fieldsProject = [
     label: "Status",
   },
   { 
-    id: "fileUri",
+    id: "projectUri",
     label: "Link del archivo",
   },
   { 

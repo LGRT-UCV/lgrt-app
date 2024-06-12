@@ -48,7 +48,7 @@ export default function Projects () {
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columsList = fieldsProject.filter(
-      field => !["comments", "projectMaterial", "fileUri", "file", "status"].includes(field.id)
+      field => !["comments", "projectMaterial", "projectUri", "file", "status"].includes(field.id)
     );
     const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
       title: column.label,
@@ -73,7 +73,7 @@ export default function Projects () {
         width: 20,
         render: (record: IProject & { key: string }) => (
           <div className="text-center mx-auto">
-            <a href={record.fileUri} target="_blank">
+            <a href={record.projectUri} target="_blank">
               <strong>Ver Archivo</strong>
             </a>
           </div>

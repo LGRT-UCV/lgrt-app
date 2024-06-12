@@ -4,7 +4,8 @@ export type TSaveProject = {
   name: string,
   description: string,
   status: string,
-  fileUri: string,
+  projectUri: string,
+  fileUri?: string,
   projectManager: string,
   projectMaterial?: Array<TProjectMaterial>;
   comments?: string,
@@ -28,6 +29,7 @@ export interface IProject {
   comments: string,
   status: string,
   fileUri: string,
+  projectUri: string;
   projectManager: string,
   file: string | null,
   projectMaterial: Array<TProjectMaterial>,

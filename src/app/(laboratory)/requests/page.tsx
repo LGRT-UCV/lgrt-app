@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { Modal, Button, Divider, Popover, Tag, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
+import { useForm } from "antd/es/form/Form";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
@@ -12,10 +13,13 @@ import useRequest from "./useRequest";
 import { getStatus, requestFields } from "./utils";
 import { IRequest } from "./interfaces";
 import DetailsModal from "./components/modals/detailsModal";
+import CreateRequestModal from "./components/modals/createRequestModal";
 
 export default function Requests () {
+  const [form] = useForm();
   const {
-    openModal,
+    openDetailsModal,
+    openCreateModal,
     tableData,
     currentRequest,
     notificationElement,
@@ -23,7 +27,8 @@ export default function Requests () {
     handleRequestDetails,
     handleDeleteRequest,
     setSearchValue,
-    setOpenModal,
+    setOpenDetailsModal,
+    setOpenCreateModal,
     handleUpdateRequest,
   } = useRequest();
 
@@ -100,7 +105,7 @@ export default function Requests () {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => console.log("Add new request"),
+          onClick: () => setOpenCreateModal(true),
         }}
       />
 
@@ -116,10 +121,30 @@ export default function Requests () {
       <Modal
         title="Detalles de la solicitud"
         centered
-        open={openModal}
+        open={openCreateModal}
         okText={"Editar"}
         onOk={() => handleRequestDetails()}
-        onCancel={() => setOpenModal(false)}
+        onCancel={() => setOpenCreateModal(false)}
+        footer={[
+          <Button
+            key="delete"
+            className="bg-blue-500"
+            onClick={form.submit}
+          >
+            Crear solicitud
+          </Button>
+        ]}
+      >
+        <CreateRequestModal form={form} closeModal={handleUpdateRequest} />
+      </Modal>
+
+      <Modal
+        title="Detalles de la solicitud"
+        centered
+        open={openDetailsModal}
+        okText={"Editar"}
+        onOk={() => handleRequestDetails()}
+        onCancel={() => setOpenDetailsModal(false)}
         okButtonProps={{
           className: "bg-blue-500"
         }}

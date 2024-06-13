@@ -8,7 +8,8 @@ import type { IRequest } from "./interfaces";
 
 export default function useRequest () {
   const [searchValue, setSearchValue] = useState("");
-  const [openModal, setOpenModal] = useState(false);
+  const [openDetailsModal, setOpenDetailsModal] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
@@ -32,7 +33,8 @@ export default function useRequest () {
   });
 
   const handleUpdateRequest = () => {
-    setOpenModal(false);
+    setOpenDetailsModal(false);
+    setOpenCreateModal(false);
     void refetch();
   };
 
@@ -49,7 +51,7 @@ export default function useRequest () {
       );
       void refetch();
       setCurrentRequest(undefined);
-      setOpenModal(false);
+      setOpenDetailsModal(false);
       openNotification(
         "success",
         "Material eliminado",
@@ -63,7 +65,7 @@ export default function useRequest () {
 
   const handleRequestDetails = (request?: IRequest, show = true) => {
     setCurrentRequest(request)
-    setOpenModal(show);
+    setOpenDetailsModal(show);
   };
 
   const handleRequestMaterials = (request?: IRequest) => {
@@ -80,7 +82,8 @@ export default function useRequest () {
   }, [requestList, searchValue]);
 
   return {
-    openModal,
+    openDetailsModal,
+    openCreateModal,
     tableData,
     currentRequest,
     requestList,
@@ -88,7 +91,8 @@ export default function useRequest () {
     notificationElement,
     handleDeleteRequest,
     handleRequestDetails,
-    setOpenModal,
+    setOpenDetailsModal,
+    setOpenCreateModal,
     setSearchValue,
     handleUpdateRequest,
     handleRequestMaterials,

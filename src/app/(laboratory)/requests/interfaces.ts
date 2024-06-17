@@ -1,3 +1,4 @@
+import type { IGenericId } from "@/types/app";
 import type { FormInstance } from "antd/lib";
 
 export type TSaveRequest = {
@@ -7,10 +8,10 @@ export type TSaveRequest = {
   returnDate?: string;
   commentsRequesterReturn?: string;
   commentsResponsibleReturn?: string;
-  idRequester?: TUser;
-  idResponsibleDrop?: TUser;
-  requesterReturn?: TUser;
-  idResponsibleReturn?: TUser;
+  idRequester?: IGenericId;
+  idResponsibleDrop?: IGenericId;
+  requesterReturn?: IGenericId;
+  idResponsibleReturn?: IGenericId;
   status?: string;
   materialRequestMaterial?: Array<TRequestMaterial>;
 };
@@ -29,8 +30,7 @@ export type TLaboratory = {
   name: string;
 };
 
-export interface IUser {
-  id: string;
+export interface IUser extends IGenericId {
   name: string;
   lastName: string;
   laboratory: TLaboratory;
@@ -42,8 +42,6 @@ export interface IRequest {
   id: string;
   commentsRequester: string;
   commentsResponsible: string;
-  dropDate: string;
-  returnDate: string;
   commentsRequesterReturn: string;
   commentsResponsibleReturn: string;
   idRequester: TUser;
@@ -52,7 +50,10 @@ export interface IRequest {
   idResponsibleReturn: TUser | null;
   status: string;
   materialRequestMaterial: Array<TRequestMaterial>;
+  dropDate: string;
+  returnDate: string;
   dateupd: string;
+  datecre: string;
 };
 
 export interface IRequestForm {

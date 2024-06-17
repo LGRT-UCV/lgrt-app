@@ -6,12 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import useNotification from "@/hooks/useNotification";
 import { getAllMaterials } from "@/(laboratory)/inventory/utils";
 import useMaterialInit from "@/(laboratory)/inventory/material/hooks/useMaterialInit";
-import type { IRequest, TSaveRequest } from "../interfaces";
+import type { TSaveRequest } from "../interfaces";
 import { createRequest } from "../utils";
-import { Routes } from "@/lib/constants";
+import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
 
 export default function useRequestForm (callback: () => void) {
   const [measurements, setMeasurements] = useState<Array<string>>([]);
+  const [materialsSelected, setMaterialsSelected] = useState<Array<TMaterial>>([]);
   const { openNotification, notificationElement } = useNotification();
   const { materialTypeList, isLoading: isMaterialInitLoading } = useMaterialInit(["materialType"]);
   const { data: sessionData } = useSession();
@@ -50,9 +51,9 @@ export default function useRequestForm (callback: () => void) {
 
   const onFinish = async (values: TSaveRequest) => {
     try {
-      const sessionToken = sessionData?.user.token;
+      const user = sessionData?.user;
 
-      if (typeof sessionToken === "undefined") throw new Error("Sesión vencida");
+      if (typeof user === "undefined") throw new Error("Sesión vencida");
 
       const materialRequestMaterial = values.materialRequestMaterial?.map(material => ({
         idMaterial: material.idMaterial,
@@ -61,8 +62,11 @@ export default function useRequestForm (callback: () => void) {
 
       await createRequest({
         ...values,
+        idRequester: {
+          id: user.email,
+        },
         materialRequestMaterial,
-      } , sessionToken);
+      } , user.token);
 
       openNotification(
         "success",
@@ -71,7 +75,12 @@ export default function useRequestForm (callback: () => void) {
         "topRight"
       );
       callback();
-    } catch (error) {
+    } catch (error: any) {
+      if (String(error.details).includes("The quantity of a material cannot be greater than")) {
+        openNotification(
+          "error",
+          "No hay cantidad suficiente", "La cantidad de material no puede ser mayor a la cantidad en inventario", "topRight");
+      }
       openNotification("error", "Ha ocurrido un error al guardar la solicitud", "", "topRight");
       console.log("ERROR: ", error);
     }
@@ -79,11 +88,15 @@ export default function useRequestForm (callback: () => void) {
 
   const handleMeasurements = (id: string) => {
     const materialData = materialList?.materials?.find((material) => material.id === id);
+    if (materialData === undefined) return;
+
+    setMaterialsSelected([...materialsSelected, materialData]);
     setMeasurements([...measurements, materialData?.measurement.description ?? ""]);
   };
 
   return {
     materialList: materialList?.materialsToList,
+    materialsSelected,
     measurements,
     isLoading: isMaterialLoading || isMaterialInitLoading,
     notificationElement,

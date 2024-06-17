@@ -47,7 +47,7 @@ export const createRequest = async (data: TSaveRequest, sessionToken: string) =>
     Authorization: `Bearer ${sessionToken}`
   };
   return newRequest(
-    REQUEST_URI + "/",
+    REQUEST_URI,
     RequestMethods.POST,
     headers,
     JSON.stringify(data)
@@ -79,6 +79,29 @@ export const updateRequestStatus = async (id: string, data: TUpdateRequestStatus
     JSON.stringify(data)
   );
 };
+
+export const requestStatus = [
+  {
+    label: "Aprobado",
+    value: "A",
+  },
+  {
+    label: "Pendiente",
+    value: "P",
+  },
+  {
+    label: "Rechazado",
+    value: "R",
+  },
+  {
+    label: "Entregado",
+    value: "E",
+  },
+  {
+    label: "Devuelto",
+    value: "D",
+  },
+];
 
 export const getStatus = (status: string) => {
   switch (status) {

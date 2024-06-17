@@ -2,11 +2,12 @@ import { Button, Select, Tag } from "antd";
 import type { IRequest, TUpdateRequestStatus } from "../../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { SelectProps } from "antd/lib";
-import { getStatus, updateRequestStatus } from "../../utils";
+import { requestStatus, getStatus, updateRequestStatus } from "../../utils";
 import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
 import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
 import { getMaterial } from "@/(laboratory)/inventory/utils";
+import TextArea from "antd/es/input/TextArea";
 
 type TagRender = SelectProps["tagRender"];
 
@@ -101,7 +102,15 @@ export default function DetailsModal ({
           <strong>Nombre del solicitante:</strong> {`${request.idRequester.name} ${request.idRequester.lastName}`}
         </p>
 
-        <div className="w-full flex flex-col gap-1">
+        <p className="w-full mt-4">
+          <strong>Correo:</strong> {request.idRequester.id}
+        </p>
+
+        <p className="w-full mt-4">
+          <strong>Fecha de solicitud:</strong> {new Date(request.datecre).toLocaleDateString('es-VE')}
+        </p>
+
+        <div className="w-full flex flex-col gap-2 mt-4">
           <strong>Materiales:</strong>
           {currentMaterials.map((material, index) => (
             <div key={`material-${index}`} className="w-full grid grid-cols-2">
@@ -115,20 +124,34 @@ export default function DetailsModal ({
           ))}
         </div>
 
-        <div className="w-full grid grid-cols-2 space-y-4">
-          {!!request.idResponsibleDrop && <p className="mt-4">
-            <strong>Entregado por:</strong> {`${request.idResponsibleDrop.name} ${request.idResponsibleDrop.lastName}`}
-          </p>}
+        <div className="w-full grid grid-cols-2 space-y-4 mt-4">
+          {!!request.idResponsibleDrop && (
+            <div>
+              <p className="mt-4">
+                <strong>Entregado por:</strong> {`${request.idResponsibleDrop.name} ${request.idResponsibleDrop.lastName}`}
+              </p>
+              <p className="w-full mt-4">
+                <strong>Fecha de entrega:</strong> {new Date(request.dropDate).toLocaleDateString('es-VE')}
+              </p>
+            </div>
+          )}
 
-          {!!request.idResponsibleReturn && <p className="mt-4">
-            <strong>Recibido por:</strong> {`${request.idResponsibleReturn.name} ${request.idResponsibleReturn.lastName}`}
-          </p>}
+          {!!request.idResponsibleReturn && (
+            <div>
+              <p className="mt-4">
+                <strong>Recibido por:</strong> {`${request.idResponsibleReturn.name} ${request.idResponsibleReturn.lastName}`}
+              </p>
+              <p className="w-full mt-4">
+                <strong>Fecha de retorno:</strong> {new Date(request.returnDate).toLocaleDateString('es-VE')}
+              </p>
+            </div>
+          )}
         </div>
 
         {!!request.commentsResponsible && <div className="w-full">
           <strong>Comentarios del responsable de entregar el material:</strong>
           <br />
-          <p>{request.commentsResponsible}</p>
+          <p>{request.commentsResponsible ?? "Sin comentarios"}</p>
         </div>}
 
         {!!request.commentsRequester && <div className="w-full">
@@ -145,38 +168,11 @@ export default function DetailsModal ({
 
         <div className="w-full flex flex-col gap-1">
           <strong>Cambiar status:</strong>
-          <div className="w-full grid grid-cols-2 items-center space-x-4">
-            <div className="flex gap-2 items-center">
-              <Select
-                tagRender={tagRender}
-                defaultValue={[request.status ?? "I"]}
-                onSelect={value => setStatusSelected(value)}
-                style={{ width: "100%" }}
-                options={[
-                  {
-                    label: "Aprobado",
-                    value: "A",
-                  },
-                  {
-                    label: "Pendiente",
-                    value: "P",
-                  },
-                  {
-                    label: "Rechazado",
-                    value: "R",
-                  },
-                  {
-                    label: "Entregado",
-                    value: "E",
-                  },
-                  {
-                    label: "Devuelto",
-                    value: "D",
-                  },
-                ]}
-              />
-            </div>
-            <Button onClick={onChangeStatus}>Cambiar</Button>
+          <div className="w-full space-y-4">
+            <TextArea placeholder={"Comentarios"} rows={4} maxLength={500}/>
+            <Button onClick={onChangeStatus}>
+              Cambiar a {requestStatus.find(status => request.status === status.value)?.label ?? request.status ?? "Pendiente"}
+            </Button>
           </div>
         </div>
       </div>

@@ -119,16 +119,16 @@ export default function Requests () {
       />
 
       <Modal
-        title="Detalles de la solicitud"
+        title="Crea una nueva solicitud"
         centered
         open={openCreateModal}
         okText={"Editar"}
-        onOk={() => handleRequestDetails()}
         onCancel={() => setOpenCreateModal(false)}
+        width={800}
         footer={[
           <Button
             key="delete"
-            className="bg-blue-500"
+            className="bg-blue-500 text-white"
             onClick={form.submit}
           >
             Crear solicitud
@@ -143,8 +143,8 @@ export default function Requests () {
         centered
         open={openDetailsModal}
         okText={"Editar"}
-        onOk={() => handleRequestDetails()}
         onCancel={() => setOpenDetailsModal(false)}
+        width={600}
         okButtonProps={{
           className: "bg-blue-500"
         }}

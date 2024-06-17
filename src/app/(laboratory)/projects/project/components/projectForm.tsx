@@ -137,7 +137,7 @@ export default function ProjectForm ({
               ))}
               <Form.Item>
                 <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                  Agragar material
+                  Agregar material
                 </Button>
               </Form.Item>
             </>

@@ -7,11 +7,16 @@ export default function CreateRequestModal ({ form, closeModal } : { form : Form
   const {
     isLoading,
     materialList,
+    materialsSelected,
     measurements,
     notificationElement,
     handleMeasurements,
     onFinish,
-  } = useRequestForm(closeModal);
+  } = useRequestForm(() => {
+    form.resetFields();
+    closeModal();
+  });
+
 
   if (isLoading) return (
     <div className="w-full text-center pt-4">
@@ -30,6 +35,7 @@ export default function CreateRequestModal ({ form, closeModal } : { form : Form
         requiredMark="optional"
         size="large"
         scrollToFirstError
+        initialValues={{ items: [{}] }}
       >
         <Form.List name="materialRequestMaterial">
           {(fields, { add, remove }) => (
@@ -40,8 +46,14 @@ export default function CreateRequestModal ({ form, closeModal } : { form : Form
                     {...restField}
                     label="Materiales a usar"
                     name={[name, "idMaterial"]}
-                    className="w-full mb-4"
+                    className="w-2/3 mb-4"
                     shouldUpdate
+                    rules={[
+                      {
+                        required: true,
+                        message: "Por favor elija un material",
+                      },
+                    ]}
                   >
                     <TreeSelect
                       showSearch
@@ -57,22 +69,28 @@ export default function CreateRequestModal ({ form, closeModal } : { form : Form
                     {...restField}
                     label="Cantiadad a user"
                     name={[name, "quantity"]}
-                    className="w-full mb-4"
+                    className="w- mb-4"
                     rules={[
                       {
                         required: true,
                         message: "Por favor verifique la cantidad",
                       },
+                      {
+                        type: "number",
+                        min: 0,
+                        max: Number(materialsSelected[key]?.quantity),
+                        message: `Cantidad disponible (${materialsSelected[key]?.quantity} ${measurements[key]})`,
+                      }
                     ]}
                   >
-                    <InputNumber className="w-full" placeholder="cantidad" min={0} max={100} suffix={measurements[key]} />
+                    <InputNumber className="w-full" placeholder="cantidad" min={0} suffix={measurements[key]} />
                   </Form.Item>
                   {fields.length > 1 && <MinusCircleOutlined onClick={() => remove(name)} />}
                 </div>
               ))}
               <Form.Item>
                 <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                  Agragar material
+                  Agregar material
                 </Button>
               </Form.Item>
             </>

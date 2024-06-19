@@ -62,9 +62,6 @@ export default function useRequestForm (callback: () => void) {
 
       await createRequest({
         ...values,
-        idRequester: {
-          id: user.email,
-        },
         materialRequestMaterial,
       } , user.token);
 

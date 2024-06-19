@@ -77,7 +77,7 @@ export default function useRequest () {
       ...request,
       key: `request-${index}`,
       requester: `${request.idRequester.name} ${request.idRequester.lastName}`,
-      dateupd: new Date(request.dateupd).toLocaleDateString('es-VE'),
+      dateupd: new Date(request.dateupd ?? request.datecre).toLocaleDateString('es-VE'),
     })) ?? [];
   }, [requestList, searchValue]);
 

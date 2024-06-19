@@ -1,5 +1,5 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
-import type { IRequest, TSaveRequest, TUpdateRequestStatus } from "./interfaces";
+import type { IRequest, TRequestStatus, TSaveRequest, TStatus, TUpdateRequestStatus } from "./interfaces";
 
 export const REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/request/materialrequests`;
 
@@ -80,11 +80,7 @@ export const updateRequestStatus = async (id: string, data: TUpdateRequestStatus
   );
 };
 
-export const requestStatus = [
-  {
-    label: "Aprobado",
-    value: "A",
-  },
+export const requestStatus: Array<TRequestStatus> = [
   {
     label: "Pendiente",
     value: "P",
@@ -92,6 +88,10 @@ export const requestStatus = [
   {
     label: "Rechazado",
     value: "R",
+  },
+  {
+    label: "Aprobado",
+    value: "A",
   },
   {
     label: "Entregado",
@@ -103,7 +103,7 @@ export const requestStatus = [
   },
 ];
 
-export const getStatus = (status: string) => {
+export const getStatus = (status: TStatus) => {
   switch (status) {
     case "A":
       return {

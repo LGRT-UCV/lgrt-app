@@ -1,24 +1,30 @@
 import type { IGenericId } from "@/types/app";
 import type { FormInstance } from "antd/lib";
 
-export type TSaveRequest = {
+export type TStatus = "P" | "A" | "E" | "D" | "R";
+
+export type TRequestStatus = {
+  label: string;
+  value: TStatus;
+};
+
+export type TUpdateRequestStatus = {
+  status?: TStatus;
   commentsRequester?: string;
   commentsResponsible?: string;
-  dropDate?: string;
-  returnDate?: string;
   commentsRequesterReturn?: string;
   commentsResponsibleReturn?: string;
+};
+
+export type TSaveRequest = {
+  dropDate?: string;
+  returnDate?: string;
   idRequester?: IGenericId;
   idResponsibleDrop?: IGenericId;
   requesterReturn?: IGenericId;
   idResponsibleReturn?: IGenericId;
-  status?: string;
   materialRequestMaterial?: Array<TRequestMaterial>;
-};
-
-export type TUpdateRequestStatus = {
-  status?: string;
-};
+} & TUpdateRequestStatus;
 
 export type TRequestMaterial = {
   idMaterial: string;
@@ -48,7 +54,7 @@ export interface IRequest {
   idResponsibleDrop: TUser | null;
   requesterReturn: TUser | null;
   idResponsibleReturn: TUser | null;
-  status: string;
+  status: TStatus;
   materialRequestMaterial: Array<TRequestMaterial>;
   dropDate: string;
   returnDate: string;

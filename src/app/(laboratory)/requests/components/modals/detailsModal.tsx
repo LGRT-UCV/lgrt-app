@@ -1,5 +1,5 @@
 import { Button, Select, Tag } from "antd";
-import type { IRequest, TUpdateRequestStatus } from "../../interfaces";
+import type { IRequest, TRequestStatus, TStatus, TUpdateRequestStatus } from "../../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { SelectProps } from "antd/lib";
 import { requestStatus, getStatus, updateRequestStatus } from "../../utils";
@@ -20,7 +20,7 @@ export default function DetailsModal ({
   request,
   closeModal,
 }: IDetailsModal) {
-  const [statusSelected, setStatusSelected] = useState<string>();
+  const [comments, setComments] = useState<string>("");
   const [currentMaterials, setCurrentMaterials] = useState<Array<TMaterial>>([]);
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
@@ -29,6 +29,22 @@ export default function DetailsModal ({
 
   const { status, statusColor } = useMemo(() => {
     return getStatus(request.status);
+  }, [request.status]);
+
+  const nextStatus = useMemo(() => {
+    const currentStatus = requestStatus.find(sts => sts.value === request.status);
+    if (typeof currentStatus === "undefined") return requestStatus[0];
+
+    switch (currentStatus.value) {
+      case "P":
+        return requestStatus.find(sts => sts.value === "A") ?? requestStatus[0];
+      case "A":
+        return requestStatus.find(sts => sts.value === "E") ?? requestStatus[0];
+      case "E":
+        return requestStatus.find(sts => sts.value === "D") ?? requestStatus[0];
+      default:
+        return requestStatus[0];
+    }
   }, [request.status]);
 
   useEffect(() => {
@@ -45,35 +61,20 @@ export default function DetailsModal ({
     void getMaterials();
   }, []);
 
-  const tagRender: TagRender = (props) => {
-    const { label, value, closable, onClose } = props;
-    const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
-      event.preventDefault();
-      event.stopPropagation();
-    };
-    return (
-      <Tag
-        color={value}
-        onMouseDown={onPreventMouseDown}
-        closable={closable}
-        onClose={onClose}
-      >
-        {label}
-      </Tag>
-    );
-  };
-
-  const onChangeStatus = async () => {
+  const onChangeStatus = async (newStatus?: TRequestStatus) => {
     try {
+      const statusToSave = newStatus ?? nextStatus;
       const sessionToken = sessionData?.user.token ?? "";
       const data: TUpdateRequestStatus = {
-        status: statusSelected,
+        status: statusToSave?.value,
+        commentsResponsible: request.status === "P" ? comments : undefined,
+        commentsResponsibleReturn: request.status === "E" ? comments : undefined,
       };
       await updateRequestStatus(request.id, data, sessionToken);
       openNotification(
         "success",
         "Solicitud actualizada con exito",
-        `El status ${statusSelected} ha sido guardado con exito.`,
+        `El status ${statusToSave?.label} ha sido guardado con exito.`,
         "topRight"
       );
       closeModal();
@@ -148,31 +149,38 @@ export default function DetailsModal ({
           )}
         </div>
 
-        {!!request.commentsResponsible && <div className="w-full">
-          <strong>Comentarios del responsable de entregar el material:</strong>
-          <br />
-          <p>{request.commentsResponsible ?? "Sin comentarios"}</p>
-        </div>}
+        <div className="w-full space-y-4 mb-4">
+          {!!request.commentsResponsible && <div className="w-full">
+            <strong>Comentarios del responsable de entregar el material:</strong>
+            <br />
+            <p>{request.commentsResponsible ?? "Sin comentarios"}</p>
+          </div>}
 
-        {!!request.commentsRequester && <div className="w-full">
-          <strong>Comentarios del solicitante al recibir el material:</strong>
-          <br />
-          <p>{request.commentsRequester}</p>
-        </div>}
+          {!!request.commentsRequester && <div className="w-full">
+            <strong>Comentarios del solicitante al recibir el material:</strong>
+            <br />
+            <p>{request.commentsRequester}</p>
+          </div>}
 
-        {!!request.commentsRequester && <div className="w-full">
-          <strong>Comentarios de la persona que recibió el material:</strong>
-          <br />
-          <p>{request.commentsRequester}</p>
-        </div>}
+          {!!request.commentsRequester && <div className="w-full">
+            <strong>Comentarios de la persona que recibió el material:</strong>
+            <br />
+            <p>{request.commentsRequester}</p>
+          </div>}
+        </div>
 
         <div className="w-full flex flex-col gap-1">
           <strong>Cambiar status:</strong>
           <div className="w-full space-y-4">
-            <TextArea placeholder={"Comentarios"} rows={4} maxLength={500}/>
-            <Button onClick={onChangeStatus}>
-              Cambiar a {requestStatus.find(status => request.status === status.value)?.label ?? request.status ?? "Pendiente"}
+            <TextArea placeholder={"Comentarios"} rows={4} maxLength={500} value={comments} onChange={(e) => setComments(e.target.value)}/>
+            <Button className="bg-green-500 !text-white mr-4 hover:!bg-green-400 border-none" onClick={() => onChangeStatus()}>
+              Cambiar a {nextStatus?.label ?? "Pendiente"}
             </Button>
+            {request.status === "P" &&
+              <Button className="bg-red-500 hover:!bg-red-400 !text-white border-none" onClick={() => onChangeStatus(requestStatus[1])}>
+                Rechazar
+              </Button>
+            }
           </div>
         </div>
       </div>

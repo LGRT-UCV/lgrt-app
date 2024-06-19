@@ -118,7 +118,7 @@ export default function DetailsModal ({
             <strong>Responsable:</strong> {project.projectManager}
           </div>
           <div>
-            <a href={project.fileUri} target="_blank"><strong>Ver Archivo</strong></a>
+            <a href={project.projectUri} target="_blank"><strong>Ver Archivo</strong></a>
           </div>
         </div>
 

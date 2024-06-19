@@ -1,8 +1,5 @@
 import type { FormInstance } from "antd/lib";
-
-interface IGenericId {
-  id: string;
-}
+import type { IGenericId } from "@/types/app";
 
 export type TMaterialForm = {
   name: string;

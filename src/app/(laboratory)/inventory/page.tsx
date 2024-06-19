@@ -138,6 +138,7 @@ export default function Inventory () {
         okText={"Editar"}
         onOk={() => handleMaterialDetails()}
         onCancel={() => setOpenModal(false)}
+        width={600}
         okButtonProps={{
           className: "bg-blue-500"
         }}

@@ -1,5 +1,5 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
-import type { IRequest, TSaveRequest, TUpdateRequestStatus } from "./interfaces";
+import type { IRequest, TRequestStatus, TSaveRequest, TStatus, TUpdateRequestStatus } from "./interfaces";
 
 export const REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/request/materialrequests`;
 
@@ -47,7 +47,7 @@ export const createRequest = async (data: TSaveRequest, sessionToken: string) =>
     Authorization: `Bearer ${sessionToken}`
   };
   return newRequest(
-    REQUEST_URI + "/",
+    REQUEST_URI,
     RequestMethods.POST,
     headers,
     JSON.stringify(data)
@@ -80,7 +80,30 @@ export const updateRequestStatus = async (id: string, data: TUpdateRequestStatus
   );
 };
 
-export const getStatus = (status: string) => {
+export const requestStatus: Array<TRequestStatus> = [
+  {
+    label: "Pendiente",
+    value: "P",
+  },
+  {
+    label: "Rechazado",
+    value: "R",
+  },
+  {
+    label: "Aprobado",
+    value: "A",
+  },
+  {
+    label: "Entregado",
+    value: "E",
+  },
+  {
+    label: "Devuelto",
+    value: "D",
+  },
+];
+
+export const getStatus = (status: TStatus) => {
   switch (status) {
     case "A":
       return {
@@ -116,7 +139,7 @@ export const requestFields = [
     label: "#",
   },
   { 
-    id: "idRequester",
+    id: "requester",
     label: "Nombre del solicitante",
   },
   { 
@@ -124,7 +147,7 @@ export const requestFields = [
     label: "Status",
   },
   { 
-    id: "updateDate",
-    label: "Fecha de actualización",
+    id: "dateupd",
+    label: "Última actualización",
   },
 ];

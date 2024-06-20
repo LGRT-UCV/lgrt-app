@@ -11,10 +11,20 @@ import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
 import { fileFields } from "./utils";
 import type { IFile } from "./interfaces";
+import useFile from "./hooks/useFiles";
 
 export default function Files () {
   const [form] = useForm();
-
+  const {
+    tableData,
+    isLoading,
+    notificationElement,
+    handleFileDetails,
+    handleDeleteFile,
+    openCreateModal,
+    setOpenCreateModal,
+    setSearchValue
+  } = useFile();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columnToShow: TableColumnsType<AnyObject> = fileFields.map((column) => ({
@@ -31,7 +41,7 @@ export default function Files () {
         width: 20,
         render: (record: IFile & { key: string }) => (
           <div className="text-center mx-auto">
-            <a href={record.file[0]} target="_blank">
+            <a href={record.file?.[0]} target="_blank">
               <strong>Descargar</strong>
             </a>
           </div>
@@ -48,14 +58,14 @@ export default function Files () {
               <div className="text-center">
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => handleRequestDetails(record)}
+                  onClick={() => handleFileDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Editar
                 </span>
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => void handleDeleteRequest(record)}
+                  onClick={() => void handleDeleteFile(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Eliminar

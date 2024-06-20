@@ -3,8 +3,8 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
-import { deleteRequest, getAllRequests } from "./utils";
-import type { IRequest } from "./interfaces";
+import { deleteRequest, getAllRequests } from "../utils";
+import type { IRequest } from "../interfaces";
 
 export default function useRequest () {
   const [searchValue, setSearchValue] = useState("");
@@ -68,10 +68,6 @@ export default function useRequest () {
     setOpenDetailsModal(show);
   };
 
-  const handleRequestMaterials = (request?: IRequest) => {
-    
-  };
-
   const tableData: Array<AnyObject> = useMemo(() => {
     return requestList.map((request, index) => ({
       ...request,
@@ -95,6 +91,5 @@ export default function useRequest () {
     setOpenCreateModal,
     setSearchValue,
     handleUpdateRequest,
-    handleRequestMaterials,
   };
 };

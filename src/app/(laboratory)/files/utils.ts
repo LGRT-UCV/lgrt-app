@@ -1,7 +1,7 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
 import type { IFile, TSaveFile } from "./interfaces";
 
-export const REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/request/materialrequests`;
+export const FILE_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/quality/files`;
 
 export const deleteFile = async (sessionToken: string, id: string) => {
   const headers = {
@@ -9,7 +9,7 @@ export const deleteFile = async (sessionToken: string, id: string) => {
     Authorization: `Bearer ${sessionToken}`
   };
   return newRequest(
-    `${REQUEST_URI}/${id}`,
+    `${FILE_URI}/${id}`,
     RequestMethods.DELETE,
     headers,
   );
@@ -21,7 +21,7 @@ export const getAllFiles = async (sessionToken: string) => {
     Authorization: `Bearer ${sessionToken}`
   };
   const response = await newRequest(
-    REQUEST_URI,
+    FILE_URI,
     RequestMethods.GET,
     headers,
   );
@@ -34,7 +34,7 @@ export const getFile = async (sessionToken: string, id: string) => {
     Authorization: `Bearer ${sessionToken}`
   };
   const response = await newRequest(
-    `${REQUEST_URI}/${id}`,
+    `${FILE_URI}/${id}`,
     RequestMethods.GET,
     headers,
   );
@@ -47,7 +47,7 @@ export const createFile = async (data: TSaveFile, sessionToken: string) => {
     Authorization: `Bearer ${sessionToken}`
   };
   return newRequest(
-    REQUEST_URI,
+    FILE_URI,
     RequestMethods.POST,
     headers,
     JSON.stringify(data)
@@ -60,7 +60,7 @@ export const updateFile = async (id: string, data: TSaveFile, sessionToken: stri
     Authorization: `Bearer ${sessionToken}`
   };
   return newRequest(
-    `${REQUEST_URI}/${id}`,
+    `${FILE_URI}/${id}`,
     RequestMethods.PUT,
     headers,
     JSON.stringify(data)

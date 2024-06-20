@@ -127,7 +127,7 @@ export default function Requests () {
         width={800}
         footer={[
           <Button
-            key="delete"
+            key="create"
             className="bg-blue-500 text-white"
             onClick={form.submit}
           >

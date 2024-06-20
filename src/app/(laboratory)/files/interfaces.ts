@@ -8,6 +8,12 @@ export type TSaveFile = {
   file?: Array<string>,
 };
 
+export type TFile = {
+  name: string,
+  description: string,
+  file: File,
+};
+
 export interface IFile extends IGenericId {
   name: string,
   fileType: string,

@@ -12,6 +12,7 @@ import Header from "@/components/layout/header";
 import { fileFields } from "./utils";
 import type { IFile } from "./interfaces";
 import useFile from "./hooks/useFiles";
+import CreateFileModal from "./components/modals/createFileModal";
 
 export default function Files () {
   const [form] = useForm();
@@ -131,7 +132,7 @@ export default function Files () {
           </Button>
         ]}
       >
-        {/* <CreateRequestModal form={form} closeModal={handleUpdateRequest} /> */}
+        <CreateFileModal form={form} closeModal={() => setOpenCreateModal(false)} />
       </Modal>
     </>
   )

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { FormInstance } from "antd";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -67,7 +66,7 @@ export default function useRequestForm (callback: () => void) {
 
       openNotification(
         "success",
-        "Proyecto guardado con exito",
+        "Solicitud guardado con exito",
         `La solicitud ha sido creado con exito.`,
         "topRight"
       );

@@ -1,7 +1,8 @@
-import { Form, Upload, type UploadProps } from "antd";
+import { Form, Input, Upload, type UploadProps } from "antd";
 import { LoadingOutlined, InboxOutlined } from "@ant-design/icons";
 import type { FormInstance } from "antd/lib";
 import useFileForm from "../../hooks/useFileForm";
+import TextArea from "antd/lib/input/TextArea";
 
 export default function CreateFileModal ({ form, closeModal } : { form : FormInstance, closeModal: () => void}) {
   const {
@@ -31,9 +32,9 @@ export default function CreateFileModal ({ form, closeModal } : { form : FormIns
       return false; // Prevents automatic upload
     },
     onChange(info) {
-      const { status, originFileObj } = info.file;
+      const { status } = info.file;
       if (status !== "uploading") {
-        console.log(originFileObj, info.fileList);
+        console.log("Uploading file");
       }
       if (status === "done") {
         console.log("Upload finished")
@@ -65,7 +66,36 @@ export default function CreateFileModal ({ form, closeModal } : { form : FormIns
         size="large"
         scrollToFirstError
       >
-        <Form.Item name="file">
+        <Form.Item
+          label="Nombre del archivo"
+          name="name"
+          className="w-full"
+          rules={[
+            {
+              required: true,
+              type: "string",
+              max: 120,
+              message: "Por favor verifique el nombre del archivo",
+            },
+          ]}
+        >
+          <Input placeholder="Nombre del archivo" maxLength={120} />
+        </Form.Item>
+        <Form.Item
+          name="description"
+          className="mt-4"
+          rules={[
+            {
+              type: "string",
+              required: true,
+              max: 500,
+              message: "Por favor verifique la descripción del archivo",
+            },
+          ]}
+        >
+          <TextArea placeholder="Descripción del archivo..." rows={4} maxLength={500}/>
+        </Form.Item>
+        <Form.Item name="file" className="mt-4">
           <Upload.Dragger {...props}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />

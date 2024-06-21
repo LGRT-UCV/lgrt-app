@@ -5,14 +5,21 @@ export type TSaveFile = {
   name?: string,
   fileType?: string,
   description?: string,
-  file?: Array<string>,
+  file?: string,
+};
+
+export type TFileForm = {
+  name: string,
+  description: string,
+  file: {
+    file: File,
+    fileList: Array<TFile>,
+  }
 };
 
 export type TFile = {
-  name: string,
-  description: string,
-  file: File,
-};
+  originFileObj: File,
+} & File;
 
 export interface IFile extends IGenericId {
   name: string,

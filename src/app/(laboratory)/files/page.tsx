@@ -20,9 +20,10 @@ export default function Files () {
     tableData,
     isLoading,
     notificationElement,
-    handleFileDetails,
-    handleDeleteFile,
     openCreateModal,
+    handleFileDetails,
+    handleUpdateFile,
+    handleDeleteFile,
     setOpenCreateModal,
     setSearchValue
   } = useFile();
@@ -132,7 +133,7 @@ export default function Files () {
           </Button>
         ]}
       >
-        <CreateFileModal form={form} closeModal={() => setOpenCreateModal(false)} />
+        <CreateFileModal form={form} closeModal={handleUpdateFile} />
       </Modal>
     </>
   )

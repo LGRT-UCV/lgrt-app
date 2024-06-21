@@ -9,67 +9,65 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import useRequest from "./hooks/useRequest";
-import { getStatus, requestFields } from "./utils";
-import { IRequest } from "./interfaces";
-import DetailsModal from "./components/modals/detailsModal";
-import CreateRequestModal from "./components/modals/createRequestModal";
+import { fileFields } from "./utils";
+import type { IFile } from "./interfaces";
+import useFile from "./hooks/useFiles";
+import CreateFileModal from "./components/modals/createFileModal";
 
-export default function Requests () {
+export default function Files () {
   const [form] = useForm();
   const {
-    openDetailsModal,
-    openCreateModal,
     tableData,
-    currentRequest,
-    notificationElement,
     isLoading,
-    handleRequestDetails,
-    handleDeleteRequest,
-    setSearchValue,
-    setOpenDetailsModal,
+    notificationElement,
+    openCreateModal,
+    handleFileDetails,
+    handleUpdateFile,
+    handleDeleteFile,
     setOpenCreateModal,
-    handleUpdateRequest,
-  } = useRequest();
+    setSearchValue
+  } = useFile();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columsList = requestFields.filter(fields => "status" !== fields.id);
-    const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
+    const columnToShow: TableColumnsType<AnyObject> = fileFields.map((column) => ({
       title: column.label,
-      width: "idRequester" === column.id ? 50 : 20,
+      width: ["name", "description"].includes(column.id) ? 60 : 20,
       dataIndex: column.id,
       key: column.id,
-      fixed: ["id", "idRequester"].includes(column.id) ? "left" : undefined,
+      fixed: ["name", "fileType"].includes(column.id) ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
       {
-        title: "Status",
         align: "center",
         width: 20,
-        render: (record: IRequest & { key: string }) => (
-          <Tag color={getStatus(record.status).statusColor} className="mx-auto">{getStatus(record.status).status}</Tag>
+        render: (record: IFile & { key: string }) => (
+          <div className="text-center mx-auto">
+            <a href={record.fileUri} target="_blank">
+              <strong>Descargar</strong>
+            </a>
+          </div>
         )
       },
       {
         width: 10,
         fixed: "right",
         align: "center",
-        render: (record: IRequest & { key: string }) => (
+        render: (record: IFile & { key: string }) => (
           <Popover
             placement="topRight"
             content={(
               <div className="text-center">
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => handleRequestDetails(record)}
+                  onClick={() => handleFileDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
-                  Ver solicitud
+                  Editar
                 </span>
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => void handleDeleteRequest(record)}
+                  onClick={() => void handleDeleteFile(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Eliminar
@@ -119,7 +117,7 @@ export default function Requests () {
       />
 
       <Modal
-        title="Crea una nueva solicitud"
+        title="Subir un nuevo archivo"
         centered
         open={openCreateModal}
         okText={"Editar"}
@@ -127,38 +125,15 @@ export default function Requests () {
         width={800}
         footer={[
           <Button
-            key="create"
+            key="success"
             className="bg-blue-500 text-white"
             onClick={form.submit}
           >
-            Crear solicitud
+            Subir archivo
           </Button>
         ]}
       >
-        <CreateRequestModal form={form} closeModal={handleUpdateRequest} />
-      </Modal>
-
-      <Modal
-        title="Detalles de la solicitud"
-        centered
-        open={openDetailsModal}
-        okText={"Editar"}
-        onCancel={() => setOpenDetailsModal(false)}
-        width={600}
-        okButtonProps={{
-          className: "bg-blue-500"
-        }}
-        footer={[
-          <Button
-            key="delete"
-            className="bg-red-500 hover:!bg-red-400 !text-white border-none"
-            onClick={() => void handleDeleteRequest(currentRequest)}
-          >
-            Eliminar solcitud
-          </Button>
-        ]}
-      >
-        <DetailsModal request={currentRequest} closeModal={handleUpdateRequest} />
+        <CreateFileModal form={form} closeModal={handleUpdateFile} />
       </Modal>
     </>
   )

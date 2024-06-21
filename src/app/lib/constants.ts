@@ -1,4 +1,5 @@
 export enum Routes {
+  Files = "/files",
   Home = "/",
   Inventory = "/inventory",
   Login = "/auth/login",
@@ -9,6 +10,7 @@ export enum Routes {
   RequestResetPassword = "/auth/request-reset",
   ResetPassword = "/auth/reset-password",
   Profile = "/profile",
+  Users = "/users",
 };
 
 export enum Roles {

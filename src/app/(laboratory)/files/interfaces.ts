@@ -25,6 +25,7 @@ export interface IFile extends IGenericId {
   name: string,
   fileType: string,
   description: string,
+  fileUri: string,
   file: Array<string>,
 };
 

@@ -43,7 +43,7 @@ export default function Files () {
         width: 20,
         render: (record: IFile & { key: string }) => (
           <div className="text-center mx-auto">
-            <a href={record.file?.[0]} target="_blank">
+            <a href={record.fileUri} target="_blank">
               <strong>Descargar</strong>
             </a>
           </div>

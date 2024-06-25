@@ -13,6 +13,7 @@ import {
   PlusOutlined,
   LogoutOutlined,
   UnorderedListOutlined,
+  ExperimentOutlined,
 } from "@ant-design/icons";
 import { useLabProvider } from "@/context/labProvider";
 import { Roles, Routes } from "@/lib/constants";
@@ -67,7 +68,13 @@ export default function SideMenu () {
         ]
       : undefined),
     getItem("Solicitudes", "3", <FileSearchOutlined />, undefined, () => void router.push(Routes.Requests)),
-    getItem("Usuarios", "4", <TeamOutlined />),
+    getItem("Usuarios", "4", <TeamOutlined />, 
+      [Roles.Admin].includes(role) ?
+        [
+          getItem("Ver todos", "users-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Users)),
+          getItem("Laboratorios", "labs-2", <ExperimentOutlined />, undefined, () => void router.push(Routes.Laboratory))
+        ]
+      : undefined),
     getItem("Archivos", "5", <FileOutlined />, undefined, () => void router.push(Routes.Files)),
     { type: 'divider' },
     getItem("Cerrar Sesión", "6", <LogoutOutlined />, undefined, () => void signOut()),

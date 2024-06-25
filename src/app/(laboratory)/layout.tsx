@@ -8,8 +8,6 @@ export default function LabLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   return (
     <main>
       <LabProvider>

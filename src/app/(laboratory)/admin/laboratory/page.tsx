@@ -10,23 +10,21 @@ import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
 import { fileFields } from "./utils";
-import type { IUser } from "./interfaces";
-import useFile from "./hooks/useFiles";
-import CreateFileModal from "./components/modals/createFileModal";
+import type { ILaboratory } from "./interfaces";
+import useLaboratory from "./hooks/useLaboratory";
 
-export default function Files () {
+export default function Laboratory () {
   const [form] = useForm();
   const {
     tableData,
     isLoading,
     notificationElement,
     openCreateModal,
-    handleFileDetails,
-    handleUpdateFile,
-    handleDeleteFile,
+    handleLaboratoryDetails,
+    handleDeleteLaboratory,
+    setSearchValue,
     setOpenCreateModal,
-    setSearchValue
-  } = useFile();
+  } = useLaboratory();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columnToShow: TableColumnsType<AnyObject> = fileFields.map((column) => ({
@@ -39,35 +37,24 @@ export default function Files () {
     }));
     const renderColumns = columnToShow.concat([
       {
-        align: "center",
         width: 20,
-        render: (record: IUser & { key: string }) => (
-          <div className="text-center mx-auto">
-            <a href={record.fileUri} target="_blank">
-              <strong>Descargar</strong>
-            </a>
-          </div>
-        )
-      },
-      {
-        width: 10,
         fixed: "right",
         align: "center",
-        render: (record: IUser & { key: string }) => (
+        render: (record: ILaboratory & { key: string }) => (
           <Popover
             placement="topRight"
             content={(
               <div className="text-center">
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => handleFileDetails(record)}
+                  onClick={() => handleLaboratoryDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
-                  Editar
+                  Ver
                 </span>
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => void handleDeleteFile(record)}
+                  onClick={() => void handleDeleteLaboratory(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Eliminar
@@ -99,7 +86,7 @@ export default function Files () {
     <>
       {notificationElement}
       <Header
-        title="Solicitudes"
+        title="Laboratorios"
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
@@ -117,7 +104,7 @@ export default function Files () {
       />
 
       <Modal
-        title="Subir un nuevo archivo"
+        title="Crear laboratorio"
         centered
         open={openCreateModal}
         okText={"Editar"}
@@ -129,12 +116,12 @@ export default function Files () {
             className="bg-blue-500 text-white"
             onClick={form.submit}
           >
-            Crear Usuario
+            Guardar
           </Button>
         ]}
       >
-        <CreateFileModal form={form} closeModal={handleUpdateFile} />
+        {/* <CreateLaboratoryModal form={form} closeModal={handleUpdateLaboratory} /> */}
       </Modal>
     </>
-  )
+  );
 };

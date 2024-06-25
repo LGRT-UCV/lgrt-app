@@ -1,5 +1,6 @@
 import type { IGenericId } from "@/types/app";
 import type { FormInstance } from "antd/lib";
+import type { TUser } from "../admin/users/interfaces";
 
 export type TStatus = "P" | "A" | "E" | "D" | "R";
 
@@ -30,19 +31,6 @@ export type TRequestMaterial = {
   idMaterial: string;
   quantity: string | number;
 };
-
-export type TLaboratory = {
-  id: string;
-  name: string;
-};
-
-export interface IUser extends IGenericId {
-  name: string;
-  lastName: string;
-  laboratory: TLaboratory;
-};
-
-export type TUser = IUser;
 
 export interface IRequest {
   id: string;

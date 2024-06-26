@@ -66,8 +66,8 @@ export default function useRequestForm (callback: () => void) {
 
       openNotification(
         "success",
-        "Solicitud guardado con exito",
-        `La solicitud ha sido creado con exito.`,
+        "Solicitud guardada con exito",
+        `La solicitud ha sido creada con exito.`,
         "topRight"
       );
       callback();

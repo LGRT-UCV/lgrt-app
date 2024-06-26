@@ -22,7 +22,7 @@ export default function useLaboratory () {
       } catch (error) {
         openNotification(
           "error",
-          "Ha ocurrido un error al obtener los laboratories",
+          "Ha ocurrido un error al obtener los laboratorios",
           "",
           "topRight"
         );
@@ -72,7 +72,6 @@ export default function useLaboratory () {
     return laboratoryList.map((laboratory, index) => ({
       ...laboratory,
       key: `laboratory-${index}`,
-      description: laboratory.description?.substring(0, 120) + "...",
     })) ?? [];
   }, [laboratoryList, searchValue]);
 
@@ -87,7 +86,9 @@ export default function useLaboratory () {
     handleDeleteLaboratory,
     handleLaboratoryDetails,
     setOpenCreateModal,
+    setOpenDetailsModal,
     setSearchValue,
     handleUpdateLaboratory,
+    setCurrentLaboratory,
   };
 };

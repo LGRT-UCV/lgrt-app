@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Modal, Button, Divider, Popover, Tag, type TableColumnsType } from "antd";
+import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import type { AnyObject } from "antd/es/_util/type";
@@ -12,6 +12,7 @@ import Header from "@/components/layout/header";
 import { fileFields } from "./utils";
 import type { ILaboratory } from "./interfaces";
 import useLaboratory from "./hooks/useLaboratory";
+import CreateLaboratoryModal from "./components/createLaboratoryModal";
 
 export default function Laboratory () {
   const [form] = useForm();
@@ -20,24 +21,39 @@ export default function Laboratory () {
     isLoading,
     notificationElement,
     openCreateModal,
+    openDetailsModal,
+    currentLaboratory,
+    handleUpdateLaboratory,
     handleLaboratoryDetails,
     handleDeleteLaboratory,
     setSearchValue,
+    setOpenDetailsModal,
     setOpenCreateModal,
+    setCurrentLaboratory,
   } = useLaboratory();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columnToShow: TableColumnsType<AnyObject> = fileFields.map((column) => ({
+    const columnToShow: TableColumnsType<AnyObject> = fileFields.filter(field => field.id !== "description").map((column) => ({
       title: column.label,
-      width: ["name", "description"].includes(column.id) ? 60 : 20,
+      width: "name" === column.id ? 60 : "id" === column.id ? 15 : 30,
       dataIndex: column.id,
       key: column.id,
-      fixed: ["name", "fileType"].includes(column.id) ? "left" : undefined,
+      fixed: "name" === column.id ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
       {
-        width: 20,
+        width: 60,
+        title: "Descripción",
+        align: "center",
+        dataIndex: "description",
+        key: "description",
+        render: (description: string) => (
+          <p>{description.substring(0, 120) + (description.length >= 120 ? "..." : "")}</p>
+        ),
+      },
+      {
+        width: 15,
         fixed: "right",
         align: "center",
         render: (record: ILaboratory & { key: string }) => (
@@ -51,6 +67,16 @@ export default function Laboratory () {
                   className="h-full w-full cursor-pointer"
                 >
                   Ver
+                </span>
+                <Divider className="m-2"/>
+                <span
+                  onClick={() => {
+                    setCurrentLaboratory(record);
+                    setOpenCreateModal(true);
+                  }}
+                  className="h-full w-full cursor-pointer"
+                >
+                  Editar
                 </span>
                 <Divider className="m-2"/>
                 <span
@@ -107,8 +133,10 @@ export default function Laboratory () {
         title="Crear laboratorio"
         centered
         open={openCreateModal}
-        okText={"Editar"}
-        onCancel={() => setOpenCreateModal(false)}
+        onCancel={() => {
+          setOpenCreateModal(false);
+          setCurrentLaboratory(undefined);
+        }}
         width={800}
         footer={[
           <Button
@@ -120,7 +148,7 @@ export default function Laboratory () {
           </Button>
         ]}
       >
-        {/* <CreateLaboratoryModal form={form} closeModal={handleUpdateLaboratory} /> */}
+        <CreateLaboratoryModal form={form} closeModal={handleUpdateLaboratory} data={currentLaboratory} />
       </Modal>
     </>
   );

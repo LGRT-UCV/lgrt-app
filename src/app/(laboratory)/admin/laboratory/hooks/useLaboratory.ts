@@ -53,13 +53,13 @@ export default function useLaboratory () {
       setOpenDetailsModal(false);
       openNotification(
         "success",
-        "Material eliminado",
-        `Se ha eliminado el proyecto ${laboratory.name}`,
+        "Laboratorio eliminado",
+        `Se ha eliminado el laboratorio ${laboratory.name}`,
         "topRight"
       );
     } catch (error) {
       console.error("Error", error);
-      openNotification("error", "Ha ocurrido un error al eliminar el laboratoryo", "", "topRight");
+      openNotification("error", "Ha ocurrido un error al eliminar el laboratorio", "", "topRight");
     }
   };
 

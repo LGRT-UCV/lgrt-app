@@ -13,6 +13,7 @@ import { fileFields } from "./utils";
 import type { ILaboratory } from "./interfaces";
 import useLaboratory from "./hooks/useLaboratory";
 import CreateLaboratoryModal from "./components/createLaboratoryModal";
+import DetailsModal from "./components/detailsLaboratoryModal";
 
 export default function Laboratory () {
   const [form] = useForm();
@@ -149,6 +150,28 @@ export default function Laboratory () {
         ]}
       >
         <CreateLaboratoryModal form={form} closeModal={handleUpdateLaboratory} data={currentLaboratory} />
+      </Modal>
+
+      <Modal
+        title="Detalles del laboratorio"
+        centered
+        open={openDetailsModal}
+        onCancel={() => {
+          setOpenDetailsModal(false);
+          setCurrentLaboratory(undefined);
+        }}
+        width={800}
+        footer={[
+          <Button
+            key="delete"
+            className="bg-red-500 text-white"
+            onClick={() => handleDeleteLaboratory(currentLaboratory)}
+          >
+            Eliminar
+          </Button>
+        ]}
+      >
+        <DetailsModal laboratory={currentLaboratory} />
       </Modal>
     </>
   );

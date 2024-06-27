@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
-import { deleteUser, getAllUsers } from "../utils";
+import { deleteUser, getAllUsers, userRoles } from "../utils";
 import type { IUser } from "../interfaces";
 
 export default function useUser () {
@@ -73,6 +73,7 @@ export default function useUser () {
       ...user,
       key: `user-${index}`,
       laboratory: user.laboratory?.name ?? "Sin laboratorio",
+      role: userRoles.find(role => role.id === Number(user.idRoleId))?.roleName ?? "Invitado",
     })) ?? [];
   }, [userList, searchValue]);
 

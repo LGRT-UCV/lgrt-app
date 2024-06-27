@@ -1,5 +1,5 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
-import type { IUser, TSaveUser } from "./interfaces";
+import type { IUser, TSaveUser, TStatus, TUserStatus } from "./interfaces";
 
 export const USER_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/security/users`;
 
@@ -67,6 +67,41 @@ export const updateUser = async (id: string, data: TSaveUser, sessionToken: stri
   );
 };
 
+export const requestStatus: Array<TUserStatus> = [
+  {
+    label: "Pendiente",
+    value: "P",
+  },
+  {
+    label: "Rechazado",
+    value: "R",
+  },
+  {
+    label: "Aprobado",
+    value: "A",
+  },
+];
+
+export const getStatus = (status: TStatus) => {
+  switch (status) {
+    case "A":
+      return {
+        status: "Aprobado",
+        statusColor: "green",
+      };
+    case "R":
+      return {
+        status: "Rechazado",
+        statusColor: "red",
+      };
+    default:
+      return {
+        status: "Pendiente",
+        statusColor: "orange",
+      };
+  };
+};
+
 export const userRoles = [
   { id: 0, roleName: "Admin" },
   { id: 1, roleName: "Personal" },
@@ -89,10 +124,6 @@ export const userFields = [
   { 
     id: "role",
     label: "Tipo de usuario",
-  },
-  { 
-    id: "status",
-    label: "Estatus",
   },
   {
     id: "laboratory",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
+import { Modal, Button, Divider, Popover, type TableColumnsType, Tag } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import type { AnyObject } from "antd/es/_util/type";
@@ -9,10 +9,11 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { userFields } from "./utils";
+import { getStatus, userFields } from "./utils";
 import type { IUser } from "./interfaces";
 import useUser from "./hooks/useUsers";
 import { CreateUserModal } from "./components/createUserModal";
+import DetailsModal from "./components/detailsUserModal";
 
 export default function Users () {
   const [form] = useForm();
@@ -22,10 +23,12 @@ export default function Users () {
     currentUser,
     notificationElement,
     openCreateModal,
+    openDetailsModal,
     handleUserDetails,
     handleUpdateUser,
     handleDeleteUser,
     setOpenCreateModal,
+    setOpenDetailsModal,
     setCurrentUser,
     setSearchValue
   } = useUser();
@@ -40,6 +43,14 @@ export default function Users () {
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
+      {
+        title: "Status",
+        align: "center",
+        width: 20,
+        render: (record: IUser & { key: string }) => (
+          <Tag color={getStatus(record.status).statusColor} className="mx-auto w-full text-center">{getStatus(record.status).status}</Tag>
+        )
+      },
       {
         width: 15,
         fixed: "right",
@@ -100,7 +111,7 @@ export default function Users () {
     <>
       {notificationElement}
       <Header
-        title="Solicitudes"
+        title="Usuarios"
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
@@ -135,6 +146,28 @@ export default function Users () {
         ]}
       >
         <CreateUserModal form={form} closeModal={handleUpdateUser} data={currentUser} />
+      </Modal>
+
+      <Modal
+        title="Detalles del usuario"
+        centered
+        open={openDetailsModal}
+        onCancel={() => {
+          setOpenDetailsModal(false);
+          setCurrentUser(undefined);
+        }}
+        width={800}
+        footer={[
+          <Button
+            key="delete"
+            className="bg-red-500 text-white"
+            onClick={() => handleDeleteUser(currentUser)}
+          >
+            Eliminar
+          </Button>
+        ]}
+      >
+        <DetailsModal user={currentUser} />
       </Modal>
     </>
   )

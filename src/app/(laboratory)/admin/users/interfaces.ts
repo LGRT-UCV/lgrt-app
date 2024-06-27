@@ -22,7 +22,7 @@ export interface IUser extends IGenericId {
   name: string;
   lastName: string;
   identificationNumber: string;
-  status: string;
+  status: TStatus;
   idRoleId: string;
   laboratory: TLaboratory;
 };
@@ -32,4 +32,11 @@ export type TUser = IUser;
 export interface IUserForm {
   formIntance: FormInstance;
   UserData?: TUser;
+};
+
+export type TStatus = "P" | "A" | "R";
+
+export type TUserStatus = {
+  label: string;
+  value: TStatus;
 };

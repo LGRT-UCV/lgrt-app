@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
@@ -13,21 +12,21 @@ import Header from "@/components/layout/header";
 import { userFields } from "./utils";
 import type { IUser } from "./interfaces";
 import useUser from "./hooks/useUsers";
-import { Routes } from "@/lib/constants";
 import { CreateUserModal } from "./components/createUserModal";
 
 export default function Users () {
-  const router = useRouter();
   const [form] = useForm();
   const {
     tableData,
     isLoading,
+    currentUser,
     notificationElement,
     openCreateModal,
     handleUserDetails,
     handleUpdateUser,
     handleDeleteUser,
     setOpenCreateModal,
+    setCurrentUser,
     setSearchValue
   } = useUser();
 
@@ -59,7 +58,10 @@ export default function Users () {
                 </span>
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => void router.push(`${Routes.SaveMaterial}?id=${record.id}`)}
+                  onClick={() => {
+                    setCurrentUser(record);
+                    setOpenCreateModal(true);
+                  }}
                   className="h-full w-full cursor-pointer"
                 >
                   Editar
@@ -116,7 +118,7 @@ export default function Users () {
       />
 
       <Modal
-        title="Crear usuario"
+        title={`${!!currentUser ? "Editar" : "Crear"} usuario`}
         centered
         open={openCreateModal}
         okText={"Editar"}
@@ -128,11 +130,11 @@ export default function Users () {
             className="bg-blue-500 text-white"
             onClick={form.submit}
           >
-            Crear Usuario
+            Guardar Usuario
           </Button>
         ]}
       >
-        <CreateUserModal form={form} closeModal={handleUpdateUser} />
+        <CreateUserModal form={form} closeModal={handleUpdateUser} data={currentUser} />
       </Modal>
     </>
   )

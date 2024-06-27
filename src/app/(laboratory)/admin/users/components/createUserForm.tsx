@@ -67,7 +67,7 @@ export default function CreateUserForm ({ form, isLoading, openNotification, onF
         </Form.Item>
         <Form.Item
         label="Apellido"
-        name="lastname"
+        name="lastName"
         className="w-full md:w-1/2"
         rules={[
           {

@@ -1,12 +1,13 @@
 import { ReactNode } from "react";
 import { notification } from 'antd';
 import type { NotificationPlacement } from "antd/es/notification/interface";
+import type { TNotificationType } from "@/types/app";
 
 export default function useNotification () {
   const [api, notificationElement] = notification.useNotification();
 
   const openNotification = (
-    type: "info" | "success" | "error" | "warning",
+    type: TNotificationType,
     message: string,
     description: string | ReactNode,
     placement: NotificationPlacement

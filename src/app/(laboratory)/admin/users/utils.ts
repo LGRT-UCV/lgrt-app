@@ -67,7 +67,13 @@ export const updateUser = async (id: string, data: TSaveUser, sessionToken: stri
   );
 };
 
-export const fileFields = [
+export const userRoles = [
+  { id: 0, roleName: "Admin" },
+  { id: 1, roleName: "Personal" },
+  { id: 2, roleName: "Invitado" },
+];
+
+export const userFields = [
   { 
     id: "name",
     label: "Nombre",

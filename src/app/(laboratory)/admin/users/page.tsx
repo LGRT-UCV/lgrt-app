@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { Modal, Button, Divider, Popover, Tag, type TableColumnsType } from "antd";
+import { useRouter } from "next/navigation";
+import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import type { AnyObject } from "antd/es/_util/type";
@@ -9,48 +10,39 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { fileFields } from "./utils";
+import { userFields } from "./utils";
 import type { IUser } from "./interfaces";
-import useFile from "./hooks/useFiles";
-import CreateFileModal from "./components/modals/createFileModal";
+import useUser from "./hooks/useUsers";
+import { Routes } from "@/lib/constants";
+import { CreateUserModal } from "./components/createUserModal";
 
-export default function Files () {
+export default function Users () {
+  const router = useRouter();
   const [form] = useForm();
   const {
     tableData,
     isLoading,
     notificationElement,
     openCreateModal,
-    handleFileDetails,
-    handleUpdateFile,
-    handleDeleteFile,
+    handleUserDetails,
+    handleUpdateUser,
+    handleDeleteUser,
     setOpenCreateModal,
     setSearchValue
-  } = useFile();
+  } = useUser();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columnToShow: TableColumnsType<AnyObject> = fileFields.map((column) => ({
+    const columnToShow: TableColumnsType<AnyObject> = userFields.map((column) => ({
       title: column.label,
-      width: ["name", "description"].includes(column.id) ? 60 : 20,
+      width: ["id", "name", "lastname"].includes(column.id) ? 40 : 20,
       dataIndex: column.id,
       key: column.id,
-      fixed: ["name", "fileType"].includes(column.id) ? "left" : undefined,
+      fixed: "name" === column.id ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
       {
-        align: "center",
-        width: 20,
-        render: (record: IUser & { key: string }) => (
-          <div className="text-center mx-auto">
-            <a href={record.fileUri} target="_blank">
-              <strong>Descargar</strong>
-            </a>
-          </div>
-        )
-      },
-      {
-        width: 10,
+        width: 15,
         fixed: "right",
         align: "center",
         render: (record: IUser & { key: string }) => (
@@ -60,14 +52,21 @@ export default function Files () {
               <div className="text-center">
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => handleFileDetails(record)}
+                  onClick={() => handleUserDetails(record)}
+                  className="h-full w-full cursor-pointer"
+                >
+                  Ver
+                </span>
+                <Divider className="m-2"/>
+                <span
+                  onClick={() => void router.push(`${Routes.SaveMaterial}?id=${record.id}`)}
                   className="h-full w-full cursor-pointer"
                 >
                   Editar
                 </span>
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => void handleDeleteFile(record)}
+                  onClick={() => void handleDeleteUser(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Eliminar
@@ -117,7 +116,7 @@ export default function Files () {
       />
 
       <Modal
-        title="Subir un nuevo archivo"
+        title="Crear usuario"
         centered
         open={openCreateModal}
         okText={"Editar"}
@@ -133,7 +132,7 @@ export default function Files () {
           </Button>
         ]}
       >
-        <CreateFileModal form={form} closeModal={handleUpdateFile} />
+        <CreateUserModal form={form} closeModal={handleUpdateUser} />
       </Modal>
     </>
   )

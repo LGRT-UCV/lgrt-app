@@ -9,7 +9,7 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { fileFields } from "./utils";
+import { laboratoryFields } from "./utils";
 import type { ILaboratory } from "./interfaces";
 import useLaboratory from "./hooks/useLaboratory";
 import CreateLaboratoryModal from "./components/createLaboratoryModal";
@@ -34,7 +34,7 @@ export default function Laboratory () {
   } = useLaboratory();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columnToShow: TableColumnsType<AnyObject> = fileFields.filter(field => field.id !== "description").map((column) => ({
+    const columnToShow: TableColumnsType<AnyObject> = laboratoryFields.filter(field => field.id !== "description").map((column) => ({
       title: column.label,
       width: "name" === column.id ? 60 : "id" === column.id ? 15 : 30,
       dataIndex: column.id,

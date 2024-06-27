@@ -8,7 +8,7 @@ export type TSaveUser = {
   identificationNumber: string;
   idRoleId?: IGenericId;
   laboratory?: IGenericId;
-};
+} & IGenericId;
 
 export type TUserForm = {
   name?: string;
@@ -16,7 +16,7 @@ export type TUserForm = {
   lastName?: string;
   idRoleId?: string;
   laboratory?: string;
-};
+} & IGenericId;
 
 export interface IUser extends IGenericId {
   name: string;

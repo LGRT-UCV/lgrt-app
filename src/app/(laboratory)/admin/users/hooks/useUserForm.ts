@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
-import type { ILaboratory, TSaveLaboratory } from "../interfaces";
-import { createLaboratory, updateLaboratory } from "../utils";
+import type { IUser, TSaveUser } from "../interfaces";
+import { createUser, updateUser } from "../utils";
 import { FormInstance } from "antd";
 
-export default function useLaboratoryForm (callback: () => void, formIntance: FormInstance, labData?: ILaboratory) {
+export default function useUserForm (callback: () => void, formIntance: FormInstance, usrData?: IUser) {
   const [isLoading, setIsLoading] = useState(false);
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
   useEffect(() => {
-    if (typeof labData === "undefined") return;
-    formIntance.setFieldsValue(labData);
-  }, [labData]);
+    if (typeof usrData === "undefined") return;
+    formIntance.setFieldsValue(usrData);
+  }, [usrData]);
 
-  const onFinish = async (values: TSaveLaboratory) => {
+  const onFinish = async (values: TSaveUser) => {
     try {
       const user = sessionData?.user;
 
@@ -23,21 +23,21 @@ export default function useLaboratoryForm (callback: () => void, formIntance: Fo
       
       setIsLoading(true);
 
-      if (!!labData) {
-        await updateLaboratory(labData.id, values, user.token);
+      if (!!usrData) {
+        await updateUser(usrData.id, values, user.token);
       } else {
-        await createLaboratory(values, user.token);
+        await createUser(values, user.token);
       }
 
       openNotification(
         "success",
-        "Laboratorio guardado con exito",
-        `El laboratorio ${values.name} ha sido creado con exito.`,
+        "Usuario guardado con exito",
+        `El usuario ${values.name} ha sido creado con exito.`,
         "topRight"
       );
       callback();
     } catch (error: any) {
-      openNotification("error", "Ha ocurrido un error al guardar el laboratorio", "", "topRight");
+      openNotification("error", "Ha ocurrido un error al guardar el usuario", "", "topRight");
       console.log("ERROR: ", error);
     } finally {
       setIsLoading(false);
@@ -47,6 +47,7 @@ export default function useLaboratoryForm (callback: () => void, formIntance: Fo
   return {
     isLoading,
     notificationElement,
+    openNotification,
     onFinish,
   };
 };

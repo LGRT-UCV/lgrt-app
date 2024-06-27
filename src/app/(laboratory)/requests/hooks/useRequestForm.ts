@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import useNotification from "@/hooks/useNotification";
 import { getAllMaterials } from "@/(laboratory)/inventory/utils";
@@ -15,7 +14,6 @@ export default function useRequestForm (callback: () => void) {
   const { openNotification, notificationElement } = useNotification();
   const { materialTypeList, isLoading: isMaterialInitLoading } = useMaterialInit(["materialType"]);
   const { data: sessionData } = useSession();
-  const router = useRouter();
 
   const { data: materialList, isLoading: isMaterialLoading } = useQuery({
     queryKey: ["material"],

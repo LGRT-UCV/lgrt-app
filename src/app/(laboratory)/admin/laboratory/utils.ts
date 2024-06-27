@@ -67,7 +67,7 @@ export const updateLaboratory = async (id: string, data: TSaveLaboratory, sessio
   );
 };
 
-export const fileFields = [
+export const laboratoryFields = [
   {
     id: "id",
     label: "#",

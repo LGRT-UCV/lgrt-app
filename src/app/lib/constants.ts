@@ -12,6 +12,7 @@ export enum Routes {
   ResetPassword = "/auth/reset-password",
   Profile = "/profile",
   Users = "/admin/users",
+  SaveUser = "/admin/users/user",
 };
 
 export enum Roles {

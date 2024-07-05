@@ -99,7 +99,7 @@ export default function Files () {
     <>
       {notificationElement}
       <Header
-        title="Solicitudes"
+        title="Archivos"
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,

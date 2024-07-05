@@ -71,7 +71,12 @@ export default function useProject () {
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
-    return projectList.map((project, index) => ({
+    const search = searchValue.toLocaleLowerCase();
+    const projects = projectList.filter((project) =>
+      project.name.toLocaleLowerCase().includes(search) ||
+      project.description.toLocaleLowerCase().includes(search)
+    );
+    return projects.map((project, index) => ({
       ...project,
       key: `project-${index}`,
       description: project.description.substring(0, 120) + "...",

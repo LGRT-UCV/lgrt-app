@@ -69,7 +69,13 @@ export default function useFile () {
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
-    return fileList.map((file, index) => ({
+    const search = searchValue.toLocaleLowerCase();
+    const files = fileList.filter((file) => {
+      return file.id.toLocaleLowerCase().includes(search) ||
+        file.fileType.toLocaleLowerCase().includes(search) ||
+        file.description?.toLocaleLowerCase().includes(search)
+    });
+    return files.map((file, index) => ({
       ...file,
       key: `file-${index}`,
     })) ?? [];

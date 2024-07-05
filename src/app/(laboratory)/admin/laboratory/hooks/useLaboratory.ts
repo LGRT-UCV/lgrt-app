@@ -69,7 +69,13 @@ export default function useLaboratory () {
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
-    return laboratoryList.map((laboratory, index) => ({
+    const laboratories = laboratoryList.filter((laboratory) => {
+      return laboratory.id.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
+        laboratory.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
+        laboratory.description?.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
+        laboratory.area?.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase());
+    });
+    return laboratories.map((laboratory, index) => ({
       ...laboratory,
       key: `laboratory-${index}`,
     })) ?? [];

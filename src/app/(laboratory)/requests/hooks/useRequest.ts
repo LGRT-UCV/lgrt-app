@@ -69,7 +69,14 @@ export default function useRequest () {
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
-    return requestList.map((request, index) => ({
+    const search = searchValue.toLocaleLowerCase();
+    const requests = requestList.filter((request) => {
+      const requesterFullName = `${request.idRequester.name} ${request.idRequester.lastName}`;
+      return request.id.toLocaleLowerCase().includes(search) ||
+        request.idRequester.id.toLocaleLowerCase().includes(search) ||
+        requesterFullName.toLocaleLowerCase().includes(search);
+    });
+    return requests.map((request, index) => ({
       ...request,
       key: `request-${index}`,
       requester: `${request.idRequester.name} ${request.idRequester.lastName}`,

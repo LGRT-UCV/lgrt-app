@@ -69,7 +69,14 @@ export default function useUser () {
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
-    return userList.map((user, index) => ({
+    const search = searchValue.toLocaleLowerCase();
+    const users = userList.filter((user) => {
+      const userFullName = `${user.name} ${user.lastName}`;
+      return user.id.toLocaleLowerCase().includes(search) ||
+        userFullName.toLocaleLowerCase().includes(search) ||
+        user.laboratory.name.toLocaleLowerCase().includes(search);
+    });
+    return users.map((user, index) => ({
       ...user,
       key: `user-${index}`,
       laboratory: user.laboratory?.name ?? "Sin laboratorio",

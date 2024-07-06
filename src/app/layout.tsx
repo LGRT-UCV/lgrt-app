@@ -4,6 +4,7 @@ import { LAB_DETAILS } from "@/lib/constants";
 import SessionAuthProvider from "../context/sessionAuthProvider";
 import QueryClientProvider from "@/context/queryClientProvider";
 import "./globals.css";
+import { LabProvider } from "@/context/labProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
         <main className="min-h-screen">
           <SessionAuthProvider>
             <QueryClientProvider>
-              {children}
+              <LabProvider>
+                {children}
+              </LabProvider>
             </QueryClientProvider>
           </SessionAuthProvider>
         </main>

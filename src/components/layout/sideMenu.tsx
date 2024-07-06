@@ -3,6 +3,7 @@
 import { Menu, type MenuProps } from "antd";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { isMobile } from "react-device-detect";
 import Sider from "antd/es/layout/Sider";
 import {
   ProjectOutlined,
@@ -76,12 +77,16 @@ export default function SideMenu () {
         ]
       : undefined),
     getItem("Archivos", "5", <FileOutlined />, undefined, () => void router.push(Routes.Files)),
-    { type: 'divider' },
+    { type: "divider" },
     getItem("Cerrar Sesión", "6", <LogoutOutlined />, undefined, () => void signOut()),
   ];
 
   return (
-    <Sider collapsible collapsed={menuCollapsed} onCollapse={(value) => handleMenuCollapsed(value)}>
+    <Sider
+      collapsible
+      collapsed={menuCollapsed}
+      onCollapse={(value) => handleMenuCollapsed(value)}
+      style={{ overflow: "auto", height: "100vh", position: !isMobile ? "fixed" : "relative", left: 0, top: 0, bottom: 0, zIndex: 50 }}>
       <Avatar
         label="username"
         hideLabel={menuCollapsed}

@@ -1,6 +1,9 @@
+"use client";
+
 import { Layout } from "antd";
-import { Content, Footer } from "antd/es/layout/layout";
-import { LabProvider } from "@/context/labProvider";
+import { isMobile } from "react-device-detect";
+import { Footer } from "antd/es/layout/layout";
+import { useLabProvider } from "@/context/labProvider";
 import SideMenu from "@/components/layout/sideMenu";
 
 export default function LabLayout({
@@ -8,21 +11,21 @@ export default function LabLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { menuCollapsed } = useLabProvider();
+
   return (
     <main>
-      <LabProvider>
-        <Layout className="min-h-screen">
-          <SideMenu />
-          <Layout>
-            <div className="flex flex-col gap-8 p-8 relative">
-              {children}
-            </div>
-            <Footer className="text-center">
-              LGRT ©{new Date().getFullYear()}
-            </Footer>
-          </Layout>
+      <Layout hasSider className="min-h-screen">
+        <SideMenu />
+        <Layout className={!isMobile ? "ml-20" : ""}>
+          <div className="flex flex-col gap-8 p-8 relative">
+            {children}
+          </div>
+          <Footer className="text-center">
+            LGRT ©{new Date().getFullYear()}
+          </Footer>
         </Layout>
-      </LabProvider>
+      </Layout>
     </main>
   );
 }

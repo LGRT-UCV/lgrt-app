@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useForm } from "antd/es/form/Form";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
@@ -7,6 +8,7 @@ import { deleteUser, getAllUsers, userRoles } from "../utils";
 import type { IUser } from "../interfaces";
 
 export default function useUser () {
+  const [form] = useForm();
   const [searchValue, setSearchValue] = useState("");
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
@@ -84,7 +86,15 @@ export default function useUser () {
     })) ?? [];
   }, [userList, searchValue]);
 
+  useEffect(() => {
+    if (!openCreateModal) {
+      setCurrentUser(undefined);
+      form.setFieldsValue({});
+    }
+  }, [openCreateModal]);
+
   return {
+    form,
     openDetailsModal,
     openCreateModal,
     tableData,

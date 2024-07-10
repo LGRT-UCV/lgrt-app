@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 import { Modal, Button, Divider, Popover, type TableColumnsType, Tag } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
-import { useForm } from "antd/es/form/Form";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
@@ -16,8 +15,8 @@ import { CreateUserModal } from "./components/createUserModal";
 import DetailsModal from "./components/detailsUserModal";
 
 export default function Users () {
-  const [form] = useForm();
   const {
+    form,
     tableData,
     isLoading,
     currentUser,
@@ -76,13 +75,6 @@ export default function Users () {
                   className="h-full w-full cursor-pointer"
                 >
                   Editar
-                </span>
-                <Divider className="m-2"/>
-                <span
-                  onClick={() => void handleDeleteUser(record)}
-                  className="h-full w-full cursor-pointer"
-                >
-                  Eliminar
                 </span>
               </div>
             )}
@@ -152,10 +144,7 @@ export default function Users () {
         title="Detalles del usuario"
         centered
         open={openDetailsModal}
-        onCancel={() => {
-          setOpenDetailsModal(false);
-          setCurrentUser(undefined);
-        }}
+        onCancel={() => setOpenDetailsModal(false)}
         width={800}
         footer={[
           <Button

@@ -41,7 +41,11 @@ export default function useInventory () {
   const tableData: Array<AnyObject> = useMemo(() => {
     const currentMaterials = materialList.filter((material) => 
       material.materialType.id === currentMaterialType?.id &&
-      material.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
+      (
+        material.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
+        material.id.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
+        material.storagePlace.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
+      )
     );
     return currentMaterials?.map((material, index) => ({
       ...material,
@@ -53,6 +57,7 @@ export default function useInventory () {
       presentation: !!material.presentation ? `${material.presentation} ${material.measurement.name}` : "",
       sensibleMaterial: material.sensibleMaterial ? "Si" : "No",
       superUse: material.superUse ? "Si" : "No",
+      storagePlace: material.storagePlace.name,
       expirationDate: material.expirationDate ?
         new Date(material.expirationDate).toLocaleDateString("es-VE") :
         "",

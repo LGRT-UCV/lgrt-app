@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
-import type { IUser, TSaveUser } from "../interfaces";
+import type { IUser, TUserForm } from "../interfaces";
 import { createUser, updateUser } from "../utils";
 import { FormInstance } from "antd";
 
@@ -15,7 +15,7 @@ export default function useUserForm (callback: () => void, formIntance: FormInst
     formIntance.setFieldsValue(usrData);
   }, [usrData]);
 
-  const onFinish = async (values: TSaveUser) => {
+  const onFinish = async (values: TUserForm) => {
     try {
       const user = sessionData?.user;
 
@@ -24,9 +24,19 @@ export default function useUserForm (callback: () => void, formIntance: FormInst
       setIsLoading(true);
 
       if (!!usrData) {
-        await updateUser(usrData.id, values, user.token);
+        await updateUser(usrData.id, {
+          ...values,
+          laboratory: {
+            id: values.laboratory,
+          },
+        }, user.token);
       } else {
-        await createUser(values, user.token);
+        await createUser({
+          ...values,
+          laboratory: {
+            id: values.laboratory,
+          },
+        }, user.token);
       }
 
       openNotification(

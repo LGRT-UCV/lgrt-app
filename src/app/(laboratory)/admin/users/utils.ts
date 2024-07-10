@@ -69,16 +69,12 @@ export const updateUser = async (id: string, data: TSaveUser, sessionToken: stri
 
 export const requestStatus: Array<TUserStatus> = [
   {
-    label: "Pendiente",
-    value: "P",
-  },
-  {
-    label: "Rechazado",
-    value: "R",
-  },
-  {
-    label: "Aprobado",
+    label: "Activo",
     value: "A",
+  },
+  {
+    label: "Inactivo",
+    value: "I",
   },
 ];
 
@@ -86,18 +82,13 @@ export const getStatus = (status: TStatus) => {
   switch (status) {
     case "A":
       return {
-        status: "Aprobado",
+        status: "Activo",
         statusColor: "green",
-      };
-    case "R":
-      return {
-        status: "Rechazado",
-        statusColor: "red",
       };
     default:
       return {
-        status: "Pendiente",
-        statusColor: "orange",
+        status: "Inactivo",
+        statusColor: "red",
       };
   };
 };

@@ -6,16 +6,16 @@ export type TSaveUser = {
   name: string;
   lastName: string;
   identificationNumber: string;
-  idRoleId?: IGenericId;
+  idRoleId?: string;
   laboratory?: IGenericId;
 } & IGenericId;
 
 export type TUserForm = {
-  name?: string;
-  identificationNumber?: string;
-  lastName?: string;
-  idRoleId?: string;
-  laboratory?: string;
+  name: string;
+  identificationNumber: string;
+  lastName: string;
+  idRoleId: string;
+  laboratory: string;
 } & IGenericId;
 
 export interface IUser extends IGenericId {
@@ -34,7 +34,7 @@ export interface IUserForm {
   UserData?: TUser;
 };
 
-export type TStatus = "P" | "A" | "R";
+export type TStatus = "A" | "I";
 
 export type TUserStatus = {
   label: string;

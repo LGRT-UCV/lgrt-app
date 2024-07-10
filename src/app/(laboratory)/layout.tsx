@@ -17,7 +17,7 @@ export default function LabLayout({
     <main>
       <Layout hasSider className="min-h-screen">
         <SideMenu />
-        <Layout className={!isMobile ? "ml-20" : ""}>
+        <Layout className={isMobile ? "ml-20" : ""}>
           <div className="flex flex-col gap-8 p-8 relative">
             {children}
           </div>

@@ -238,7 +238,7 @@ export default function MaterialForm ({
                   }
                   options={storagePlace.map((storage) => {
                     return {
-                      label: `${storage.name}`,
+                      label: `#${storage.id} - ${storage.name}`,
                       value: storage.id,
                     }
                   })}

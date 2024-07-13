@@ -137,6 +137,7 @@ export default function Laboratory () {
         onCancel={() => {
           setOpenCreateModal(false);
           setCurrentLaboratory(undefined);
+          form.resetFields();
         }}
         width={800}
         footer={[

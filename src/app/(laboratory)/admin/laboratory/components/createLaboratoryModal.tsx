@@ -23,6 +23,7 @@ export default function CreateLaboratoryModal ({ form, data, closeModal } : TCre
 
   if (isLoading) return (
     <div className="w-full text-center pt-4">
+      {notificationElement}
       <LoadingOutlined className="text-3xl" />
     </div>
   );

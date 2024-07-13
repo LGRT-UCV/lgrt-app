@@ -9,13 +9,13 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { laboratoryFields } from "./utils";
-import type { ILaboratory } from "./interfaces";
-import useLaboratory from "./hooks/useLaboratory";
-import CreateLaboratoryModal from "./components/createLaboratoryModal";
-import DetailsModal from "./components/detailsLaboratoryModal";
+import { storageFields } from "./utils";
+import type { IStorage } from "./interfaces";
+import useStorage from "./hooks/useStorage";
+import CreateStorageModal from "./components/createStorageModal";
+import DetailsModal from "./components/detailsStorageModal";
 
-export default function Laboratory () {
+export default function Storage () {
   const [form] = useForm();
   const {
     tableData,
@@ -23,20 +23,20 @@ export default function Laboratory () {
     notificationElement,
     openCreateModal,
     openDetailsModal,
-    currentLaboratory,
-    handleUpdateLaboratory,
-    handleLaboratoryDetails,
-    handleDeleteLaboratory,
+    currentStorage,
+    handleUpdateStorage,
+    handleStorageDetails,
+    handleDeleteStorage,
     setSearchValue,
     setOpenDetailsModal,
     setOpenCreateModal,
-    setCurrentLaboratory,
-  } = useLaboratory();
+    setCurrentStorage,
+  } = useStorage();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columnToShow: TableColumnsType<AnyObject> = laboratoryFields.filter(field => field.id !== "description").map((column) => ({
+    const columnToShow: TableColumnsType<AnyObject> = storageFields.filter(field => field.id !== "description").map((column) => ({
       title: column.label,
-      width: "name" === column.id ? 60 : "id" === column.id ? 15 : 30,
+      width: "name" === column.id ? 30 : "id" === column.id ? 10 : 60,
       dataIndex: column.id,
       key: column.id,
       fixed: "name" === column.id ? "left" : undefined,
@@ -57,14 +57,14 @@ export default function Laboratory () {
         width: 15,
         fixed: "right",
         align: "center",
-        render: (record: ILaboratory & { key: string }) => (
+        render: (record: IStorage & { key: string }) => (
           <Popover
             placement="topRight"
             content={(
               <div className="text-center">
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => handleLaboratoryDetails(record)}
+                  onClick={() => handleStorageDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Ver
@@ -72,19 +72,12 @@ export default function Laboratory () {
                 <Divider className="m-2"/>
                 <span
                   onClick={() => {
-                    setCurrentLaboratory(record);
+                    setCurrentStorage(record);
                     setOpenCreateModal(true);
                   }}
                   className="h-full w-full cursor-pointer"
                 >
                   Editar
-                </span>
-                <Divider className="m-2"/>
-                <span
-                  onClick={() => void handleDeleteLaboratory(record)}
-                  className="h-full w-full cursor-pointer"
-                >
-                  Eliminar
                 </span>
               </div>
             )}
@@ -136,7 +129,8 @@ export default function Laboratory () {
         open={openCreateModal}
         onCancel={() => {
           setOpenCreateModal(false);
-          setCurrentLaboratory(undefined);
+          setCurrentStorage(undefined);
+          form.resetFields();
         }}
         width={800}
         footer={[
@@ -149,29 +143,22 @@ export default function Laboratory () {
           </Button>
         ]}
       >
-        <CreateLaboratoryModal form={form} closeModal={handleUpdateLaboratory} data={currentLaboratory} />
+        <CreateStorageModal form={form} closeModal={handleUpdateStorage} data={currentStorage} />
       </Modal>
 
       <Modal
         title="Detalles del almacenamiento"
         centered
         open={openDetailsModal}
+        okButtonProps={{ hidden: true }}
         onCancel={() => {
           setOpenDetailsModal(false);
-          setCurrentLaboratory(undefined);
+          setCurrentStorage(undefined);
         }}
+        cancelText="Cerrar"
         width={800}
-        footer={[
-          <Button
-            key="delete"
-            className="bg-red-500 text-white"
-            onClick={() => handleDeleteLaboratory(currentLaboratory)}
-          >
-            Eliminar
-          </Button>
-        ]}
       >
-        <DetailsModal laboratory={currentLaboratory} />
+        <DetailsModal storage={currentStorage} />
       </Modal>
     </>
   );

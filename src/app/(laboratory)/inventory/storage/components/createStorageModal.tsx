@@ -1,28 +1,29 @@
-import { Form, Input } from "antd";
+import { Form, Input, InputNumber } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import type { FormInstance } from "antd/lib";
-import useLaboratoryForm from "../hooks/useLaboratoryForm";
+import useStorageForm from "../hooks/useStorageForm";
 import TextArea from "antd/es/input/TextArea";
-import { ILaboratory } from "../interfaces";
+import { IStorage } from "../interfaces";
 
-type TCreateLaboratoryModal = {
+type TCreateStorageModal = {
   form: FormInstance,
-  data?: ILaboratory,
+  data?: IStorage,
   closeModal: () => void
 };
 
-export default function CreateLaboratoryModal ({ form, data, closeModal } : TCreateLaboratoryModal) {
+export default function CreateStorageModal ({ form, data, closeModal } : TCreateStorageModal) {
   const {
     isLoading,
     notificationElement,
     onFinish,
-  } = useLaboratoryForm(() => {
+  } = useStorageForm(() => {
     form.resetFields();
     closeModal();
   }, form, data);
 
   if (isLoading) return (
     <div className="w-full text-center pt-4">
+      {notificationElement}
       <LoadingOutlined className="text-3xl" />
     </div>
   );
@@ -31,7 +32,7 @@ export default function CreateLaboratoryModal ({ form, data, closeModal } : TCre
     <div>
       {notificationElement}
       <Form
-        name="laboratoryForm"
+        name="storageForm"
         form={form}
         onFinish={onFinish}
         layout="vertical"
@@ -42,35 +43,33 @@ export default function CreateLaboratoryModal ({ form, data, closeModal } : TCre
       >
         <div className="flex flex-col md:flex-row gap-4">
           <Form.Item
-            label="Nombre del laboratorio"
+            label="Identificador"
+            name="id"
+            className="w-full md:w-1/5"
+            rules={[
+              {
+                required: true,
+                message: "Por favor verifique el identificador",
+              },
+            ]}
+          >
+            <InputNumber className="w-full" placeholder="Número de identificador" max={9999} />
+          </Form.Item>
+          <Form.Item
+            label="Nombre del almacenamiento"
             name="name"
-            className="w-full md:w-2/3"
+            className="w-full md:w-4/5"
             rules={[
               {
                 required: true,
                 type: "string",
                 max: 120,
-                message: "Por favor verifique el nombre del laboratorio",
+                message: "Por favor verifique el nombre del almacenamiento",
               },
             ]}
           >
-            <Input placeholder="Nombre del laboratorio" maxLength={120} />
+            <Input placeholder="Nombre del almacenamiento" maxLength={120} />
           </Form.Item>
-          <Form.Item
-          label="Área"
-          name="area"
-          className="w-full md:w-1/3"
-          rules={[
-            {
-              required: true,
-              type: "string",
-              max: 120,
-              message: "Por favor verifique el área del laboratorio",
-            },
-          ]}
-        >
-          <Input placeholder="Área del laboratorio" maxLength={120} />
-        </Form.Item>
         </div>
         <Form.Item
           name="description"
@@ -80,11 +79,11 @@ export default function CreateLaboratoryModal ({ form, data, closeModal } : TCre
               type: "string",
               required: true,
               max: 500,
-              message: "Por favor verifique la descripción del laboratorio",
+              message: "Por favor verifique la descripción del almacenamiento",
             },
           ]}
         >
-          <TextArea placeholder="Descripción del laboratorio..." rows={4} maxLength={500}/>
+          <TextArea placeholder="Descripción del almacenamiento..." rows={4} maxLength={500}/>
         </Form.Item>
       </Form>
     </div>

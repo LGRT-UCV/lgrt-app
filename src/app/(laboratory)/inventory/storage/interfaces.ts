@@ -1,23 +1,19 @@
 import type { IGenericId } from "@/types/app";
 import type { FormInstance } from "antd/lib";
 
-export type TSaveLaboratory = {
-  name: string;
+export type TSaveStorage = {
+  name?: string;
   description?: string;
-  area?: string;
-  status?: string;
 };
 
-export interface ILaboratory extends IGenericId {
+export interface IStorage extends IGenericId {
   name: string;
   description?: string;
-  area?: string;
-  status?: string;
 };
 
-export type TLaboratory = ILaboratory;
+export type TStorage = IStorage;
 
-export interface ILaboratoryForm {
+export interface IStorageForm {
   formIntance: FormInstance;
-  LaboratoryData?: TLaboratory;
+  StorageData?: TStorage;
 };

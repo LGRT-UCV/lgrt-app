@@ -1,9 +1,9 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
-import type { ILaboratory, TSaveLaboratory } from "./interfaces";
+import type { IStorage, TSaveStorage } from "./interfaces";
 
-export const LAB_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/security/laboratories`;
+export const LAB_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/inventory/storageplaces`;
 
-export const deleteLaboratory = async (sessionToken: string, id: string) => {
+export const deleteStorage = async (sessionToken: string, id: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`
@@ -15,7 +15,7 @@ export const deleteLaboratory = async (sessionToken: string, id: string) => {
   );
 };
 
-export const getAllLaboratories = async (sessionToken: string) => {
+export const getAllStorages = async (sessionToken: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`
@@ -25,10 +25,10 @@ export const getAllLaboratories = async (sessionToken: string) => {
     RequestMethods.GET,
     headers,
   );
-  return response as Array<ILaboratory>;
+  return response as Array<IStorage>;
 };
 
-export const getLaboratory = async (sessionToken: string, id: string) => {
+export const getStorage = async (sessionToken: string, id: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`
@@ -38,10 +38,10 @@ export const getLaboratory = async (sessionToken: string, id: string) => {
     RequestMethods.GET,
     headers,
   );
-  return response as ILaboratory;
+  return response as IStorage;
 };
 
-export const createLaboratory = async (data: TSaveLaboratory, sessionToken: string) => {
+export const createStorage = async (data: TSaveStorage, sessionToken: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`
@@ -54,7 +54,7 @@ export const createLaboratory = async (data: TSaveLaboratory, sessionToken: stri
   );
 };
 
-export const updateLaboratory = async (id: string, data: TSaveLaboratory, sessionToken: string) => {
+export const updateStorage = async (id: string, data: TSaveStorage, sessionToken: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`
@@ -67,7 +67,7 @@ export const updateLaboratory = async (id: string, data: TSaveLaboratory, sessio
   );
 };
 
-export const laboratoryFields = [
+export const storageFields = [
   {
     id: "id",
     label: "#",
@@ -79,9 +79,5 @@ export const laboratoryFields = [
   { 
     id: "description",
     label: "Descripción",
-  },
-  { 
-    id: "area",
-    label: "Área",
   },
 ];

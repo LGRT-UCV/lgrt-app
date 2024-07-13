@@ -8,7 +8,7 @@ export type TSaveUser = {
   identificationNumber: string;
   idRoleId?: string;
   laboratory?: IGenericId;
-} & IGenericId;
+};
 
 export type TUserForm = {
   name: string;

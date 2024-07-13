@@ -12,6 +12,7 @@ export default function useUserForm (callback: () => void, formIntance: FormInst
 
   useEffect(() => {
     if (typeof usrData === "undefined") return;
+    console.log("usrData: ", usrData);
     formIntance.setFieldsValue(usrData);
   }, [usrData]);
 
@@ -24,8 +25,9 @@ export default function useUserForm (callback: () => void, formIntance: FormInst
       setIsLoading(true);
 
       if (!!usrData) {
-        await updateUser(usrData.id, {
-          ...values,
+        const { id, ...rest } = values;
+        await updateUser(id, {
+          ...rest,
           laboratory: {
             id: values.laboratory,
           },

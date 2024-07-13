@@ -1,7 +1,9 @@
 "use client";
 
-import { ReactNode, createContext, useContext, useState } from "react";
+import { ReactNode, createContext, useContext, useMemo, useState } from "react";
 import { Roles } from "@/lib/constants";
+import { useSession } from "next-auth/react";
+import { getUserRole } from "@/(laboratory)/admin/users/utils";
 
 /**
  * Type to define return values
@@ -42,16 +44,22 @@ export const LabContext = createContext<TLabReturnValues>(defaultValues);
  */
 export const LabProvider = ({ children } : Readonly<{ children: ReactNode }>) => {
   const [menuCollapsed, setMenuCollapsed] = useState(false);
+  const { data: sessionData } = useSession();
 
   const handleMenuCollapsed = (collapsed?: boolean) => {
     const isCollapsed = collapsed ?? !menuCollapsed;
     setMenuCollapsed(isCollapsed);
   };
 
+  const role = useMemo(() => {
+    if (!sessionData) return Roles.External;
+    return getUserRole(Number(sessionData.user.user.idRoleId)) ?? Roles.External;
+  }, [sessionData]);
+
   return (
     <LabContext.Provider
       value={{
-        role: Roles.Admin,
+        role,
         menuCollapsed,
         handleMenuCollapsed,
       }}

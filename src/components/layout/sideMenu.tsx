@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, type MenuProps } from "antd";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { isMobile } from "react-device-detect";
 import Sider from "antd/es/layout/Sider";
@@ -29,6 +29,7 @@ type TMenuItem = Required<MenuProps>["items"][number];
  */
 export default function SideMenu () {
   const router = useRouter();
+  const { data: sessionData } = useSession();
   const { role, menuCollapsed, handleMenuCollapsed } = useLabProvider();
 
   /**
@@ -55,14 +56,14 @@ export default function SideMenu () {
    */
   const items: TMenuItem[] = [
     getItem("Inventario", "1", <ProfileOutlined />,
-      [Roles.Admin, Roles.Internal].includes(role) ?
+      [Roles.Admin, Roles.Personal].includes(role) ?
         [
           getItem("Ver todos", "inv-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Inventory)),
           getItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveMaterial))
         ]
       : undefined),
     getItem("Proyectos", "2", <ProjectOutlined />,
-      [Roles.Admin, Roles.Internal].includes(role) ?
+      [Roles.Admin, Roles.Personal].includes(role) ?
         [
           getItem("Ver todos", "proj-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Projects)),
           getItem("Añadir nuevo", "proj-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveProject))
@@ -88,7 +89,7 @@ export default function SideMenu () {
       onCollapse={(value) => handleMenuCollapsed(value)}
       style={{ overflow: "auto", height: "100vh", position: isMobile ? "fixed" : "relative", left: 0, top: 0, bottom: 0, zIndex: 50 }}>
       <Avatar
-        label="username"
+        label={sessionData?.user.user.name + " " + sessionData?.user.user.lastName}
         hideLabel={menuCollapsed}
       />
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" items={items} />

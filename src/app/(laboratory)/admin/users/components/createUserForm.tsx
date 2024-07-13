@@ -104,28 +104,26 @@ export default function CreateUserForm ({ form, isLoading, openNotification, onF
           rules={[
             {
               required: true,
-              type: "number",
-              max: 99999999,
               message: "Por favor verifique la cédula del usuario",
             },
           ]}
         >
-          <InputNumber className="w-full" placeholder="Cédula" />
+          <InputNumber className="w-full" max={99999999} placeholder="Cédula" />
         </Form.Item>
       </div>
       <div className="flex flex-col md:flex-row gap-4">
         <Form.Item
           name="idRoleId"
-          label="Rol"
+          label="Tipo de usuario"
           rules={[{ required: true, message: "Por favor elija una opción" }]}
           className="w-full md:w-1/2 mb-4"
         >
           <Select
-            placeholder="Rol del usuario"
-            options={userRoles.map((roles) => {
+            placeholder="Tipo de usuario"
+            options={userRoles.map((role) => {
               return {
-                label: roles.roleName,
-                value: roles.id,
+                label: role.roleName,
+                value: role.id,
               }
             })}
           />

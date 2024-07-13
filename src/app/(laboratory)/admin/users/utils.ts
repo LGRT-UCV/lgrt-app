@@ -1,5 +1,6 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
 import type { IUser, TSaveUser, TStatus, TUserStatus } from "./interfaces";
+import { Roles } from "@/lib/constants";
 
 export const USER_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/security/users`;
 
@@ -94,10 +95,12 @@ export const getStatus = (status: TStatus) => {
 };
 
 export const userRoles = [
-  { id: 0, roleName: "Admin" },
-  { id: 1, roleName: "Personal" },
-  { id: 2, roleName: "Invitado" },
+  { id: 0, roleName: Roles.Admin },
+  { id: 1, roleName: Roles.Personal },
+  { id: 2, roleName: Roles.External },
 ];
+
+export const getUserRole = (roleId: number) => userRoles.find(role => role.id === roleId)?.roleName;
 
 export const userFields = [
   { 

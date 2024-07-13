@@ -17,7 +17,7 @@ export enum Routes {
 
 export enum Roles {
   External = "external",
-  Internal = "internal",
+  Personal = "personal",
   Admin = "admin",
 };
 

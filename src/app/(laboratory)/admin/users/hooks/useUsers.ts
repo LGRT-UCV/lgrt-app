@@ -89,7 +89,7 @@ export default function useUser () {
   useEffect(() => {
     if (!openCreateModal) {
       setCurrentUser(undefined);
-      form.setFieldsValue({});
+      form.resetFields();
     }
   }, [openCreateModal]);
 

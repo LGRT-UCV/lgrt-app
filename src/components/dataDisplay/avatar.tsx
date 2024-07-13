@@ -37,7 +37,7 @@ export default function Avatar ({
   onClick,
 }: IAvatar) {
   return (
-    <div className={`mx-auto w-fit my-4 flex flex-col items-center ${className ?? ""}`}>
+    <div className={`mx-auto w-fit my-4 flex flex-col gap-4 items-center ${className ?? ""}`}>
       {!!src ? (
         <Image
           src={src}

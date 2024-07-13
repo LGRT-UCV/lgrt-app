@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useForm } from "antd/es/form/Form";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
@@ -7,6 +8,7 @@ import { deleteFile, getAllFiles } from "../utils";
 import type { IFile } from "../interfaces";
 
 export default function useFile () {
+  const [form] = useForm();
   const [searchValue, setSearchValue] = useState("");
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -63,9 +65,13 @@ export default function useFile () {
     }
   };
 
-  const handleFileDetails = (file?: IFile, show = true) => {
+  const handleEditFile = (file: IFile, show = true) => {
     setCurrentFile(file)
-    setOpenDetailsModal(show);
+    form.setFieldsValue({
+      name: file.name,
+      description: file.description,
+    });
+    setOpenCreateModal(show);
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
@@ -82,6 +88,7 @@ export default function useFile () {
   }, [fileList, searchValue]);
 
   return {
+    form,
     openDetailsModal,
     openCreateModal,
     tableData,
@@ -90,7 +97,7 @@ export default function useFile () {
     isLoading,
     notificationElement,
     handleDeleteFile,
-    handleFileDetails,
+    handleEditFile,
     setOpenDetailsModal,
     setOpenCreateModal,
     setSearchValue,

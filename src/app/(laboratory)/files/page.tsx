@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 import { Modal, Button, Divider, Popover, Tag, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
-import { useForm } from "antd/es/form/Form";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
@@ -15,13 +14,14 @@ import useFile from "./hooks/useFiles";
 import CreateFileModal from "./components/modals/createFileModal";
 
 export default function Files () {
-  const [form] = useForm();
   const {
+    form,
     tableData,
     isLoading,
+    currentFile,
     notificationElement,
     openCreateModal,
-    handleFileDetails,
+    handleEditFile,
     handleUpdateFile,
     handleDeleteFile,
     setOpenCreateModal,
@@ -60,7 +60,7 @@ export default function Files () {
               <div className="text-center">
                 <Divider className="m-2"/>
                 <span
-                  onClick={() => handleFileDetails(record)}
+                  onClick={() => handleEditFile(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Editar
@@ -129,11 +129,11 @@ export default function Files () {
             className="bg-blue-500 text-white"
             onClick={form.submit}
           >
-            Subir archivo
+            {!!currentFile ? "Actualizar" : "Subir archivo"}
           </Button>
         ]}
       >
-        <CreateFileModal form={form} closeModal={handleUpdateFile} />
+        <CreateFileModal form={form} fileData={currentFile} closeModal={handleUpdateFile} />
       </Modal>
     </>
   )

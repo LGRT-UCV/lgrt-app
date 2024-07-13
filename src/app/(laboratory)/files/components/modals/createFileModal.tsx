@@ -3,8 +3,9 @@ import { LoadingOutlined, InboxOutlined } from "@ant-design/icons";
 import type { FormInstance } from "antd/lib";
 import useFileForm from "../../hooks/useFileForm";
 import TextArea from "antd/lib/input/TextArea";
+import { IFile } from "../../interfaces";
 
-export default function CreateFileModal ({ form, closeModal } : { form : FormInstance, closeModal: () => void}) {
+export default function CreateFileModal ({ form, fileData, closeModal } : { form : FormInstance, fileData?: IFile, closeModal: () => void}) {
   const {
     isLoading,
     notificationElement,
@@ -13,7 +14,7 @@ export default function CreateFileModal ({ form, closeModal } : { form : FormIns
   } = useFileForm(() => {
     form.resetFields();
     closeModal();
-  });
+  }, fileData);
   const props: UploadProps = {
     name: "file",
     accept:".pdf",
@@ -95,17 +96,19 @@ export default function CreateFileModal ({ form, closeModal } : { form : FormIns
         >
           <TextArea placeholder="Descripción del archivo..." rows={4} maxLength={500}/>
         </Form.Item>
-        <Form.Item name="file" className="mt-4">
-          <Upload.Dragger {...props}>
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">Click o arrastra el archivo aquí para subirlo</p>
-            <p className="ant-upload-hint">
-              Soporta sólo una carga a la vez. Soporta archivos de hasta 2MB. Sólo PDF.
-            </p>
-          </Upload.Dragger>
-        </Form.Item>
+        {typeof fileData === "undefined" && (
+          <Form.Item name="file" className="mt-4">
+            <Upload.Dragger {...props}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">Click o arrastra el archivo aquí para subirlo</p>
+              <p className="ant-upload-hint">
+                Soporta sólo una carga a la vez. Soporta archivos de hasta 2MB. Sólo PDF.
+              </p>
+            </Upload.Dragger>
+          </Form.Item>
+        )}
       </Form>
     </div>
   );

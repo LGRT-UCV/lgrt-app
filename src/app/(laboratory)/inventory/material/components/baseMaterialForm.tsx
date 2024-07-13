@@ -32,7 +32,7 @@ export default function BaseMaterialForm ({
         </Form.Item>
         <Form.Item
           name="materialType"
-          label="Unidad de medida"
+          label="Tipo de material"
           rules={[{ required: true, message: "Por favor elija una opción" }]}
           className="w-full md:w-1/3 px-2 mb-4"
         >

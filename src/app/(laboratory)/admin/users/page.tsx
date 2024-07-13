@@ -25,7 +25,7 @@ export default function Users () {
     openDetailsModal,
     handleUserDetails,
     handleUpdateUser,
-    handleDeleteUser,
+    handleUserStatus,
     setOpenCreateModal,
     setOpenDetailsModal,
     setCurrentUser,
@@ -75,6 +75,16 @@ export default function Users () {
                   className="h-full w-full cursor-pointer"
                 >
                   Editar
+                </span>
+                <Divider className="m-2"/>
+                <span
+                  onClick={() => handleUserStatus(
+                    record.id ?? "",
+                    record.status === "A" ? "I" : "A"
+                  )}
+                  className="h-full w-full cursor-pointer"
+                >
+                  {record.status === "A" ? "Desactivar" : "Activar"}
                 </span>
               </div>
             )}
@@ -148,11 +158,14 @@ export default function Users () {
         width={800}
         footer={[
           <Button
-            key="delete"
-            className="bg-red-500 text-white"
-            onClick={() => handleDeleteUser(currentUser)}
+            key="status"
+            className={`${currentUser?.status === "A" ? "bg-red-500" : "bg-green-500"} text-white`}
+            onClick={() => handleUserStatus(
+              currentUser?.id ?? "",
+              currentUser?.status === "A" ? "I" : "A"
+            )}
           >
-            Eliminar
+            {currentUser?.status === "A" ? "Desactivar" : "Activar"}
           </Button>
         ]}
       >

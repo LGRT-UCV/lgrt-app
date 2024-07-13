@@ -120,7 +120,7 @@ export const userFields = [
     label: "Tipo de usuario",
   },
   {
-    id: "laboratory",
+    id: "laboratoryName",
     label: "Laboratorio",
   }
 ];

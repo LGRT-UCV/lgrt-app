@@ -4,8 +4,8 @@ import { useForm } from "antd/es/form/Form";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
-import { deleteUser, getAllUsers, userRoles } from "../utils";
-import type { IUser } from "../interfaces";
+import { deleteUser, getAllUsers, updateUser, userRoles } from "../utils";
+import type { IUser, TStatus } from "../interfaces";
 
 export default function useUser () {
   const [form] = useForm();
@@ -39,24 +39,26 @@ export default function useUser () {
     void refetch();
   };
 
-  const handleDeleteUser = async (user?: IUser) => {
-    if (typeof user === "undefined") {
+  const handleUserStatus = async (userId: string, status: TStatus) => {  
+    if (userId === "") {
       openNotification("error", "No se ha seleccionado un usuario a eliminar", "", "topRight");
       return;
     }
-  
+    
     try {
-      await deleteUser(
+      await updateUser(
+        userId,
+        {
+          status: status,
+        },
         sessionData?.user.token ?? "",
-        user.id
       );
       void refetch();
-      setCurrentUser(undefined);
       setOpenDetailsModal(false);
       openNotification(
         "success",
-        "Laboratorio eliminado",
-        `Se ha eliminado el usuario ${user.name}`,
+        "",
+        "Usuario actualizado",
         "topRight"
       );
     } catch (error) {
@@ -81,8 +83,10 @@ export default function useUser () {
     return users.map((user, index) => ({
       ...user,
       key: `user-${index}`,
-      laboratory: user.laboratory?.name ?? "Sin laboratorio",
-      role: userRoles.find(role => role.id === Number(user.idRoleId))?.roleName ?? "Invitado",
+      laboratoryName: user.laboratory?.name ?? "Sin laboratorio",
+      laboratory: user.laboratory.id,
+      idRoleId: Number(user.idRoleId),
+      role: userRoles.find(role => role.id === Number(user.idRoleId))?.roleName ?? "External",
     })) ?? [];
   }, [userList, searchValue]);
 
@@ -102,7 +106,7 @@ export default function useUser () {
     userList,
     isLoading,
     notificationElement,
-    handleDeleteUser,
+    handleUserStatus,
     handleUserDetails,
     setOpenCreateModal,
     setOpenDetailsModal,

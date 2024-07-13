@@ -15,6 +15,7 @@ import {
   LogoutOutlined,
   UnorderedListOutlined,
   ExperimentOutlined,
+  DatabaseOutlined,
 } from "@ant-design/icons";
 import { useLabProvider } from "@/context/labProvider";
 import { Roles, Routes } from "@/lib/constants";
@@ -59,7 +60,8 @@ export default function SideMenu () {
       [Roles.Admin, Roles.Personal].includes(role) ?
         [
           getItem("Ver todos", "inv-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Inventory)),
-          getItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveMaterial))
+          getItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveMaterial)),
+          getItem("Almacen", "inv-3", <DatabaseOutlined />, undefined, () => void router.push(Routes.Storage))
         ]
       : undefined),
     getItem("Proyectos", "2", <ProjectOutlined />,

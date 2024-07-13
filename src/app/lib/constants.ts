@@ -6,6 +6,7 @@ export enum Routes {
   Laboratory = "/admin/laboratory",
   SaveMaterial = "/inventory/material",
   Projects = "/projects",
+  Storage = "/inventory/storage",
   SaveProject = "/projects/project",
   Requests = "/requests",
   RequestResetPassword = "/auth/request-reset",

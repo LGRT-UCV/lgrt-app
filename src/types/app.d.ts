@@ -3,3 +3,5 @@ export interface IGenericId {
 }
 
 export type TNotificationType = "success" | "error" | "info" | "warning";
+
+export type TMenuItem = Required<MenuProps>["items"][number];

@@ -42,10 +42,10 @@ export default function Avatar ({
         <Image
           src={src}
           alt="Avatar"
-          width={80}
-          height={80}
+          width={40}
+          height={40}
           onClick={onClick}
-          className={`border-4 rounded-full ${!!onClick ? "cursor-pointer" : ""}`}
+          className={`${!!onClick ? "cursor-pointer" : ""}`}
         />
       ) : (
         <UserOutlined

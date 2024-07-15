@@ -18,9 +18,14 @@ import type { TMenuItem } from "@/types/app";
 import { useLabProvider } from "@/context/labProvider";
 import { useMemo } from "react";
 
-export default function useMenuItems() {
+export default function useMenuItems({ closeMenu }: { closeMenu?: () => void } | undefined = {}) {
   const router = useRouter();
   const { role } = useLabProvider();
+
+  const handleMenuClick = (route: Routes) => {
+    void router.push(route);
+    closeMenu?.();
+  };
 
   /**
    * Items array to render into the side menu
@@ -30,27 +35,33 @@ export default function useMenuItems() {
       getMenuItem("Inventario", "1", <ProfileOutlined />,
         [Roles.Admin, Roles.Personal].includes(role) ?
           [
-            getMenuItem("Ver todos", "inv-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Inventory)),
-            getMenuItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveMaterial)),
-            getMenuItem("Almacen", "inv-3", <DatabaseOutlined />, undefined, () => void router.push(Routes.Storage))
+            getMenuItem("Ver todos", "inv-1", <UnorderedListOutlined />, undefined, () => handleMenuClick(Routes.Inventory)),
+            getMenuItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => handleMenuClick(Routes.SaveMaterial)),
+            getMenuItem("Almacen", "inv-3", <DatabaseOutlined />, undefined, () => handleMenuClick(Routes.Storage))
           ]
-        : undefined),
+        : undefined,
+        () => handleMenuClick(Routes.Inventory)
+      ),
       getMenuItem("Proyectos", "2", <ProjectOutlined />,
         [Roles.Admin, Roles.Personal].includes(role) ?
           [
-            getMenuItem("Ver todos", "proj-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Projects)),
-            getMenuItem("Añadir nuevo", "proj-2", <PlusOutlined />, undefined, () => void router.push(Routes.SaveProject))
+            getMenuItem("Ver todos", "proj-1", <UnorderedListOutlined />, undefined, () => handleMenuClick(Routes.Projects)),
+            getMenuItem("Añadir nuevo", "proj-2", <PlusOutlined />, undefined, () => handleMenuClick(Routes.SaveProject))
           ]
-        : undefined),
-      getMenuItem("Solicitudes", "3", <FileSearchOutlined />, undefined, () => void router.push(Routes.Requests)),
+        : undefined,
+        () => handleMenuClick(Routes.Projects)
+      ),
+      getMenuItem("Solicitudes", "3", <FileSearchOutlined />, undefined, () => handleMenuClick(Routes.Requests)),
       getMenuItem("Usuarios", "4", <TeamOutlined />, 
         [Roles.Admin].includes(role) ?
           [
-            getMenuItem("Ver todos", "users-1", <UnorderedListOutlined />, undefined, () => void router.push(Routes.Users)),
-            getMenuItem("Laboratorios", "labs-2", <ExperimentOutlined />, undefined, () => void router.push(Routes.Laboratory))
+            getMenuItem("Ver todos", "users-1", <UnorderedListOutlined />, undefined, () => handleMenuClick(Routes.Users)),
+            getMenuItem("Laboratorios", "labs-2", <ExperimentOutlined />, undefined, () => handleMenuClick(Routes.Laboratory))
           ]
-        : undefined),
-      getMenuItem("Archivos", "5", <FileOutlined />, undefined, () => void router.push(Routes.Files)),
+        : undefined,
+        () => handleMenuClick(Routes.Users)
+      ),
+      getMenuItem("Archivos", "5", <FileOutlined />, undefined, () => handleMenuClick(Routes.Files)),
       { type: "divider" },
       getMenuItem("Cerrar Sesión", "6", <LogoutOutlined />, undefined, () => void signOut()),
     ];

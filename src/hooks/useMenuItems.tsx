@@ -11,6 +11,7 @@ import {
   UnorderedListOutlined,
   ExperimentOutlined,
   DatabaseOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { Roles, Routes } from "@/lib/constants";
 import { getMenuItem } from "@/utils/layout";
@@ -60,7 +61,8 @@ export default function useMenuItems({ closeMenu }: { closeMenu?: () => void } |
       ),
       getMenuItem("Archivos", "5", <FileOutlined />, undefined, () => handleMenuClick(Routes.Files)),
       { type: "divider" },
-      getMenuItem("Cerrar Sesión", "6", <LogoutOutlined />, undefined, () => void signOut()),
+      getMenuItem("Profile", "6", <UserOutlined />, undefined, () => handleMenuClick(Routes.Profile)),
+      getMenuItem("Cerrar Sesión", "7", <LogoutOutlined />, undefined, () => void signOut()),
     ];
   }, []);
 

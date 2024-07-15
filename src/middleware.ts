@@ -6,6 +6,7 @@ export const config = {
     "/projects/:path*",
     "/requests/:path*",
     "/admin/:path*",
-    "/files/:path*"
+    "/files/:path*",
+    "/profile/:path*",
   ],
 };

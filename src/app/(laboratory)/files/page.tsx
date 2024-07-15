@@ -12,6 +12,7 @@ import { fileFields } from "./utils";
 import type { IFile } from "./interfaces";
 import useFile from "./hooks/useFiles";
 import CreateFileModal from "./components/modals/createFileModal";
+import { isMobile } from "react-device-detect";
 
 export default function Files () {
   const {
@@ -34,7 +35,7 @@ export default function Files () {
       width: ["name", "description"].includes(column.id) ? 60 : 20,
       dataIndex: column.id,
       key: column.id,
-      fixed: ["name", "fileType"].includes(column.id) ? "left" : undefined,
+      fixed: ["name", "fileType"].includes(column.id) && !isMobile ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
@@ -121,7 +122,10 @@ export default function Files () {
         centered
         open={openCreateModal}
         okText={"Editar"}
-        onCancel={() => setOpenCreateModal(false)}
+        onCancel={() => {
+          setOpenCreateModal(false);
+          form.resetFields();
+        }}
         width={800}
         footer={[
           <Button

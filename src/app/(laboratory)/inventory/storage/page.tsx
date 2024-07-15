@@ -14,6 +14,7 @@ import type { IStorage } from "./interfaces";
 import useStorage from "./hooks/useStorage";
 import CreateStorageModal from "./components/createStorageModal";
 import DetailsModal from "./components/detailsStorageModal";
+import { isMobile } from "react-device-detect";
 
 export default function Storage () {
   const [form] = useForm();
@@ -39,7 +40,7 @@ export default function Storage () {
       width: "name" === column.id ? 30 : "id" === column.id ? 10 : 60,
       dataIndex: column.id,
       key: column.id,
-      fixed: "name" === column.id ? "left" : undefined,
+      fixed: ["id", "name"].includes(column.id) && (!isMobile && column.id !== "name")  ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
@@ -54,7 +55,7 @@ export default function Storage () {
         ),
       },
       {
-        width: 15,
+        width: 5,
         fixed: "right",
         align: "center",
         render: (record: IStorage & { key: string }) => (

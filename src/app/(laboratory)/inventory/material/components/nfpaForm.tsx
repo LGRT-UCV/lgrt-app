@@ -11,7 +11,7 @@ export default function NFPAForm({
   readOnly = false
 }: INFPAForm) {
   return (
-    <div className="w-1/2">
+    <div className="w-full md:w-1/2">
       <h5>Clasificación NFPA</h5>
       
       <div className="relative w-full h-48 mt-8">

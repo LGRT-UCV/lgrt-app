@@ -12,8 +12,7 @@ export default function useUserForm (callback: () => void, formIntance: FormInst
 
   useEffect(() => {
     if (typeof usrData === "undefined") return;
-    console.log("usrData: ", usrData);
-    formIntance.setFieldsValue(usrData);
+    formIntance.setFieldsValue({...usrData, laboratory: usrData.laboratory.id });
   }, [usrData]);
 
   const onFinish = async (values: TUserForm) => {

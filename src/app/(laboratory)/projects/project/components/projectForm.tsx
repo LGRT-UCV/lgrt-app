@@ -100,7 +100,7 @@ export default function ProjectForm ({
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full flex gap-8">
+                <div key={key} className="w-full flex flex-col md:flex-none gap-4 md:gap-8">
                   <Form.Item
                     {...restField}
                     label="Materiales a usar"

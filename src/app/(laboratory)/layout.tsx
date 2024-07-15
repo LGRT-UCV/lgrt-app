@@ -17,7 +17,7 @@ export default function LabLayout({
         <SideMenu />
         <Layout>
           <MobileHeader />
-          <Content className="flex flex-col gap-8 p-8 relative">
+          <Content className="flex flex-col gap-8 p-4 relative">
             {children}
           </Content>
           <Footer className="text-center">

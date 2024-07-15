@@ -14,6 +14,7 @@ import type { ILaboratory } from "./interfaces";
 import useLaboratory from "./hooks/useLaboratory";
 import CreateLaboratoryModal from "./components/createLaboratoryModal";
 import DetailsModal from "./components/detailsLaboratoryModal";
+import { isMobile } from "react-device-detect";
 
 export default function Laboratory () {
   const [form] = useForm();
@@ -39,7 +40,7 @@ export default function Laboratory () {
       width: "name" === column.id ? 60 : "id" === column.id ? 15 : 30,
       dataIndex: column.id,
       key: column.id,
-      fixed: "name" === column.id ? "left" : undefined,
+      fixed: "name" === column.id && !isMobile ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
@@ -54,7 +55,7 @@ export default function Laboratory () {
         ),
       },
       {
-        width: 15,
+        width: isMobile ? 10 : 15,
         fixed: "right",
         align: "center",
         render: (record: ILaboratory & { key: string }) => (
@@ -79,13 +80,13 @@ export default function Laboratory () {
                 >
                   Editar
                 </span>
-                <Divider className="m-2"/>
+                {/* <Divider className="m-2"/>
                 <span
                   onClick={() => void handleDeleteLaboratory(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Eliminar
-                </span>
+                </span> */}
               </div>
             )}
             title="Opciones"

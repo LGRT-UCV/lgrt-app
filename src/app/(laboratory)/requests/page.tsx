@@ -14,6 +14,7 @@ import { getStatus, requestFields } from "./utils";
 import { IRequest } from "./interfaces";
 import DetailsModal from "./components/modals/detailsModal";
 import CreateRequestModal from "./components/modals/createRequestModal";
+import { isMobile } from "react-device-detect";
 
 export default function Requests () {
   const [form] = useForm();
@@ -36,10 +37,10 @@ export default function Requests () {
     const columsList = requestFields.filter(fields => "status" !== fields.id);
     const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
       title: column.label,
-      width: "idRequester" === column.id ? 50 : 20,
+      width: "idRequester" === column.id ? 50 : "id" === column.id ? 7 : 20,
       dataIndex: column.id,
       key: column.id,
-      fixed: ["id", "idRequester"].includes(column.id) ? "left" : undefined,
+      fixed: ["id", "idRequester"].includes(column.id) && !isMobile ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
@@ -52,7 +53,7 @@ export default function Requests () {
         )
       },
       {
-        width: 10,
+        width: isMobile ? 4 : 10,
         fixed: "right",
         align: "center",
         render: (record: IRequest & { key: string }) => (

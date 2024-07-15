@@ -14,6 +14,7 @@ import type { IProject } from "./interfaces";
 import useProject from "./useProject";
 import { fieldsProject } from "./utils";
 import DetailsModal from "./project/components/detailsModal";
+import { isMobile } from "react-device-detect";
 
 
 export default function Projects () {
@@ -55,7 +56,7 @@ export default function Projects () {
       width: "description" === column.id ? 50 : 20,
       dataIndex: column.id,
       key: column.id,
-      fixed: column.id === "name" ? "left" : undefined,
+      fixed: column.id === "name" && !isMobile ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([

@@ -13,6 +13,7 @@ import type { IUser } from "./interfaces";
 import useUser from "./hooks/useUsers";
 import { CreateUserModal } from "./components/createUserModal";
 import DetailsModal from "./components/detailsUserModal";
+import { isMobile } from "react-device-detect";
 
 export default function Users () {
   const {
@@ -38,7 +39,7 @@ export default function Users () {
       width: ["id", "name", "lastname"].includes(column.id) ? 40 : 20,
       dataIndex: column.id,
       key: column.id,
-      fixed: "name" === column.id ? "left" : undefined,
+      fixed: "name" === column.id && !isMobile ? "left" : undefined,
       align: "center",
     }));
     const renderColumns = columnToShow.concat([
@@ -51,7 +52,7 @@ export default function Users () {
         )
       },
       {
-        width: 15,
+        width: isMobile ? 10 : 15,
         fixed: "right",
         align: "center",
         render: (record: IUser & { key: string }) => (

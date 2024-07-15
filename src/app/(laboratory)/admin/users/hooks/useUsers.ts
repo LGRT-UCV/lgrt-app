@@ -4,7 +4,7 @@ import { useForm } from "antd/es/form/Form";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
-import { deleteUser, getAllUsers, updateUser, userRoles } from "../utils";
+import { getAllUsers, updateUser, userRoles } from "../utils";
 import type { IUser, TStatus } from "../interfaces";
 
 export default function useUser () {
@@ -83,9 +83,8 @@ export default function useUser () {
     return users.map((user, index) => ({
       ...user,
       key: `user-${index}`,
-      laboratoryName: user.laboratory?.name ?? "Sin laboratorio",
-      laboratory: user.laboratory.id,
       idRoleId: Number(user.idRoleId),
+      laboratoryName: user.laboratory.name,
       role: userRoles.find(role => role.id === Number(user.idRoleId))?.roleName ?? "External",
     })) ?? [];
   }, [userList, searchValue]);

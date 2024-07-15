@@ -39,8 +39,7 @@ export default function useMenuItems({ closeMenu }: { closeMenu?: () => void } |
             getMenuItem("Añadir nuevo", "inv-2", <PlusOutlined />, undefined, () => handleMenuClick(Routes.SaveMaterial)),
             getMenuItem("Almacen", "inv-3", <DatabaseOutlined />, undefined, () => handleMenuClick(Routes.Storage))
           ]
-        : undefined,
-        () => handleMenuClick(Routes.Inventory)
+        : undefined
       ),
       getMenuItem("Proyectos", "2", <ProjectOutlined />,
         [Roles.Admin, Roles.Personal].includes(role) ?
@@ -48,8 +47,7 @@ export default function useMenuItems({ closeMenu }: { closeMenu?: () => void } |
             getMenuItem("Ver todos", "proj-1", <UnorderedListOutlined />, undefined, () => handleMenuClick(Routes.Projects)),
             getMenuItem("Añadir nuevo", "proj-2", <PlusOutlined />, undefined, () => handleMenuClick(Routes.SaveProject))
           ]
-        : undefined,
-        () => handleMenuClick(Routes.Projects)
+        : undefined
       ),
       getMenuItem("Solicitudes", "3", <FileSearchOutlined />, undefined, () => handleMenuClick(Routes.Requests)),
       getMenuItem("Usuarios", "4", <TeamOutlined />, 
@@ -58,8 +56,7 @@ export default function useMenuItems({ closeMenu }: { closeMenu?: () => void } |
             getMenuItem("Ver todos", "users-1", <UnorderedListOutlined />, undefined, () => handleMenuClick(Routes.Users)),
             getMenuItem("Laboratorios", "labs-2", <ExperimentOutlined />, undefined, () => handleMenuClick(Routes.Laboratory))
           ]
-        : undefined,
-        () => handleMenuClick(Routes.Users)
+        : undefined
       ),
       getMenuItem("Archivos", "5", <FileOutlined />, undefined, () => handleMenuClick(Routes.Files)),
       { type: "divider" },

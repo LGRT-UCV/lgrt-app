@@ -103,7 +103,7 @@ export default function TableFilter ({
   }, [filters]);
 
   return (
-    <div className="w-full flex justify-between">
+    <div className="w-full flex gap-4 md:justify-between">
       {components}
     </div>
   );

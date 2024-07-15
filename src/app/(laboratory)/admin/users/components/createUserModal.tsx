@@ -21,7 +21,7 @@ export function CreateUserModal({ form, data, closeModal } : TCreateUserModal) {
   }, form, data);
 
   return (
-    <div>
+    <div className="max-h-96 overflow-y-auto">
       {notificationElement}
       <CreateUserForm
         form={form}

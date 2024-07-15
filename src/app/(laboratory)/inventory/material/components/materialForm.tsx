@@ -282,13 +282,13 @@ export default function MaterialForm ({
             />
           </Form.Item>
 
-          <div className="flex flex-wrap">
+          <div className="space-y-8 md:space-y-0 md:flex flex-wrap">
             <NFPAForm />
 
             <Form.Item
               label="Clasificación SGA"
               name="sgaClassif"
-              className="w-1/2"
+              className="w-full md:w-1/2"
             >
               <Checkbox.Group className="w-full">
                 <div className="flex flex-wrap justify-between">

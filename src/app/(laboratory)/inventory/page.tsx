@@ -14,6 +14,7 @@ import DetailsModal from "./material/components/detailsModal";
 import { fieldsToList } from "./material/utils";
 import useInventory from "./useInventory";
 import type { TMaterial } from "./interfaces";
+import { isMobile } from "react-device-detect";
 
 
 export default function Inventory () {
@@ -41,14 +42,14 @@ export default function Inventory () {
     const columsList = fieldsToList.filter((field) => materialFileds.includes(field.id));
     const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
       title: column.label,
-      width: column.id === "id" ? 30 : 100,
+      width: column.id === "id" ? 25 : 100,
       dataIndex: column.id,
       key: column.id,
-      fixed: ["id", "name"].includes(column.id) ? "left" : undefined,
+      fixed: ["id", "name"].includes(column.id) && (!isMobile && column.id !== "name")  ? "left" : undefined,
       align: "center",
     }));
     columnToShow.push(({
-      width: 30,
+      width: 20,
       fixed: "right",
       render: (record: TMaterial & { key: string }) => (
         <Popover

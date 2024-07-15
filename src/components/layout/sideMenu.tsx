@@ -18,19 +18,19 @@ export default function SideMenu () {
   const { menuCollapsed, handleMenuCollapsed } = useLabProvider();
   const items = useMenuItems();
 
-  if (isMobile || true) return <></>;
+  if (isMobile) return <></>;
 
-  // return (
-  //   <Sider
-  //     collapsible
-  //     collapsed={menuCollapsed}
-  //     onCollapse={(value) => handleMenuCollapsed(value)}
-  //     style={{ overflow: "auto", height: "100vh", position: isMobile ? "fixed" : "relative", left: 0, top: 0, bottom: 0, zIndex: 50 }}>
-  //     <Avatar
-  //       label={sessionData?.user.user.name + " " + sessionData?.user.user.lastName}
-  //       hideLabel={menuCollapsed}
-  //     />
-  //     <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" items={items} />
-  //   </Sider>
-  // )
+  return (
+    <Sider
+      collapsible
+      collapsed={menuCollapsed}
+      onCollapse={(value) => handleMenuCollapsed(value)}
+      style={{ overflow: "auto", height: "100vh", position: isMobile ? "fixed" : "relative", left: 0, top: 0, bottom: 0, zIndex: 50 }}>
+      <Avatar
+        label={sessionData?.user.user.name + " " + sessionData?.user.user.lastName}
+        hideLabel={menuCollapsed}
+      />
+      <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" items={items} />
+    </Sider>
+  );
 };

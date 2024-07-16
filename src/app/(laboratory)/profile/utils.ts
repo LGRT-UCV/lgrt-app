@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
 import type { TResetPasswordFormData } from "./interfaces";
 
@@ -8,10 +9,20 @@ export const resetPassword = async (id: string, data: TResetPasswordFormData, se
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`
   };
+
+  const currentPassword = createHash("sha256").update(data.actualPassword).digest("hex").toString();
+  const password = createHash("sha256").update(data.newPassword).digest("hex").toString();
+  const confirm = createHash("sha256").update(data.passwordConfirmation).digest("hex").toString();
+  const requestData: TResetPasswordFormData = {
+    actualPassword: currentPassword,
+    newPassword: password,
+    passwordConfirmation: confirm
+  };
+
   return newRequest(
     `${RESET_URI}/${id}`,
     RequestMethods.PUT,
     headers,
-    JSON.stringify(data)
+    JSON.stringify(requestData)
   );
 };

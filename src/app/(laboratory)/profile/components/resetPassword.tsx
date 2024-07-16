@@ -32,7 +32,7 @@ export default function ResetPassword () {
       );
     // @ts-expect-error
     } catch (error: Error) {
-      const msg = error.message.includes("The user does not have any token available.") || error.message.includes("The token is wrong") ?
+      const msg = error.message.includes("The user does not have any token available.") || error.message.includes("The token is wrong") || error.message.includes("The token has expired") ?
           "Token o inválido" :
           error.message;
       openNotification("error", msg, "", "topRight");

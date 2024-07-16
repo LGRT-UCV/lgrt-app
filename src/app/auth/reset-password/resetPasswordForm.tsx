@@ -8,6 +8,7 @@ import { LockOutlined } from "@ant-design/icons";
 import { LAB_DETAILS, Routes } from "@/lib/constants";
 import useNotification from "@/hooks/useNotification";
 import { resetPassword } from "./utils";
+import Link from "next/link";
 
 type TResetPasswordFormData = {
   token: string;
@@ -41,7 +42,7 @@ export default function ResetPassword () {
       void router.push(Routes.Login);
     // @ts-expect-error
     } catch (error: Error) {
-      const msg = error.message.includes("The user does not have any token available.") || error.message.includes("The token is wrong") ?
+      const msg = error.message.includes("The user does not have any token available.") || error.message.includes("The token is wrong") || error.message.includes("The token has expired") ?
           "Token o inválido" :
           error.message;
       openNotification("error", msg, "", "topRight");
@@ -120,6 +121,11 @@ export default function ResetPassword () {
           <Button block className="bg-brand-primary text-brand-dark-light" htmlType="submit">
             Cambiar contraseña
           </Button>
+        </Form.Item>
+        <Form.Item>
+          <Link className="float-right" href={Routes.Login}>
+            Regresar al inicio de sesión
+          </Link>
         </Form.Item>
       </Form>
     </>

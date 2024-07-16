@@ -12,7 +12,8 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) throw new Error("Error de credenciales");
-        const password = createHash('sha256').update(credentials?.password).digest('base64');
+        const password = createHash('sha256').update(credentials?.password).digest("hex").toString();
+
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/login`,

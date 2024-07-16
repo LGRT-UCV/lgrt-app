@@ -11,7 +11,7 @@ import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
 import useRequest from "./hooks/useRequest";
 import { getStatus, requestFields } from "./utils";
-import { IRequest } from "./interfaces";
+import { IRequest, RequestStatus } from "./interfaces";
 import DetailsModal from "./components/modals/detailsModal";
 import CreateRequestModal from "./components/modals/createRequestModal";
 import { isMobile } from "react-device-detect";
@@ -69,12 +69,14 @@ export default function Requests () {
                   Ver solicitud
                 </span>
                 <Divider className="m-2"/>
-                <span
-                  onClick={() => void handleDeleteRequest(record)}
-                  className="h-full w-full cursor-pointer"
-                >
-                  Eliminar
-                </span>
+                {record?.status === RequestStatus.Pending ?
+                  <span
+                    onClick={() => void handleDeleteRequest(record)}
+                    className="h-full w-full cursor-pointer"
+                  >
+                    Eliminar
+                  </span>
+                  : null}
               </div>
             )}
             title="Opciones"
@@ -143,13 +145,12 @@ export default function Requests () {
         title="Detalles de la solicitud"
         centered
         open={openDetailsModal}
-        okText={"Editar"}
         onCancel={() => setOpenDetailsModal(false)}
         width={600}
         okButtonProps={{
           className: "bg-blue-500"
         }}
-        footer={[
+        footer={currentRequest?.status === RequestStatus.Pending ? [
           <Button
             key="delete"
             className="bg-red-500 hover:!bg-red-400 !text-white border-none"
@@ -157,7 +158,7 @@ export default function Requests () {
           >
             Eliminar solcitud
           </Button>
-        ]}
+        ] : []}
       >
         <DetailsModal request={currentRequest} closeModal={handleUpdateRequest} />
       </Modal>

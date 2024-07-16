@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { Form, Input, InputNumber, Select } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { userRoles } from "../utils";
+import { getUserRole, userRoles } from "../utils";
 import { TNotificationType } from "@/types/app";
 import { useQuery } from "@tanstack/react-query";
 import { getAllLaboratories } from "../../laboratory/utils";
@@ -122,7 +122,7 @@ export default function CreateUserForm ({ form, isLoading, openNotification, onF
             placeholder="Tipo de usuario"
             options={userRoles.map((role) => {
               return {
-                label: role.roleName,
+                label: getUserRole(role.id),
                 value: role.id,
               }
             })}

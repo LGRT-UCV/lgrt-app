@@ -2,7 +2,15 @@ import type { IGenericId } from "@/types/app";
 import type { FormInstance } from "antd/lib";
 import type { TUser } from "../admin/users/interfaces";
 
-export type TStatus = "P" | "A" | "E" | "D" | "R";
+export enum RequestStatus {
+  Pending = "P",
+  Approved = "A",
+  Delivered = "E",
+  Returned = "D",
+  Rejected = "R",
+};
+
+export type TStatus = typeof RequestStatus[keyof typeof RequestStatus];
 
 export type TRequestStatus = {
   label: string;

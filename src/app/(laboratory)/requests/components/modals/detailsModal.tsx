@@ -1,5 +1,5 @@
 import { Button, Select, Tag } from "antd";
-import type { IRequest, TRequestStatus, TStatus, TUpdateRequestStatus } from "../../interfaces";
+import { RequestStatus, type IRequest, type TRequestStatus, type TStatus, type TUpdateRequestStatus } from "../../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { SelectProps } from "antd/lib";
 import { requestStatus, getStatus, updateRequestStatus } from "../../utils";
@@ -169,20 +169,24 @@ export default function DetailsModal ({
           </div>}
         </div>
 
-        <div className="w-full flex flex-col gap-1">
-          <strong>Cambiar status:</strong>
-          <div className="w-full space-y-4">
-            <TextArea placeholder={"Comentarios"} rows={4} maxLength={500} value={comments} onChange={(e) => setComments(e.target.value)}/>
-            <Button className="bg-green-500 !text-white mr-4 hover:!bg-green-400 border-none" onClick={() => onChangeStatus()}>
-              Cambiar a {nextStatus?.label ?? "Pendiente"}
-            </Button>
-            {request.status === "P" &&
-              <Button className="bg-red-500 hover:!bg-red-400 !text-white border-none" onClick={() => onChangeStatus(requestStatus[1])}>
-                Rechazar
+        {(request.idRequester.id !== sessionData?.user.user.id || request.status === RequestStatus.Delivered) && (
+          <div className="w-full flex flex-col gap-1">
+            <strong>Cambiar status:</strong>
+            <div className="w-full space-y-4">
+              {![RequestStatus.Pending, RequestStatus.Returned].includes(request.status) &&
+                <TextArea placeholder={"Comentarios"} rows={4} maxLength={500} value={comments} onChange={(e) => setComments(e.target.value)}/>
+              }
+              <Button className="bg-green-500 !text-white mr-4 hover:!bg-green-400 border-none" onClick={() => onChangeStatus()}>
+                Cambiar a {nextStatus?.label ?? "Pendiente"}
               </Button>
-            }
+              {request.status === RequestStatus.Pending &&
+                <Button className="bg-red-500 hover:!bg-red-400 !text-white border-none" onClick={() => onChangeStatus(requestStatus[1])}>
+                  Rechazar
+                </Button>
+              }
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   </>);

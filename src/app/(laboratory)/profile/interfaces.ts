@@ -1,5 +1,5 @@
 export type TResetPasswordFormData = {
-  actualPassword: string;
+  currentPassword: string;
   newPassword: string;
   passwordConfirmation: string;
 };

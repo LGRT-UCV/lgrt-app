@@ -27,6 +27,7 @@ export default function SideMenu () {
       onCollapse={(value) => handleMenuCollapsed(value)}
       style={{ overflow: "auto", height: "100vh", position: isMobile ? "fixed" : "relative", left: 0, top: 0, bottom: 0, zIndex: 50 }}>
       <Avatar
+        src="/icons/logo.png"
         label={sessionData?.user.user.name + " " + sessionData?.user.user.lastName}
         hideLabel={menuCollapsed}
       />

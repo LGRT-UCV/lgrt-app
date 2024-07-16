@@ -18,8 +18,9 @@ export enum Routes {
 
 export enum Roles {
   Admin = "Admin",
+  PersonalExtra = "PersonalExtra",
   Personal = "Personal",
-  External = "External",
+  External = "Externo",
 };
 
 export const LAB_DETAILS = {

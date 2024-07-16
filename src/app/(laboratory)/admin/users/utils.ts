@@ -97,10 +97,16 @@ export const getStatus = (status: TStatus) => {
 export const userRoles = [
   { id: 0, roleName: Roles.Admin },
   { id: 1, roleName: Roles.Personal },
-  { id: 2, roleName: Roles.External },
+  { id: 2, roleName: Roles.PersonalExtra },
+  { id: 3, roleName: Roles.External },
 ];
 
-export const getUserRole = (roleId: number) => userRoles.find(role => role.id === roleId)?.roleName;
+export const getUserRole = (roleId: number) => {
+  const roleName = userRoles.find(role => role.id === roleId)?.roleName;
+  if (roleId === 2) return "Personal Extra";
+
+  return roleName;
+};
 
 export const userFields = [
   { 

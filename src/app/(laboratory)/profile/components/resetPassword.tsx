@@ -1,11 +1,13 @@
 import { signOut, useSession } from "next-auth/react";
 import { Button, Form, Input } from "antd";
+import { useForm } from "antd/es/form/Form";
 import { LockOutlined } from "@ant-design/icons";
 import useNotification from "@/hooks/useNotification";
 import { resetPassword } from "../utils";
 import type { TResetPasswordFormData } from "../interfaces";
 
 export default function ResetPassword () {
+  const [form] = useForm();
   const { data: sessionData } = useSession();
   const { openNotification, notificationElement } = useNotification();
 
@@ -16,7 +18,7 @@ export default function ResetPassword () {
         openNotification("error", "Sesión vencida", "", "topRight");
         await signOut();
       }
-      if (values.newPassword !== values.passwordConfirmation || values.newPassword.length < 6 || values.actualPassword.length < 6)
+      if (values.newPassword !== values.passwordConfirmation || values.newPassword.length < 6 || values.currentPassword.length < 6)
         throw new Error("Verifique su contraseña");
 
       await resetPassword(
@@ -24,6 +26,7 @@ export default function ResetPassword () {
         values,
         sessionData?.user.token ?? "",
       );
+      form.resetFields();
       openNotification(
         "success",
         "Contraseña establecida correctamente",
@@ -32,8 +35,8 @@ export default function ResetPassword () {
       );
     // @ts-expect-error
     } catch (error: Error) {
-      const msg = error.message.includes("The user does not have any token available.") || error.message.includes("The token is wrong") || error.message.includes("The token has expired") ?
-          "Token o inválido" :
+      const msg = error.message.includes("The actual password does not match") || error.message.includes("Access Denied") || error.message.includes("The new password does not match") ?
+          "Contraseña inválida" :
           error.message;
       openNotification("error", msg, "", "topRight");
       console.error("ERROR: ", error);
@@ -44,6 +47,7 @@ export default function ResetPassword () {
     <div>
       {notificationElement}
       <Form
+        form={form}
         name="resetPassword"
         initialValues={{
           remember: true,
@@ -55,7 +59,7 @@ export default function ResetPassword () {
         className="w-3/4 mx-auto"
       >
         <Form.Item
-          name="actualPassword"
+          name="currentPassword"
           rules={[
             {
               required: true,

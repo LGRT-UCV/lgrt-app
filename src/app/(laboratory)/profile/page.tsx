@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { Card, Descriptions } from "antd";
-import { getUserRole } from "../admin/users/utils";
+import { getUserRoleName } from "../admin/users/utils";
 import ResetPassword from "./components/resetPassword";
 
 export default function Profile () {
@@ -16,7 +16,7 @@ export default function Profile () {
           <Descriptions.Item key={"lastname"} label="Apellido">{sessionData?.user.user.lastName}</Descriptions.Item>
           <Descriptions.Item key={"id"} label="Cédula">{sessionData?.user.user.identificationNumber}</Descriptions.Item>
           <Descriptions.Item key={"email"} label="Correo">{sessionData?.user.user.id}</Descriptions.Item>
-          <Descriptions.Item key={"role"} label="Tipo de usuario">{getUserRole(Number(sessionData?.user.user.idRoleId ?? 3))}</Descriptions.Item>
+          <Descriptions.Item key={"role"} label="Tipo de usuario">{getUserRoleName(Number(sessionData?.user.user.idRoleId ?? 3))}</Descriptions.Item>
         </Descriptions>
       </Card>
       <Card title="Información del laboratorio" style={{ width: "100%" }}>

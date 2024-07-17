@@ -3,7 +3,7 @@
 import { ReactNode, createContext, useContext, useMemo, useState } from "react";
 import { Roles } from "@/lib/constants";
 import { useSession } from "next-auth/react";
-import { getUserRole } from "@/(laboratory)/admin/users/utils";
+import { getUserRoleName } from "@/(laboratory)/admin/users/utils";
 
 /**
  * Type to define return values
@@ -53,7 +53,7 @@ export const LabProvider = ({ children } : Readonly<{ children: ReactNode }>) =>
 
   const role = useMemo(() => {
     if (!sessionData) return Roles.External;
-    return getUserRole(Number(sessionData.user.user.idRoleId)) ?? Roles.External;
+    return getUserRoleName(Number(sessionData.user.user.idRoleId)) ?? Roles.External;
   }, [sessionData]);
 
   return (

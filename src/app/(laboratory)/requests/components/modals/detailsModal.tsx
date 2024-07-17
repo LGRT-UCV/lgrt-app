@@ -1,5 +1,5 @@
-import { Button, Select, Tag } from "antd";
-import { RequestStatus, type IRequest, type TRequestStatus, type TStatus, type TUpdateRequestStatus } from "../../interfaces";
+import { Button, Tag } from "antd";
+import { RequestStatus, type IRequest, type TRequestStatus, type TUpdateRequestStatus } from "../../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { SelectProps } from "antd/lib";
 import { requestStatus, getStatus, updateRequestStatus } from "../../utils";
@@ -8,6 +8,8 @@ import useNotification from "@/hooks/useNotification";
 import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
 import { getMaterial } from "@/(laboratory)/inventory/utils";
 import TextArea from "antd/es/input/TextArea";
+import { Roles } from "@/lib/constants";
+import { getUserRole } from "@/(laboratory)/admin/users/utils";
 
 type TagRender = SelectProps["tagRender"];
 
@@ -88,6 +90,8 @@ export default function DetailsModal ({
       console.log("ERROR: ", error);
     }
   };
+
+  console.log("REQUEST: ", request);
   
   return (<>
     {notificationElement}
@@ -149,27 +153,40 @@ export default function DetailsModal ({
           )}
         </div>
 
-        <div className="w-full space-y-4 mb-4">
-          {!!request.commentsResponsible && <div className="w-full">
-            <strong>Comentarios del responsable de entregar el material:</strong>
-            <br />
-            <p>{request.commentsResponsible ?? "Sin comentarios"}</p>
-          </div>}
+        {
+          request.idRequester.id === sessionData?.user.user.id ||
+          [Roles.Admin, Roles.PersonalExtra].includes(getUserRole(Number(sessionData?.user.user.idRoleId)).roleName) && 
+          (<div className="w-full space-y-4 mb-4">
+            {!!request.commentsResponsible && <div className="w-full">
+              <strong>Comentarios del responsable de entregar el material:</strong>
+              <br />
+              <p>{request.commentsResponsible ?? "Sin comentarios"}</p>
+            </div>}
 
-          {!!request.commentsRequester && <div className="w-full">
-            <strong>Comentarios del solicitante al recibir el material:</strong>
-            <br />
-            <p>{request.commentsRequester}</p>
-          </div>}
+            {!!request.commentsRequester && <div className="w-full">
+              <strong>Comentarios del solicitante al recibir el material:</strong>
+              <br />
+              <p>{request.commentsRequester}</p>
+            </div>}
 
-          {!!request.commentsRequester && <div className="w-full">
-            <strong>Comentarios de la persona que recibió el material:</strong>
-            <br />
-            <p>{request.commentsRequester}</p>
-          </div>}
-        </div>
+            {!!request.commentsRequesterReturn && <div className="w-full">
+              <strong>Comentarios del solicitante al devolver el material:</strong>
+              <br />
+              <p>{request.commentsRequesterReturn}</p>
+            </div>}
 
-        {(request.idRequester.id !== sessionData?.user.user.id || request.status === RequestStatus.Delivered) && (
+            {!!request.commentsResponsibleReturn && <div className="w-full">
+              <strong>Comentarios de la persona que recibió el material:</strong>
+              <br />
+              <p>{request.commentsResponsibleReturn}</p>
+            </div>}
+          </div>
+        )}
+
+        {(
+          ([Roles.Admin, Roles.PersonalExtra].includes(getUserRole(Number(sessionData?.user.user.idRoleId)).roleName) && request.status !== RequestStatus.Pending) ||
+          ([RequestStatus.Delivered, RequestStatus.Returned].includes(request.status) && request.idRequester.id === sessionData?.user.user.id)
+        ) && (
           <div className="w-full flex flex-col gap-1">
             <strong>Cambiar status:</strong>
             <div className="w-full space-y-4">

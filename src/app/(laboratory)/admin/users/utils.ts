@@ -101,11 +101,14 @@ export const userRoles = [
   { id: 3, roleName: Roles.External },
 ];
 
-export const getUserRole = (roleId: number) => {
-  const roleName = userRoles.find(role => role.id === roleId)?.roleName;
+export const getUserRoleName = (roleId: number) => {
   if (roleId === 2) return "Personal Extra";
-
+  const roleName = userRoles.find(role => role.id === roleId)?.roleName;
   return roleName;
+}
+
+export const getUserRole = (roleId: number) => {
+  return userRoles.find(role => role.id === roleId) ?? { id: 3, roleName: Roles.External };
 };
 
 export const userFields = [

@@ -25,6 +25,7 @@ export default function Requests () {
     currentRequest,
     notificationElement,
     isLoading,
+    ableToDelete,
     handleRequestDetails,
     handleDeleteRequest,
     setSearchValue,
@@ -69,7 +70,7 @@ export default function Requests () {
                   Ver solicitud
                 </span>
                 <Divider className="m-2"/>
-                {record?.status === RequestStatus.Pending ?
+                {ableToDelete(record) ?
                   <span
                     onClick={() => void handleDeleteRequest(record)}
                     className="h-full w-full cursor-pointer"
@@ -145,12 +146,15 @@ export default function Requests () {
         title="Detalles de la solicitud"
         centered
         open={openDetailsModal}
-        onCancel={() => setOpenDetailsModal(false)}
+        onCancel={() => {
+          setOpenDetailsModal(false);
+          handleUpdateRequest();
+        }}
         width={600}
         okButtonProps={{
           className: "bg-blue-500"
         }}
-        footer={currentRequest?.status === RequestStatus.Pending ? [
+        footer={ableToDelete() ? [
           <Button
             key="delete"
             className="bg-red-500 hover:!bg-red-400 !text-white border-none"
@@ -160,7 +164,14 @@ export default function Requests () {
           </Button>
         ] : []}
       >
-        <DetailsModal request={currentRequest} closeModal={handleUpdateRequest} />
+        <DetailsModal
+          request={currentRequest} 
+          closeModal={ () => {
+            setOpenDetailsModal(false);
+            handleUpdateRequest();
+            handleRequestDetails(undefined, false)
+          }}
+        />
       </Modal>
     </>
   )

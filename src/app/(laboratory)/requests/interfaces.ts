@@ -19,10 +19,10 @@ export type TRequestStatus = {
 
 export type TUpdateRequestStatus = {
   status?: TStatus;
-  commentsRequester?: string;
-  commentsResponsible?: string;
-  commentsRequesterReturn?: string;
-  commentsResponsibleReturn?: string;
+  commentsRequester?: string | null;
+  commentsResponsible?: string | null;
+  commentsRequesterReturn?: string | null;
+  commentsResponsibleReturn?: string | null;
 };
 
 export type TSaveRequest = {

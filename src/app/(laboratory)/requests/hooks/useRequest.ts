@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
 import { deleteRequest, getAllRequests } from "../utils";
-import type { IRequest } from "../interfaces";
+import { RequestStatus, TStatus, type IRequest } from "../interfaces";
+import { Roles } from "@/lib/constants";
+import { getUserRole } from "@/(laboratory)/admin/users/utils";
 
 export default function useRequest () {
   const [searchValue, setSearchValue] = useState("");
@@ -32,6 +34,14 @@ export default function useRequest () {
     enabled: !!sessionData?.user.token,
   });
 
+  const ableToDelete = useCallback((request?: IRequest) => {
+    const req = request ?? currentRequest;
+    const currentUser = sessionData?.user.user;
+    const userRole = getUserRole(Number(currentUser?.idRoleId)).roleName;
+    const isUserWithPermission = [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(userRole) || currentUser?.id === req?.idRequester.id;
+    return req?.status === RequestStatus.Pending && isUserWithPermission;
+  }, [sessionData?.user.user]);
+
   const handleUpdateRequest = () => {
     setOpenDetailsModal(false);
     setOpenCreateModal(false);
@@ -54,7 +64,7 @@ export default function useRequest () {
       setOpenDetailsModal(false);
       openNotification(
         "success",
-        "Material eliminado",
+        "Solicitud eliminada",
         `Se ha eliminado la solicitud ${request.id}`,
         "topRight"
       );
@@ -92,6 +102,7 @@ export default function useRequest () {
     requestList,
     isLoading,
     notificationElement,
+    ableToDelete,
     handleDeleteRequest,
     handleRequestDetails,
     setOpenDetailsModal,

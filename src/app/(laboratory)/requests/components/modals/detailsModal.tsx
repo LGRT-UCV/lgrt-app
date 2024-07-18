@@ -11,7 +11,6 @@ import TextArea from "antd/es/input/TextArea";
 import { Roles } from "@/lib/constants";
 import { getUserRole } from "@/(laboratory)/admin/users/utils";
 
-type TagRender = SelectProps["tagRender"];
 
 interface IDetailsModal {
   request?: IRequest;
@@ -29,6 +28,16 @@ export default function DetailsModal ({
 
   if (typeof request === "undefined") return <></>;
 
+  const { currentUser, isRequester, userRole } = useMemo(() => {
+    const user = sessionData?.user.user;
+    const role = getUserRole(Number(user?.idRoleId)).roleName;
+    return {
+      currentUser: sessionData?.user.user,
+      isRequester: request.idRequester.id === user?.id,
+      userRole: role,
+    }
+  }, [sessionData?.user.user]);
+
   const { status, statusColor } = useMemo(() => {
     return getStatus(request.status);
   }, [request.status]);
@@ -38,14 +47,26 @@ export default function DetailsModal ({
     if (typeof currentStatus === "undefined") return requestStatus[0];
 
     switch (currentStatus.value) {
-      case "P":
-        return requestStatus.find(sts => sts.value === "A") ?? requestStatus[0];
-      case "A":
-        return requestStatus.find(sts => sts.value === "E") ?? requestStatus[0];
-      case "E":
-        return requestStatus.find(sts => sts.value === "D") ?? requestStatus[0];
+      case RequestStatus.Pending:
+        return requestStatus.find(sts => sts.value === RequestStatus.Approved) ?? requestStatus[0];
+      case RequestStatus.Approved:
+        return requestStatus.find(sts => sts.value === RequestStatus.Delivered) ?? requestStatus[0];
+      case RequestStatus.Delivered:
+        return requestStatus.find(sts => sts.value === RequestStatus.Returned) ?? requestStatus[0];
       default:
         return requestStatus[0];
+    }
+  }, [request.status]);
+
+
+  const messageForRequester = useMemo(() => {
+    switch (request.status) {
+      case RequestStatus.Delivered:
+        return "Coloca un comentario del estado en el que recibiste el material";
+      case RequestStatus.Returned:
+        return "Coloca un comentario del estado en el que devolviste el material";
+      default:
+        return "";
     }
   }, [request.status]);
 
@@ -68,15 +89,35 @@ export default function DetailsModal ({
       const statusToSave = newStatus ?? nextStatus;
       const sessionToken = sessionData?.user.token ?? "";
       const data: TUpdateRequestStatus = {
-        status: statusToSave?.value,
-        commentsResponsible: request.status === "P" ? comments : undefined,
-        commentsResponsibleReturn: request.status === "E" ? comments : undefined,
+        status: isRequester ? undefined : statusToSave?.value,
       };
+
+      if (isRequester) {
+        switch (statusToSave?.value) {
+          case RequestStatus.Delivered:
+            data.commentsRequester = comments;
+            break;
+          case RequestStatus.Pending:
+          case RequestStatus.Returned:
+            data.commentsRequesterReturn = comments;
+            break;
+        }
+      } else {
+        switch (request.status) {
+          case RequestStatus.Approved:
+            data.commentsResponsible = comments;
+          case RequestStatus.Delivered:
+            data.commentsResponsibleReturn = comments;
+            break;
+        }
+      }
+
       await updateRequestStatus(request.id, data, sessionToken);
+      setComments("");
       openNotification(
         "success",
         "Solicitud actualizada con exito",
-        `El status ${statusToSave?.label} ha sido guardado con exito.`,
+        isRequester ? "Su comentario ha sido enviado" : `El status ${statusToSave?.label} ha sido guardado con exito.`,
         "topRight"
       );
       closeModal();
@@ -154,8 +195,8 @@ export default function DetailsModal ({
         </div>
 
         {
-          request.idRequester.id === sessionData?.user.user.id ||
-          [Roles.Admin, Roles.PersonalExtra].includes(getUserRole(Number(sessionData?.user.user.idRoleId)).roleName) && 
+          isRequester ||
+          [Roles.Admin, Roles.PersonalExtra].includes(userRole) && 
           (<div className="w-full space-y-4 mb-4">
             {!!request.commentsResponsible && <div className="w-full">
               <strong>Comentarios del responsable de entregar el material:</strong>
@@ -184,23 +225,28 @@ export default function DetailsModal ({
         )}
 
         {(
-          ([Roles.Admin, Roles.PersonalExtra].includes(getUserRole(Number(sessionData?.user.user.idRoleId)).roleName) && request.status !== RequestStatus.Pending) ||
-          ([RequestStatus.Delivered, RequestStatus.Returned].includes(request.status) && request.idRequester.id === sessionData?.user.user.id)
+          (isRequester && !request.commentsRequesterReturn) ||
+          [Roles.Admin, Roles.PersonalExtra].includes(userRole)
         ) && (
           <div className="w-full flex flex-col gap-1">
-            <strong>Cambiar status:</strong>
+            <strong>{isRequester ? "Deja tu comentario" : "Cambiar status"}:</strong>
+            {isRequester && (
+              <p className="text-xs">{messageForRequester}</p>
+            )}
             <div className="w-full space-y-4">
-              {![RequestStatus.Pending, RequestStatus.Returned].includes(request.status) &&
+              {![RequestStatus.Pending, RequestStatus.Rejected].includes(request.status) &&
                 <TextArea placeholder={"Comentarios"} rows={4} maxLength={500} value={comments} onChange={(e) => setComments(e.target.value)}/>
               }
-              <Button className="bg-green-500 !text-white mr-4 hover:!bg-green-400 border-none" onClick={() => onChangeStatus()}>
-                Cambiar a {nextStatus?.label ?? "Pendiente"}
-              </Button>
-              {request.status === RequestStatus.Pending &&
-                <Button className="bg-red-500 hover:!bg-red-400 !text-white border-none" onClick={() => onChangeStatus(requestStatus[1])}>
-                  Rechazar
+              <div className="w-full flex gap-4 justify-end">
+                <Button className="bg-green-500 !text-white hover:!bg-green-400 border-none" onClick={() => onChangeStatus()}>
+                  {isRequester ? "Enviar" : nextStatus?.label ?? "Pendiente"}
                 </Button>
-              }
+                {request.status === RequestStatus.Pending && currentUser?.id !== request.idRequester.id &&
+                  <Button className="bg-red-500 hover:!bg-red-400 !text-white border-none" onClick={() => onChangeStatus(requestStatus[1])}>
+                    Rechazar
+                  </Button>
+                }
+              </div>
             </div>
           </div>
         )}

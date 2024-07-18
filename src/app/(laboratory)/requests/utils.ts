@@ -1,5 +1,5 @@
 import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
-import type { IRequest, TRequestStatus, TSaveRequest, TStatus, TUpdateRequestStatus } from "./interfaces";
+import { RequestStatus, type IRequest, type TRequestStatus, type TSaveRequest, type TStatus, type TUpdateRequestStatus } from "./interfaces";
 
 export const REQUEST_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/request/materialrequests`;
 
@@ -83,23 +83,23 @@ export const updateRequestStatus = async (id: string, data: TUpdateRequestStatus
 export const requestStatus: Array<TRequestStatus> = [
   {
     label: "Pendiente",
-    value: "P",
+    value: RequestStatus.Pending,
   },
   {
     label: "Rechazado",
-    value: "R",
+    value: RequestStatus.Rejected,
   },
   {
     label: "Aprobado",
-    value: "A",
+    value: RequestStatus.Approved,
   },
   {
     label: "Entregado",
-    value: "E",
+    value: RequestStatus.Delivered,
   },
   {
     label: "Devuelto",
-    value: "D",
+    value: RequestStatus.Returned,
   },
 ];
 

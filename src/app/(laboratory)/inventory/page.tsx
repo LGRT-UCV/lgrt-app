@@ -9,15 +9,17 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { Routes } from "@/lib/constants";
+import { Roles, Routes } from "@/lib/constants";
 import DetailsModal from "./material/components/detailsModal";
 import { fieldsToList } from "./material/utils";
 import useInventory from "./useInventory";
 import type { TMaterial } from "./interfaces";
 import { isMobile } from "react-device-detect";
+import { useLabProvider } from "@/context/labProvider";
 
 
 export default function Inventory () {
+  const { role } = useLabProvider();
   const router = useRouter();
   const {
     openModal,
@@ -117,11 +119,11 @@ export default function Inventory () {
       {notificationElement}
       <Header
         title="Inventario"
-        btn={{
+        btn={[Roles.Admin, Roles.Personal, Roles.PersonalExtra].includes(role) ? {
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
           onClick: () => void router.push(Routes.SaveMaterial),
-        }}
+        } : undefined}
       />
 
       <TableFilter filters={filters}/>

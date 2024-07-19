@@ -13,8 +13,11 @@ import type { IFile } from "./interfaces";
 import useFile from "./hooks/useFiles";
 import CreateFileModal from "./components/modals/createFileModal";
 import { isMobile } from "react-device-detect";
+import { useLabProvider } from "@/context/labProvider";
+import { Roles } from "@/lib/constants";
 
 export default function Files () {
+  const { role } = useLabProvider();
   const {
     form,
     tableData,
@@ -101,11 +104,11 @@ export default function Files () {
       {notificationElement}
       <Header
         title="Archivos"
-        btn={{
+        btn={[Roles.Admin, Roles.Personal, Roles.PersonalExtra].includes(role) ? {
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
           onClick: () => setOpenCreateModal(true),
-        }}
+        } : undefined}
       />
 
       <TableFilter filters={filters}/>

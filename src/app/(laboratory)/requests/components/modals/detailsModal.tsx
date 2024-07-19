@@ -94,11 +94,10 @@ export default function DetailsModal ({
 
       if (isRequester) {
         switch (statusToSave?.value) {
-          case RequestStatus.Delivered:
+          case RequestStatus.Returned:
             data.commentsRequester = comments;
             break;
           case RequestStatus.Pending:
-          case RequestStatus.Returned:
             data.commentsRequesterReturn = comments;
             break;
         }
@@ -106,6 +105,7 @@ export default function DetailsModal ({
         switch (request.status) {
           case RequestStatus.Approved:
             data.commentsResponsible = comments;
+            break;
           case RequestStatus.Delivered:
             data.commentsResponsibleReturn = comments;
             break;
@@ -131,8 +131,6 @@ export default function DetailsModal ({
       console.log("ERROR: ", error);
     }
   };
-
-  console.log("REQUEST: ", request);
   
   return (<>
     {notificationElement}
@@ -195,8 +193,8 @@ export default function DetailsModal ({
         </div>
 
         {
-          isRequester ||
-          [Roles.Admin, Roles.PersonalExtra].includes(userRole) && 
+          (isRequester ||
+          [Roles.Admin, Roles.PersonalExtra].includes(userRole)) && 
           (<div className="w-full space-y-4 mb-4">
             {!!request.commentsResponsible && <div className="w-full">
               <strong>Comentarios del responsable de entregar el material:</strong>
@@ -225,9 +223,9 @@ export default function DetailsModal ({
         )}
 
         {(
-          (isRequester && !request.commentsRequesterReturn) ||
+          (isRequester && (!request.commentsRequester || !request.commentsRequesterReturn)) ||
           [Roles.Admin, Roles.PersonalExtra].includes(userRole)
-        ) && (
+        ) && nextStatus?.value !== RequestStatus.Pending && (
           <div className="w-full flex flex-col gap-1">
             <strong>{isRequester ? "Deja tu comentario" : "Cambiar status"}:</strong>
             {isRequester && (
@@ -237,7 +235,7 @@ export default function DetailsModal ({
               {![RequestStatus.Pending, RequestStatus.Rejected].includes(request.status) &&
                 <TextArea placeholder={"Comentarios"} rows={4} maxLength={500} value={comments} onChange={(e) => setComments(e.target.value)}/>
               }
-              <div className="w-full flex gap-4 justify-end">
+              <div className={`w-full flex gap-4 ${request.status !== RequestStatus.Pending ? "justify-end" : ""}`}>
                 <Button className="bg-green-500 !text-white hover:!bg-green-400 border-none" onClick={() => onChangeStatus()}>
                   {isRequester ? "Enviar" : nextStatus?.label ?? "Pendiente"}
                 </Button>

@@ -1,15 +1,15 @@
 import Image from "next/image";
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from "@ant-design/icons";
 
 /**
  * Avatar interface
- * 
+ *
  * @property `src` avatar uri
  * @property `label` label under the avatar image
  * @property `hideLabel` show or hide the label
  * @property `className` container className
  * @property `onClick` active when the user click the avatar image
- * 
+ *
  */
 interface IAvatar {
   src?: string;
@@ -17,7 +17,7 @@ interface IAvatar {
   hideLabel?: boolean;
   className?: string;
   onClick?: () => void;
-};
+}
 
 /**
  * Avatar interface
@@ -26,10 +26,10 @@ interface IAvatar {
  * @param hideLabel show or hide the label
  * @param className container className
  * @param onClick active when the user click the avatar image
- * 
+ *
  * @returns Avatar component view
  */
-export default function Avatar ({
+export default function Avatar({
   src,
   label,
   hideLabel,
@@ -37,7 +37,9 @@ export default function Avatar ({
   onClick,
 }: IAvatar) {
   return (
-    <div className={`mx-auto w-fit my-4 flex flex-col gap-4 items-center ${className ?? ""}`}>
+    <div
+      className={`mx-auto my-4 flex w-fit flex-col items-center gap-4 ${className ?? ""}`}
+    >
       {!!src ? (
         <Image
           src={src}
@@ -49,11 +51,11 @@ export default function Avatar ({
         />
       ) : (
         <UserOutlined
-          className={`p-1 text-4xl border-4 rounded-full text-white ${!!onClick ? "cursor-pointer" : ""}`}
+          className={`rounded-full border-4 p-1 text-4xl text-white ${!!onClick ? "cursor-pointer" : ""}`}
           onClick={onClick}
         />
       )}
       {!hideLabel && <p className="text-center text-white">{label}</p>}
     </div>
   );
-};
+}

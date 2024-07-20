@@ -6,7 +6,7 @@ import useNotification from "@/hooks/useNotification";
 import { deleteLaboratory, getAllLaboratories } from "../utils";
 import type { ILaboratory } from "../interfaces";
 
-export default function useLaboratory () {
+export default function useLaboratory() {
   const [searchValue, setSearchValue] = useState("");
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
@@ -14,7 +14,11 @@ export default function useLaboratory () {
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
-  const { data: laboratoryList= [], isLoading, refetch } = useQuery({
+  const {
+    data: laboratoryList = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["laboratory"],
     queryFn: async () => {
       try {
@@ -24,7 +28,7 @@ export default function useLaboratory () {
           "error",
           "Ha ocurrido un error al obtener los laboratorios",
           "",
-          "topRight"
+          "topRight",
         );
         return [];
       }
@@ -39,15 +43,17 @@ export default function useLaboratory () {
 
   const handleDeleteLaboratory = async (laboratory?: ILaboratory) => {
     if (typeof laboratory === "undefined") {
-      openNotification("error", "No se ha seleccionado un laboratorio a eliminar", "", "topRight");
+      openNotification(
+        "error",
+        "No se ha seleccionado un laboratorio a eliminar",
+        "",
+        "topRight",
+      );
       return;
     }
-  
+
     try {
-      await deleteLaboratory(
-        sessionData?.user.token ?? "",
-        laboratory.id
-      );
+      await deleteLaboratory(sessionData?.user.token ?? "", laboratory.id);
       void refetch();
       setCurrentLaboratory(undefined);
       setOpenDetailsModal(false);
@@ -55,30 +61,47 @@ export default function useLaboratory () {
         "success",
         "Laboratorio eliminado",
         `Se ha eliminado el laboratorio ${laboratory.name}`,
-        "topRight"
+        "topRight",
       );
     } catch (error) {
       console.error("Error", error);
-      openNotification("error", "Ha ocurrido un error al eliminar el laboratorio", "", "topRight");
+      openNotification(
+        "error",
+        "Ha ocurrido un error al eliminar el laboratorio",
+        "",
+        "topRight",
+      );
     }
   };
 
   const handleLaboratoryDetails = (laboratory?: ILaboratory, show = true) => {
-    setCurrentLaboratory(laboratory)
+    setCurrentLaboratory(laboratory);
     setOpenDetailsModal(show);
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
     const laboratories = laboratoryList.filter((laboratory) => {
-      return laboratory.id.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
-        laboratory.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
-        laboratory.description?.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
-        laboratory.area?.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase());
+      return (
+        laboratory.id
+          .toLocaleLowerCase()
+          .includes(searchValue.toLocaleLowerCase()) ||
+        laboratory.name
+          .toLocaleLowerCase()
+          .includes(searchValue.toLocaleLowerCase()) ||
+        laboratory.description
+          ?.toLocaleLowerCase()
+          .includes(searchValue.toLocaleLowerCase()) ||
+        laboratory.area
+          ?.toLocaleLowerCase()
+          .includes(searchValue.toLocaleLowerCase())
+      );
     });
-    return laboratories.map((laboratory, index) => ({
-      ...laboratory,
-      key: `laboratory-${index}`,
-    })) ?? [];
+    return (
+      laboratories.map((laboratory, index) => ({
+        ...laboratory,
+        key: `laboratory-${index}`,
+      })) ?? []
+    );
   }, [laboratoryList, searchValue]);
 
   return {
@@ -97,4 +120,4 @@ export default function useLaboratory () {
     handleUpdateLaboratory,
     setCurrentLaboratory,
   };
-};
+}

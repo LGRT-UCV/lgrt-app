@@ -8,17 +8,17 @@ interface IBaseMaterialForm {
   setCurrentMaterialType: Dispatch<SetStateAction<TMaterialType | undefined>>;
 }
 
-export default function BaseMaterialForm ({
+export default function BaseMaterialForm({
   materialTypeList,
   setCurrentMaterialType,
-} : IBaseMaterialForm) {
+}: IBaseMaterialForm) {
   return (
     <>
       <div className="flex flex-wrap justify-between">
         <Form.Item
           label="Nombre del material"
           name="name"
-          className="w-full md:w-2/3 px-2 mb-4"
+          className="mb-4 w-full px-2 md:w-2/3"
           rules={[
             {
               type: "string",
@@ -34,16 +34,18 @@ export default function BaseMaterialForm ({
           name="materialType"
           label="Tipo de material"
           rules={[{ required: true, message: "Por favor elija una opción" }]}
-          className="w-full md:w-1/3 px-2 mb-4"
+          className="mb-4 w-full px-2 md:w-1/3"
         >
           <Select
             placeholder="Tipo de material"
-            onSelect={(value: string) => setCurrentMaterialType(JSON.parse(value))}
+            onSelect={(value: string) =>
+              setCurrentMaterialType(JSON.parse(value))
+            }
             options={materialTypeList.map((materialType) => {
               return {
                 label: materialType.name,
                 value: JSON.stringify(materialType),
-              }
+              };
             })}
           />
         </Form.Item>
@@ -60,8 +62,12 @@ export default function BaseMaterialForm ({
           },
         ]}
       >
-        <TextArea placeholder="Descripción del material..." rows={4} maxLength={500}/>
+        <TextArea
+          placeholder="Descripción del material..."
+          rows={4}
+          maxLength={500}
+        />
       </Form.Item>
     </>
   );
-};
+}

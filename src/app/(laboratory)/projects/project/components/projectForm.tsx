@@ -1,10 +1,22 @@
-import { Button, Form, Input, InputNumber, Space, TreeSelect, Upload } from "antd";
-import { LoadingOutlined, PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Space,
+  TreeSelect,
+  Upload,
+} from "antd";
+import {
+  LoadingOutlined,
+  PlusOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import useProjectForm from "../hooks/useProjectForm";
 import type { IProjectForm } from "../../interfaces";
 
-export default function ProjectForm ({
+export default function ProjectForm({
   formIntance,
   projectData,
 }: IProjectForm) {
@@ -17,11 +29,12 @@ export default function ProjectForm ({
     handleMeasurements,
   } = useProjectForm(formIntance, projectData);
 
-  if (isLoading) return (
-    <div className="w-full text-center pt-4">
-      <LoadingOutlined className="text-3xl" />
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <div className="max-h-full overflow-y-auto p-2">
@@ -39,7 +52,7 @@ export default function ProjectForm ({
           <Form.Item
             label="Nombre del proyecto"
             name="name"
-            className="w-full md:w-1/2 px-2 mb-4"
+            className="mb-4 w-full px-2 md:w-1/2"
             rules={[
               {
                 type: "string",
@@ -54,7 +67,7 @@ export default function ProjectForm ({
           <Form.Item
             label="Responsable del proyecto"
             name="projectManager"
-            className="w-full md:w-1/2 px-2 mb-4"
+            className="mb-4 w-full px-2 md:w-1/2"
             rules={[
               {
                 type: "string",
@@ -78,12 +91,16 @@ export default function ProjectForm ({
             },
           ]}
         >
-          <TextArea placeholder="Descripción del proyecto..." rows={4} maxLength={500}/>
+          <TextArea
+            placeholder="Descripción del proyecto..."
+            rows={4}
+            maxLength={500}
+          />
         </Form.Item>
         <Form.Item
           label="Link del archivo (opcional)"
           name="projectUri"
-          className="w-full px-2 mb-4"
+          className="mb-4 w-full px-2"
           rules={[
             {
               type: "url",
@@ -93,28 +110,39 @@ export default function ProjectForm ({
             },
           ]}
         >
-          <Input placeholder="Link del proyecto" minLength={6} maxLength={300} />
+          <Input
+            placeholder="Link del proyecto"
+            minLength={6}
+            maxLength={300}
+          />
         </Form.Item>
 
         <Form.List name="projectMaterial">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="w-full flex flex-col md:flex-none gap-4 md:gap-8">
+                <div
+                  key={key}
+                  className="flex w-full flex-col gap-4 md:flex-none md:gap-8"
+                >
                   <Form.Item
                     {...restField}
                     label="Materiales a usar"
                     name={[name, "idMaterial"]}
-                    className="w-full mb-4"
+                    className="mb-4 w-full"
                     shouldUpdate
                   >
                     <TreeSelect
                       showSearch
-                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                       placeholder="Please select"
                       allowClear
                       treeData={materialList}
-                      filterTreeNode={(input, option) => (String(option?.title).toLowerCase() ?? "").includes(input.toLowerCase())}
+                      filterTreeNode={(input, option) =>
+                        (String(option?.title).toLowerCase() ?? "").includes(
+                          input.toLowerCase(),
+                        )
+                      }
                       onSelect={(_, option) => handleMeasurements(option.value)}
                     />
                   </Form.Item>
@@ -122,7 +150,7 @@ export default function ProjectForm ({
                     {...restField}
                     label="Cantiadad a user"
                     name={[name, "quantity"]}
-                    className="w-full mb-4"
+                    className="mb-4 w-full"
                     rules={[
                       {
                         required: true,
@@ -130,13 +158,26 @@ export default function ProjectForm ({
                       },
                     ]}
                   >
-                    <InputNumber className="w-full" placeholder="cantidad" min={0} max={100} suffix={measurements[key]} />
+                    <InputNumber
+                      className="w-full"
+                      placeholder="cantidad"
+                      min={0}
+                      max={100}
+                      suffix={measurements[key]}
+                    />
                   </Form.Item>
-                  {fields.length > 1 && <MinusCircleOutlined onClick={() => remove(name)} />}
+                  {fields.length > 1 && (
+                    <MinusCircleOutlined onClick={() => remove(name)} />
+                  )}
                 </div>
               ))}
               <Form.Item>
-                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
                   Agregar material
                 </Button>
               </Form.Item>
@@ -167,4 +208,4 @@ export default function ProjectForm ({
       </Form>
     </div>
   );
-};
+}

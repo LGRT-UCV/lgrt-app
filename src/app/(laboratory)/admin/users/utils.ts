@@ -1,4 +1,8 @@
-import { newRequest, RequestMethods, API_REQUEST_HEADERS } from "@/utils/requests";
+import {
+  newRequest,
+  RequestMethods,
+  API_REQUEST_HEADERS,
+} from "@/utils/requests";
 import type { IUser, TSaveUser, TStatus, TUserStatus } from "./interfaces";
 import { Roles } from "@/lib/constants";
 
@@ -7,32 +11,24 @@ export const USER_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/security/users`;
 export const deleteUser = async (sessionToken: string, id: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
-    Authorization: `Bearer ${sessionToken}`
+    Authorization: `Bearer ${sessionToken}`,
   };
-  return newRequest(
-    `${USER_URI}/${id}`,
-    RequestMethods.DELETE,
-    headers,
-  );
+  return newRequest(`${USER_URI}/${id}`, RequestMethods.DELETE, headers);
 };
 
 export const getAllUsers = async (sessionToken: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
-    Authorization: `Bearer ${sessionToken}`
+    Authorization: `Bearer ${sessionToken}`,
   };
-  const response = await newRequest(
-    USER_URI,
-    RequestMethods.GET,
-    headers,
-  );
+  const response = await newRequest(USER_URI, RequestMethods.GET, headers);
   return response as Array<IUser>;
 };
 
 export const getUser = async (sessionToken: string, id: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
-    Authorization: `Bearer ${sessionToken}`
+    Authorization: `Bearer ${sessionToken}`,
   };
   const response = await newRequest(
     `${USER_URI}/${id}`,
@@ -45,26 +41,30 @@ export const getUser = async (sessionToken: string, id: string) => {
 export const createUser = async (data: TSaveUser, sessionToken: string) => {
   const headers = {
     ...API_REQUEST_HEADERS,
-    Authorization: `Bearer ${sessionToken}`
+    Authorization: `Bearer ${sessionToken}`,
   };
   return newRequest(
     USER_URI,
     RequestMethods.POST,
     headers,
-    JSON.stringify(data)
+    JSON.stringify(data),
   );
 };
 
-export const updateUser = async (id: string, data: TSaveUser, sessionToken: string) => {
+export const updateUser = async (
+  id: string,
+  data: TSaveUser,
+  sessionToken: string,
+) => {
   const headers = {
     ...API_REQUEST_HEADERS,
-    Authorization: `Bearer ${sessionToken}`
+    Authorization: `Bearer ${sessionToken}`,
   };
   return newRequest(
     `${USER_URI}/${id}`,
     RequestMethods.PUT,
     headers,
-    JSON.stringify(data)
+    JSON.stringify(data),
   );
 };
 
@@ -91,7 +91,7 @@ export const getStatus = (status: TStatus) => {
         status: "Inactivo",
         statusColor: "red",
       };
-  };
+  }
 };
 
 export const userRoles = [
@@ -103,33 +103,38 @@ export const userRoles = [
 
 export const getUserRoleName = (roleId: number) => {
   if (roleId === 2) return "Personal Extra";
-  const roleName = userRoles.find(role => role.id === roleId)?.roleName;
+  const roleName = userRoles.find((role) => role.id === roleId)?.roleName;
   return roleName;
-}
+};
 
 export const getUserRole = (roleId: number) => {
-  return userRoles.find(role => role.id === roleId) ?? { id: 3, roleName: Roles.External };
+  return (
+    userRoles.find((role) => role.id === roleId) ?? {
+      id: 3,
+      roleName: Roles.External,
+    }
+  );
 };
 
 export const userFields = [
-  { 
+  {
     id: "name",
     label: "Nombre",
   },
-  { 
+  {
     id: "lastName",
     label: "Apellido",
   },
-  { 
+  {
     id: "id",
     label: "Email",
   },
-  { 
+  {
     id: "role",
     label: "Tipo de usuario",
   },
   {
     id: "laboratoryName",
     label: "Laboratorio",
-  }
+  },
 ];

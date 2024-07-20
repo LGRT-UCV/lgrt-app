@@ -8,7 +8,7 @@ import { RequestStatus, TStatus, type IRequest } from "../interfaces";
 import { Roles } from "@/lib/constants";
 import { getUserRole } from "@/(laboratory)/admin/users/utils";
 
-export default function useRequest () {
+export default function useRequest() {
   const [searchValue, setSearchValue] = useState("");
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -16,7 +16,11 @@ export default function useRequest () {
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
-  const { data: requestList= [], isLoading, refetch } = useQuery({
+  const {
+    data: requestList = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["requests"],
     queryFn: async () => {
       try {
@@ -26,7 +30,7 @@ export default function useRequest () {
           "error",
           "Ha ocurrido un error al obtener las solicitudes",
           "",
-          "topRight"
+          "topRight",
         );
         return [];
       }
@@ -34,13 +38,18 @@ export default function useRequest () {
     enabled: !!sessionData?.user.token,
   });
 
-  const ableToDelete = useCallback((request?: IRequest) => {
-    const req = request ?? currentRequest;
-    const currentUser = sessionData?.user.user;
-    const userRole = getUserRole(Number(currentUser?.idRoleId)).roleName;
-    const isUserWithPermission = [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(userRole) || currentUser?.id === req?.idRequester.id;
-    return req?.status === RequestStatus.Pending && isUserWithPermission;
-  }, [sessionData?.user.user]);
+  const ableToDelete = useCallback(
+    (request?: IRequest) => {
+      const req = request ?? currentRequest;
+      const currentUser = sessionData?.user.user;
+      const userRole = getUserRole(Number(currentUser?.idRoleId)).roleName;
+      const isUserWithPermission =
+        [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(userRole) ||
+        currentUser?.id === req?.idRequester.id;
+      return req?.status === RequestStatus.Pending && isUserWithPermission;
+    },
+    [sessionData?.user.user],
+  );
 
   const handleUpdateRequest = () => {
     setOpenDetailsModal(false);
@@ -50,15 +59,17 @@ export default function useRequest () {
 
   const handleDeleteRequest = async (request?: IRequest) => {
     if (typeof request === "undefined") {
-      openNotification("error", "No se ha seleccionado solicitud a eliminar", "", "topRight");
+      openNotification(
+        "error",
+        "No se ha seleccionado solicitud a eliminar",
+        "",
+        "topRight",
+      );
       return;
     }
-  
+
     try {
-      await deleteRequest(
-        sessionData?.user.token ?? "",
-        request.id
-      );
+      await deleteRequest(sessionData?.user.token ?? "", request.id);
       void refetch();
       setCurrentRequest(undefined);
       setOpenDetailsModal(false);
@@ -66,15 +77,20 @@ export default function useRequest () {
         "success",
         "Solicitud eliminada",
         `Se ha eliminado la solicitud ${request.id}`,
-        "topRight"
+        "topRight",
       );
     } catch (error) {
-      openNotification("error", "Ha ocurrido un error al eliminar la solicitud", "", "topRight");
+      openNotification(
+        "error",
+        "Ha ocurrido un error al eliminar la solicitud",
+        "",
+        "topRight",
+      );
     }
   };
 
   const handleRequestDetails = (request?: IRequest, show = true) => {
-    setCurrentRequest(request)
+    setCurrentRequest(request);
     setOpenDetailsModal(show);
   };
 
@@ -82,16 +98,22 @@ export default function useRequest () {
     const search = searchValue.toLocaleLowerCase();
     const requests = requestList.filter((request) => {
       const requesterFullName = `${request.idRequester.name} ${request.idRequester.lastName}`;
-      return request.id.toLocaleLowerCase().includes(search) ||
+      return (
+        request.id.toLocaleLowerCase().includes(search) ||
         request.idRequester.id.toLocaleLowerCase().includes(search) ||
-        requesterFullName.toLocaleLowerCase().includes(search);
+        requesterFullName.toLocaleLowerCase().includes(search)
+      );
     });
-    return requests.map((request, index) => ({
-      ...request,
-      key: `request-${index}`,
-      requester: `${request.idRequester.name} ${request.idRequester.lastName}`,
-      dateupd: new Date(request.dateupd ?? request.datecre).toLocaleDateString('es-VE'),
-    })) ?? [];
+    return (
+      requests.map((request, index) => ({
+        ...request,
+        key: `request-${index}`,
+        requester: `${request.idRequester.name} ${request.idRequester.lastName}`,
+        dateupd: new Date(
+          request.dateupd ?? request.datecre,
+        ).toLocaleDateString("es-VE"),
+      })) ?? []
+    );
   }, [requestList, searchValue]);
 
   return {
@@ -110,4 +132,4 @@ export default function useRequest () {
     setSearchValue,
     handleUpdateRequest,
   };
-};
+}

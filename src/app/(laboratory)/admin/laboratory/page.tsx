@@ -16,7 +16,7 @@ import CreateLaboratoryModal from "./components/createLaboratoryModal";
 import DetailsModal from "./components/detailsLaboratoryModal";
 import { isMobile } from "react-device-detect";
 
-export default function Laboratory () {
+export default function Laboratory() {
   const [form] = useForm();
   const {
     tableData,
@@ -35,14 +35,16 @@ export default function Laboratory () {
   } = useLaboratory();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columnToShow: TableColumnsType<AnyObject> = laboratoryFields.filter(field => field.id !== "description").map((column) => ({
-      title: column.label,
-      width: "name" === column.id ? 60 : "id" === column.id ? 15 : 30,
-      dataIndex: column.id,
-      key: column.id,
-      fixed: "name" === column.id && !isMobile ? "left" : undefined,
-      align: "center",
-    }));
+    const columnToShow: TableColumnsType<AnyObject> = laboratoryFields
+      .filter((field) => field.id !== "description")
+      .map((column) => ({
+        title: column.label,
+        width: "name" === column.id ? 60 : "id" === column.id ? 15 : 30,
+        dataIndex: column.id,
+        key: column.id,
+        fixed: "name" === column.id && !isMobile ? "left" : undefined,
+        align: "center",
+      }));
     const renderColumns = columnToShow.concat([
       {
         width: 60,
@@ -51,7 +53,10 @@ export default function Laboratory () {
         dataIndex: "description",
         key: "description",
         render: (description: string) => (
-          <p>{description.substring(0, 120) + (description.length >= 120 ? "..." : "")}</p>
+          <p>
+            {description.substring(0, 120) +
+              (description.length >= 120 ? "..." : "")}
+          </p>
         ),
       },
       {
@@ -61,16 +66,16 @@ export default function Laboratory () {
         render: (record: ILaboratory & { key: string }) => (
           <Popover
             placement="topRight"
-            content={(
+            content={
               <div className="text-center">
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => handleLaboratoryDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Ver
                 </span>
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => {
                     setCurrentLaboratory(record);
@@ -88,13 +93,13 @@ export default function Laboratory () {
                   Eliminar
                 </span> */}
               </div>
-            )}
+            }
             title="Opciones"
           >
-            <MoreOutlined className="cursor-pointer"/>
+            <MoreOutlined className="cursor-pointer" />
           </Popover>
         ),
-      }
+      },
     ]);
     return renderColumns;
   }, []);
@@ -122,8 +127,8 @@ export default function Laboratory () {
         }}
       />
 
-      <TableFilter filters={filters}/>
-      
+      <TableFilter filters={filters} />
+
       <Table
         columns={columns}
         data={tableData.reverse()}
@@ -148,10 +153,14 @@ export default function Laboratory () {
             onClick={form.submit}
           >
             Guardar
-          </Button>
+          </Button>,
         ]}
       >
-        <CreateLaboratoryModal form={form} closeModal={handleUpdateLaboratory} data={currentLaboratory} />
+        <CreateLaboratoryModal
+          form={form}
+          closeModal={handleUpdateLaboratory}
+          data={currentLaboratory}
+        />
       </Modal>
 
       <Modal
@@ -170,11 +179,11 @@ export default function Laboratory () {
             onClick={() => handleDeleteLaboratory(currentLaboratory)}
           >
             Eliminar
-          </Button>
+          </Button>,
         ]}
       >
         <DetailsModal laboratory={currentLaboratory} />
       </Modal>
     </>
   );
-};
+}

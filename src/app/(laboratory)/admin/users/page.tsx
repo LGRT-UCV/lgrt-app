@@ -1,7 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import { Modal, Button, Divider, Popover, type TableColumnsType, Tag } from "antd";
+import {
+  Modal,
+  Button,
+  Divider,
+  Popover,
+  type TableColumnsType,
+  Tag,
+} from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
@@ -15,7 +22,7 @@ import { CreateUserModal } from "./components/createUserModal";
 import DetailsModal from "./components/detailsUserModal";
 import { isMobile } from "react-device-detect";
 
-export default function Users () {
+export default function Users() {
   const {
     form,
     tableData,
@@ -30,26 +37,33 @@ export default function Users () {
     setOpenCreateModal,
     setOpenDetailsModal,
     setCurrentUser,
-    setSearchValue
+    setSearchValue,
   } = useUser();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columnToShow: TableColumnsType<AnyObject> = userFields.map((column) => ({
-      title: column.label,
-      width: ["id", "name", "lastname"].includes(column.id) ? 40 : 20,
-      dataIndex: column.id,
-      key: column.id,
-      fixed: "name" === column.id && !isMobile ? "left" : undefined,
-      align: "center",
-    }));
+    const columnToShow: TableColumnsType<AnyObject> = userFields.map(
+      (column) => ({
+        title: column.label,
+        width: ["id", "name", "lastname"].includes(column.id) ? 40 : 20,
+        dataIndex: column.id,
+        key: column.id,
+        fixed: "name" === column.id && !isMobile ? "left" : undefined,
+        align: "center",
+      }),
+    );
     const renderColumns = columnToShow.concat([
       {
         title: "Status",
         align: "center",
         width: 20,
         render: (record: IUser & { key: string }) => (
-          <Tag color={getStatus(record.status).statusColor} className="mx-auto w-full text-center">{getStatus(record.status).status}</Tag>
-        )
+          <Tag
+            color={getStatus(record.status).statusColor}
+            className="mx-auto w-full text-center"
+          >
+            {getStatus(record.status).status}
+          </Tag>
+        ),
       },
       {
         width: isMobile ? 10 : 15,
@@ -58,16 +72,16 @@ export default function Users () {
         render: (record: IUser & { key: string }) => (
           <Popover
             placement="topRight"
-            content={(
+            content={
               <div className="text-center">
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => handleUserDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Ver
                 </span>
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => {
                     setCurrentUser(record);
@@ -77,24 +91,26 @@ export default function Users () {
                 >
                   Editar
                 </span>
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
-                  onClick={() => handleUserStatus(
-                    record.id ?? "",
-                    record.status === "A" ? "I" : "A"
-                  )}
+                  onClick={() =>
+                    handleUserStatus(
+                      record.id ?? "",
+                      record.status === "A" ? "I" : "A",
+                    )
+                  }
                   className="h-full w-full cursor-pointer"
                 >
                   {record.status === "A" ? "Desactivar" : "Activar"}
                 </span>
               </div>
-            )}
+            }
             title="Opciones"
           >
-            <MoreOutlined className="cursor-pointer"/>
+            <MoreOutlined className="cursor-pointer" />
           </Popover>
         ),
-      }
+      },
     ]);
     return renderColumns;
   }, []);
@@ -122,8 +138,8 @@ export default function Users () {
         }}
       />
 
-      <TableFilter filters={filters}/>
-      
+      <TableFilter filters={filters} />
+
       <Table
         columns={columns}
         data={tableData.reverse()}
@@ -145,10 +161,14 @@ export default function Users () {
             onClick={form.submit}
           >
             Guardar Usuario
-          </Button>
+          </Button>,
         ]}
       >
-        <CreateUserModal form={form} closeModal={handleUpdateUser} data={currentUser} />
+        <CreateUserModal
+          form={form}
+          closeModal={handleUpdateUser}
+          data={currentUser}
+        />
       </Modal>
 
       <Modal
@@ -161,17 +181,19 @@ export default function Users () {
           <Button
             key="status"
             className={`${currentUser?.status === "A" ? "bg-red-500" : "bg-green-500"} text-white`}
-            onClick={() => handleUserStatus(
-              currentUser?.id ?? "",
-              currentUser?.status === "A" ? "I" : "A"
-            )}
+            onClick={() =>
+              handleUserStatus(
+                currentUser?.id ?? "",
+                currentUser?.status === "A" ? "I" : "A",
+              )
+            }
           >
             {currentUser?.status === "A" ? "Desactivar" : "Activar"}
-          </Button>
+          </Button>,
         ]}
       >
         <DetailsModal user={currentUser} />
       </Modal>
     </>
-  )
-};
+  );
+}

@@ -13,26 +13,28 @@ type TRequestResetFormData = {
   email: string;
 };
 
-export default function RequestResetPassword () {
+export default function RequestResetPassword() {
   const { openNotification, notificationElement } = useNotification();
   const router = useRouter();
 
   const onFinish = async (values: TRequestResetFormData) => {
     try {
       await requestResetPassword(values.email);
-      
+
       openNotification(
         "success",
         "Código de Verificación enviado!",
         "Se ha enviado un código de verificación a su correo",
-        "topRight"
+        "topRight",
       );
       void router.push(`${Routes.ResetPassword}?email=${values.email}`);
-    // @ts-expect-error
+      // @ts-expect-error
     } catch (error: Error) {
-      const msg = error.message.includes("Bad credentials") || error.message.includes("Non existent user") ?
-          "Email inválido" :
-          error.message;
+      const msg =
+        error.message.includes("Bad credentials") ||
+        error.message.includes("Non existent user")
+          ? "Email inválido"
+          : error.message;
       openNotification("error", msg, "", "topRight");
       console.log("ERROR: ", error);
     }
@@ -41,9 +43,9 @@ export default function RequestResetPassword () {
   return (
     <>
       {notificationElement}
-      <div className="text-center my-8">
+      <div className="my-8 text-center">
         <Title className="py-2">Recuperar contraseña</Title>
-        <Text className="py-4 w-3/4 mx-auto">
+        <Text className="mx-auto w-3/4 py-4">
           {`Bienvenido al ${LAB_DETAILS.longName}. Por favor ingrese su email para recuperar su contraseña`}
         </Text>
       </div>
@@ -56,7 +58,7 @@ export default function RequestResetPassword () {
         layout="vertical"
         requiredMark="optional"
         size="large"
-        className="w-3/4 mx-auto"
+        className="mx-auto w-3/4"
       >
         <Form.Item
           name="email"
@@ -68,17 +70,18 @@ export default function RequestResetPassword () {
             },
           ]}
         >
-          <Input
-            prefix={<MailOutlined />}
-            placeholder="Correo"
-          />
+          <Input prefix={<MailOutlined />} placeholder="Correo" />
         </Form.Item>
         <Form.Item className="mb-0">
-          <Button block className="bg-brand-primary text-brand-dark-light" htmlType="submit">
+          <Button
+            block
+            className="bg-brand-primary text-brand-dark-light"
+            htmlType="submit"
+          >
             Verificar correo
           </Button>
         </Form.Item>
       </Form>
     </>
   );
-};
+}

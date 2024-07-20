@@ -4,21 +4,21 @@ import useUserForm from "../hooks/useUserForm";
 import CreateUserForm from "./createUserForm";
 
 type TCreateUserModal = {
-  form: FormInstance,
-  data?: IUser,
-  closeModal: () => void
+  form: FormInstance;
+  data?: IUser;
+  closeModal: () => void;
 };
 
-export function CreateUserModal({ form, data, closeModal } : TCreateUserModal) {
-  const {
-    isLoading,
-    notificationElement,
-    openNotification,
-    onFinish,
-  } = useUserForm(() => {
-    form.resetFields();
-    closeModal();
-  }, form, data);
+export function CreateUserModal({ form, data, closeModal }: TCreateUserModal) {
+  const { isLoading, notificationElement, openNotification, onFinish } =
+    useUserForm(
+      () => {
+        form.resetFields();
+        closeModal();
+      },
+      form,
+      data,
+    );
 
   return (
     <div className="max-h-96 overflow-y-auto">
@@ -31,4 +31,4 @@ export function CreateUserModal({ form, data, closeModal } : TCreateUserModal) {
       />
     </div>
   );
-};
+}

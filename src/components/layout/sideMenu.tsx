@@ -10,10 +10,10 @@ import useMenuItems from "@/hooks/useMenuItems";
 
 /**
  * Side menu component
- * 
+ *
  * @returns SideMenu component view
  */
-export default function SideMenu () {
+export default function SideMenu() {
   const { data: sessionData } = useSession();
   const { menuCollapsed, handleMenuCollapsed } = useLabProvider();
   const items = useMenuItems();
@@ -25,13 +25,29 @@ export default function SideMenu () {
       collapsible
       collapsed={menuCollapsed}
       onCollapse={(value) => handleMenuCollapsed(value)}
-      style={{ overflow: "auto", height: "100vh", position: isMobile ? "fixed" : "relative", left: 0, top: 0, bottom: 0, zIndex: 50 }}>
+      style={{
+        overflow: "auto",
+        height: "100vh",
+        position: isMobile ? "fixed" : "relative",
+        left: 0,
+        top: 0,
+        bottom: 0,
+        zIndex: 50,
+      }}
+    >
       <Avatar
         src="/icons/logo.png"
-        label={sessionData?.user.user.name + " " + sessionData?.user.user.lastName}
+        label={
+          sessionData?.user.user.name + " " + sessionData?.user.user.lastName
+        }
         hideLabel={menuCollapsed}
       />
-      <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" items={items} />
+      <Menu
+        theme="dark"
+        defaultSelectedKeys={["1"]}
+        mode="inline"
+        items={items}
+      />
     </Sider>
   );
-};
+}

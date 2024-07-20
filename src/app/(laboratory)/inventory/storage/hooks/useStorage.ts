@@ -6,7 +6,7 @@ import useNotification from "@/hooks/useNotification";
 import { deleteStorage, getAllStorages } from "../utils";
 import type { IStorage } from "../interfaces";
 
-export default function useStorage () {
+export default function useStorage() {
   const [searchValue, setSearchValue] = useState("");
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
@@ -14,7 +14,11 @@ export default function useStorage () {
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
-  const { data: storageList= [], isLoading, refetch } = useQuery({
+  const {
+    data: storageList = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["storage"],
     queryFn: async () => {
       try {
@@ -24,7 +28,7 @@ export default function useStorage () {
           "error",
           "Ha ocurrido un error al obtener los almacenamientos",
           "",
-          "topRight"
+          "topRight",
         );
         return [];
       }
@@ -39,15 +43,17 @@ export default function useStorage () {
 
   const handleDeleteStorage = async (storage?: IStorage) => {
     if (typeof storage === "undefined") {
-      openNotification("error", "No se ha seleccionado un almacenamiento a eliminar", "", "topRight");
+      openNotification(
+        "error",
+        "No se ha seleccionado un almacenamiento a eliminar",
+        "",
+        "topRight",
+      );
       return;
     }
-  
+
     try {
-      await deleteStorage(
-        sessionData?.user.token ?? "",
-        storage.id
-      );
+      await deleteStorage(sessionData?.user.token ?? "", storage.id);
       void refetch();
       setCurrentStorage(undefined);
       setOpenDetailsModal(false);
@@ -55,29 +61,44 @@ export default function useStorage () {
         "success",
         "Almacenamiento eliminado",
         `Se ha eliminado el almacenamiento ${storage.name}`,
-        "topRight"
+        "topRight",
       );
     } catch (error) {
       console.error("Error", error);
-      openNotification("error", "Ha ocurrido un error al eliminar el almacenamiento", "", "topRight");
+      openNotification(
+        "error",
+        "Ha ocurrido un error al eliminar el almacenamiento",
+        "",
+        "topRight",
+      );
     }
   };
 
   const handleStorageDetails = (storage?: IStorage, show = true) => {
-    setCurrentStorage(storage)
+    setCurrentStorage(storage);
     setOpenDetailsModal(show);
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
     const laboratories = storageList.filter((storage) => {
-      return storage.id.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
-        storage.name.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()) ||
-        storage.description?.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
+      return (
+        storage.id
+          .toLocaleLowerCase()
+          .includes(searchValue.toLocaleLowerCase()) ||
+        storage.name
+          .toLocaleLowerCase()
+          .includes(searchValue.toLocaleLowerCase()) ||
+        storage.description
+          ?.toLocaleLowerCase()
+          .includes(searchValue.toLocaleLowerCase())
+      );
     });
-    return laboratories.map((storage, index) => ({
-      ...storage,
-      key: `storage-${index}`,
-    })) ?? [];
+    return (
+      laboratories.map((storage, index) => ({
+        ...storage,
+        key: `storage-${index}`,
+      })) ?? []
+    );
   }, [storageList, searchValue]);
 
   return {
@@ -96,4 +117,4 @@ export default function useStorage () {
     handleUpdateStorage,
     setCurrentStorage,
   };
-};
+}

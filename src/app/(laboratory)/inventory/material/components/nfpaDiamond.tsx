@@ -1,34 +1,30 @@
 import { IMaterial } from "../../interfaces";
 
-export default function NFPADiamond({ nfpaData }: { nfpaData: IMaterial["nfpaClassif"] }) {
+export default function NFPADiamond({
+  nfpaData,
+}: {
+  nfpaData: IMaterial["nfpaClassif"];
+}) {
   return (
-    <div className="text-2xl py-4">      
-      <div className="relative w-full h-48 mt-8">
+    <div className="py-4 text-2xl">
+      <div className="relative mt-8 h-48 w-full">
         {/* diamond red */}
-        <div
-          className="w-24 h-24 bg-red-500 border border-black flex justify-center items-center absolute top-0 left-1/2 transform -translate-x-1/2 -rotate-45"
-        >
+        <div className="absolute left-1/2 top-0 flex h-24 w-24 -translate-x-1/2 -rotate-45 transform items-center justify-center border border-black bg-red-500">
           <span className="rotate-45 pb-4">{nfpaData.nfpaRed}</span>
         </div>
         {/* diamond yellow */}
-        <div
-          className="w-24 h-24 bg-yellow-500 border border-black flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-y-1/2 -rotate-45"
-        >
+        <div className="absolute left-1/2 top-1/2 flex h-24 w-24 -translate-y-1/2 -rotate-45 transform items-center justify-center border border-black bg-yellow-500">
           <span className="rotate-45 pb-4">{nfpaData.nfpaYellow}</span>
         </div>
         {/* diamond blue */}
-        <div
-          className="w-24 h-24 bg-blue-500 border border-black flex justify-center items-center absolute top-1/2 right-1/2 transform -translate-y-1/2 -rotate-45"
-        >
+        <div className="absolute right-1/2 top-1/2 flex h-24 w-24 -translate-y-1/2 -rotate-45 transform items-center justify-center border border-black bg-blue-500">
           <span className="rotate-45 pb-4">{nfpaData.nfpaBlue}</span>
         </div>
         {/* diamond white */}
-        <div
-          className="w-24 h-24 bg-white border border-black flex justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -rotate-45"
-        >
+        <div className="absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -rotate-45 transform items-center justify-center border border-black bg-white">
           <span className="rotate-45">{nfpaData.nfpaWhite}</span>
         </div>
       </div>
     </div>
   );
-};
+}

@@ -6,7 +6,7 @@ import useNotification from "@/hooks/useNotification";
 import { resetPassword } from "../utils";
 import type { TResetPasswordFormData } from "../interfaces";
 
-export default function ResetPassword () {
+export default function ResetPassword() {
   const [form] = useForm();
   const { data: sessionData } = useSession();
   const { openNotification, notificationElement } = useNotification();
@@ -18,7 +18,11 @@ export default function ResetPassword () {
         openNotification("error", "Sesión vencida", "", "topRight");
         await signOut();
       }
-      if (values.newPassword !== values.passwordConfirmation || values.newPassword.length < 6 || values.currentPassword.length < 6)
+      if (
+        values.newPassword !== values.passwordConfirmation ||
+        values.newPassword.length < 6 ||
+        values.currentPassword.length < 6
+      )
         throw new Error("Verifique su contraseña");
 
       await resetPassword(
@@ -31,13 +35,16 @@ export default function ResetPassword () {
         "success",
         "Contraseña establecida correctamente",
         "",
-        "topRight"
+        "topRight",
       );
-    // @ts-expect-error
+      // @ts-expect-error
     } catch (error: Error) {
-      const msg = error.message.includes("The actual password does not match") || error.message.includes("Access Denied") || error.message.includes("The new password does not match") ?
-          "Contraseña inválida" :
-          error.message;
+      const msg =
+        error.message.includes("The actual password does not match") ||
+        error.message.includes("Access Denied") ||
+        error.message.includes("The new password does not match")
+          ? "Contraseña inválida"
+          : error.message;
       openNotification("error", msg, "", "topRight");
       console.error("ERROR: ", error);
     }
@@ -56,7 +63,7 @@ export default function ResetPassword () {
         layout="vertical"
         requiredMark="optional"
         size="large"
-        className="w-3/4 mx-auto"
+        className="mx-auto w-3/4"
       >
         <Form.Item
           name="currentPassword"
@@ -106,11 +113,15 @@ export default function ResetPassword () {
           />
         </Form.Item>
         <Form.Item className="mb-0">
-          <Button block className="bg-brand-primary text-brand-dark-light" htmlType="submit">
+          <Button
+            block
+            className="bg-brand-primary text-brand-dark-light"
+            htmlType="submit"
+          >
             Cambiar contraseña
           </Button>
         </Form.Item>
       </Form>
     </div>
   );
-};
+}

@@ -5,29 +5,45 @@ import useFileForm from "../../hooks/useFileForm";
 import TextArea from "antd/lib/input/TextArea";
 import { IFile } from "../../interfaces";
 
-export default function CreateFileModal ({ form, fileData, closeModal } : { form : FormInstance, fileData?: IFile, closeModal: () => void}) {
-  const {
-    isLoading,
-    notificationElement,
-    openNotification,
-    onFinish,
-  } = useFileForm(() => {
-    form.resetFields();
-    closeModal();
-  }, fileData);
+export default function CreateFileModal({
+  form,
+  fileData,
+  closeModal,
+}: {
+  form: FormInstance;
+  fileData?: IFile;
+  closeModal: () => void;
+}) {
+  const { isLoading, notificationElement, openNotification, onFinish } =
+    useFileForm(() => {
+      form.resetFields();
+      closeModal();
+    }, fileData);
   const props: UploadProps = {
     name: "file",
-    accept:".pdf",
+    accept: ".pdf",
     multiple: true,
     beforeUpload: (file: File) => {
-      if (file.size > 2 * 1024 * 1024) {  // 2MB
-        openNotification("error", "Archivo muy pesado", "Sólo se admiten archivos de hasta 2MB", "topRight");
+      if (file.size > 2 * 1024 * 1024) {
+        // 2MB
+        openNotification(
+          "error",
+          "Archivo muy pesado",
+          "Sólo se admiten archivos de hasta 2MB",
+          "topRight",
+        );
         return false;
       }
 
-      if (file.type !== "application/pdf") {  // PDF
+      if (file.type !== "application/pdf") {
+        // PDF
         console.log("File type not supported");
-        openNotification("error", "Archivo no soportado", "Sólo se admiten archivos de tipo PDF", "topRight");
+        openNotification(
+          "error",
+          "Archivo no soportado",
+          "Sólo se admiten archivos de tipo PDF",
+          "topRight",
+        );
         return false;
       }
       return false; // Prevents automatic upload
@@ -38,7 +54,7 @@ export default function CreateFileModal ({ form, fileData, closeModal } : { form
         console.log("Uploading file");
       }
       if (status === "done") {
-        console.log("Upload finished")
+        console.log("Upload finished");
       } else if (status === "error") {
         console.log("Upload failed");
       }
@@ -48,12 +64,12 @@ export default function CreateFileModal ({ form, fileData, closeModal } : { form
     },
   };
 
-
-  if (isLoading) return (
-    <div className="w-full text-center pt-4">
-      <LoadingOutlined className="text-3xl" />
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <div>
@@ -94,7 +110,11 @@ export default function CreateFileModal ({ form, fileData, closeModal } : { form
             },
           ]}
         >
-          <TextArea placeholder="Descripción del archivo..." rows={4} maxLength={500}/>
+          <TextArea
+            placeholder="Descripción del archivo..."
+            rows={4}
+            maxLength={500}
+          />
         </Form.Item>
         {typeof fileData === "undefined" && (
           <Form.Item name="file" className="mt-4">
@@ -102,9 +122,12 @@ export default function CreateFileModal ({ form, fileData, closeModal } : { form
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
-              <p className="ant-upload-text">Click o arrastra el archivo aquí para subirlo</p>
+              <p className="ant-upload-text">
+                Click o arrastra el archivo aquí para subirlo
+              </p>
               <p className="ant-upload-hint">
-                Soporta sólo una carga a la vez. Soporta archivos de hasta 2MB. Sólo PDF.
+                Soporta sólo una carga a la vez. Soporta archivos de hasta 2MB.
+                Sólo PDF.
               </p>
             </Upload.Dragger>
           </Form.Item>
@@ -112,4 +135,4 @@ export default function CreateFileModal ({ form, fileData, closeModal } : { form
       </Form>
     </div>
   );
-};
+}

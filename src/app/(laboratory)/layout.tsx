@@ -10,14 +10,13 @@ export default function LabLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <main>
       <Layout hasSider className="min-h-screen">
         <SideMenu />
         <Layout>
           <MobileHeader />
-          <Content className="flex flex-col gap-8 p-4 relative">
+          <Content className="relative flex flex-col gap-8 p-4">
             {children}
           </Content>
           <Footer className="text-center">

@@ -14,18 +14,19 @@ export enum Routes {
   Profile = "/profile",
   Users = "/admin/users",
   SaveUser = "/admin/users/user",
-};
+}
 
 export enum Roles {
   Admin = "Admin",
   PersonalExtra = "PersonalExtra",
   Personal = "Personal",
   External = "Externo",
-};
+}
 
 export const LAB_DETAILS = {
   name: "Laboratorio de Granos Raíces y Tubérculos",
-  longName: "Laboratorio de Granos Raíces y Tubérculos de la Facultad de Ciencias de la UCV",
+  longName:
+    "Laboratorio de Granos Raíces y Tubérculos de la Facultad de Ciencias de la UCV",
   shortName: "LGRT UCV",
   symbol: "LGRT",
   address: "",

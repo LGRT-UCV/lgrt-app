@@ -5,14 +5,21 @@ import type { IUser, TUserForm } from "../interfaces";
 import { createUser, updateUser } from "../utils";
 import { FormInstance } from "antd";
 
-export default function useUserForm (callback: () => void, formIntance: FormInstance, usrData?: IUser) {
+export default function useUserForm(
+  callback: () => void,
+  formIntance: FormInstance,
+  usrData?: IUser,
+) {
   const [isLoading, setIsLoading] = useState(false);
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
   useEffect(() => {
     if (typeof usrData === "undefined") return;
-    formIntance.setFieldsValue({...usrData, laboratory: usrData.laboratory.id });
+    formIntance.setFieldsValue({
+      ...usrData,
+      laboratory: usrData.laboratory.id,
+    });
   }, [usrData]);
 
   const onFinish = async (values: TUserForm) => {
@@ -20,35 +27,47 @@ export default function useUserForm (callback: () => void, formIntance: FormInst
       const user = sessionData?.user;
 
       if (typeof user === "undefined") throw new Error("Sesión vencida");
-      
+
       setIsLoading(true);
 
       if (!!usrData) {
         const { id, ...rest } = values;
-        await updateUser(id, {
-          ...rest,
-          laboratory: {
-            id: values.laboratory,
+        await updateUser(
+          id,
+          {
+            ...rest,
+            laboratory: {
+              id: values.laboratory,
+            },
           },
-        }, user.token);
+          user.token,
+        );
       } else {
-        await createUser({
-          ...values,
-          laboratory: {
-            id: values.laboratory,
+        await createUser(
+          {
+            ...values,
+            laboratory: {
+              id: values.laboratory,
+            },
           },
-        }, user.token);
+          user.token,
+        );
       }
 
       openNotification(
         "success",
         "Usuario guardado con exito",
         `El usuario ${values.name} ha sido creado con exito.`,
-        "topRight"
+        "topRight",
       );
       callback();
     } catch (error: any) {
-      openNotification("error", "Ha ocurrido un error al guardar el usuario", "", "topRight");
+      openNotification(
+        "error",
+        "Ha ocurrido un error al guardar el usuario",
+        "",
+        "topRight",
+      );
       console.log("ERROR: ", error);
     } finally {
       setIsLoading(false);
@@ -61,4 +80,4 @@ export default function useUserForm (callback: () => void, formIntance: FormInst
     openNotification,
     onFinish,
   };
-};
+}

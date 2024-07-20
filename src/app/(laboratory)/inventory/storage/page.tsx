@@ -16,7 +16,7 @@ import CreateStorageModal from "./components/createStorageModal";
 import DetailsModal from "./components/detailsStorageModal";
 import { isMobile } from "react-device-detect";
 
-export default function Storage () {
+export default function Storage() {
   const [form] = useForm();
   const {
     tableData,
@@ -35,14 +35,21 @@ export default function Storage () {
   } = useStorage();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columnToShow: TableColumnsType<AnyObject> = storageFields.filter(field => field.id !== "description").map((column) => ({
-      title: column.label,
-      width: "name" === column.id ? 30 : "id" === column.id ? 10 : 60,
-      dataIndex: column.id,
-      key: column.id,
-      fixed: ["id", "name"].includes(column.id) && (!isMobile && column.id !== "name")  ? "left" : undefined,
-      align: "center",
-    }));
+    const columnToShow: TableColumnsType<AnyObject> = storageFields
+      .filter((field) => field.id !== "description")
+      .map((column) => ({
+        title: column.label,
+        width: "name" === column.id ? 30 : "id" === column.id ? 10 : 60,
+        dataIndex: column.id,
+        key: column.id,
+        fixed:
+          ["id", "name"].includes(column.id) &&
+          !isMobile &&
+          column.id !== "name"
+            ? "left"
+            : undefined,
+        align: "center",
+      }));
     const renderColumns = columnToShow.concat([
       {
         width: 60,
@@ -51,7 +58,10 @@ export default function Storage () {
         dataIndex: "description",
         key: "description",
         render: (description: string) => (
-          <p>{description.substring(0, 120) + (description.length >= 120 ? "..." : "")}</p>
+          <p>
+            {description.substring(0, 120) +
+              (description.length >= 120 ? "..." : "")}
+          </p>
         ),
       },
       {
@@ -61,16 +71,16 @@ export default function Storage () {
         render: (record: IStorage & { key: string }) => (
           <Popover
             placement="topRight"
-            content={(
+            content={
               <div className="text-center">
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => handleStorageDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Ver
                 </span>
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => {
                     setCurrentStorage(record);
@@ -81,13 +91,13 @@ export default function Storage () {
                   Editar
                 </span>
               </div>
-            )}
+            }
             title="Opciones"
           >
-            <MoreOutlined className="cursor-pointer"/>
+            <MoreOutlined className="cursor-pointer" />
           </Popover>
         ),
-      }
+      },
     ]);
     return renderColumns;
   }, []);
@@ -115,8 +125,8 @@ export default function Storage () {
         }}
       />
 
-      <TableFilter filters={filters}/>
-      
+      <TableFilter filters={filters} />
+
       <Table
         columns={columns}
         data={tableData.reverse()}
@@ -141,10 +151,14 @@ export default function Storage () {
             onClick={form.submit}
           >
             Guardar
-          </Button>
+          </Button>,
         ]}
       >
-        <CreateStorageModal form={form} closeModal={handleUpdateStorage} data={currentStorage} />
+        <CreateStorageModal
+          form={form}
+          closeModal={handleUpdateStorage}
+          data={currentStorage}
+        />
       </Modal>
 
       <Modal
@@ -163,4 +177,4 @@ export default function Storage () {
       </Modal>
     </>
   );
-};
+}

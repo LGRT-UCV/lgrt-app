@@ -4,21 +4,30 @@ import { LoadingOutlined } from "@ant-design/icons";
 import useMaterialInit from "../hooks/useMaterialInit";
 import { IMaterial } from "../../interfaces";
 
-export default function SGAClassification ({ sgaClassif }: { sgaClassif: IMaterial["sgaClassif"] }) {
-  const { sgaClassification, isLoading } = useMaterialInit(["sgaClassification"]);
+export default function SGAClassification({
+  sgaClassif,
+}: {
+  sgaClassif: IMaterial["sgaClassif"];
+}) {
+  const { sgaClassification, isLoading } = useMaterialInit([
+    "sgaClassification",
+  ]);
 
-  if (isLoading) return (
-    <div className="w-full text-center pt-4">
-      <LoadingOutlined className="text-3xl" />
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <div>
       <strong>Clasificación SGA:</strong>
-      <div className="pl-4 space-y-1 grid grid-cols-2">
+      <div className="grid grid-cols-2 space-y-1 pl-4">
         {sgaClassif.map((classification, index) => {
-          const sgaData = sgaClassification.find(sga => String(sga.id) === classification?.idSgaClassif);
+          const sgaData = sgaClassification.find(
+            (sga) => String(sga.id) === classification?.idSgaClassif,
+          );
 
           if (!!sgaData?.iconImage) {
             return (
@@ -50,4 +59,4 @@ export default function SGAClassification ({ sgaClassif }: { sgaClassif: IMateri
       </div>
     </div>
   );
-};
+}

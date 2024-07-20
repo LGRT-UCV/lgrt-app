@@ -8,9 +8,13 @@ import { Routes } from "@/lib/constants";
 import { createMaterial, updateMaterial } from "../../utils";
 import type { TMaterial, TMaterialForm, TMaterialType } from "../../interfaces";
 
-export default function useMaterialForm (formIntance: FormInstance, materialData?: TMaterial) {
+export default function useMaterialForm(
+  formIntance: FormInstance,
+  materialData?: TMaterial,
+) {
   const [currentMeasurement, setCurrentMeasurement] = useState<string>("");
-  const [currentMaterialType, setCurrentMaterialType] = useState<TMaterialType>();
+  const [currentMaterialType, setCurrentMaterialType] =
+    useState<TMaterialType>();
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
   const router = useRouter();
@@ -19,8 +23,9 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
     if (
       typeof materialData === "undefined" ||
       typeof formIntance === "undefined"
-    ) return;
-    
+    )
+      return;
+
     const {
       measurement,
       materialType,
@@ -35,7 +40,7 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
       measurement: measurement.id,
       materialType: JSON.stringify(materialType),
       storagePlace: storagePlace.id,
-      sgaClassif: sgaClassif.map((sga) => (sga?.idSgaClassif ?? "")),
+      sgaClassif: sgaClassif.map((sga) => sga?.idSgaClassif ?? ""),
       expirationDate: dayjs(expirationDate),
       ...nfpaClassif,
       ...material,
@@ -44,7 +49,7 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
     formIntance.setFieldsValue(fieldData);
     setCurrentMaterialType(materialType);
     handleCurrentMeasurement(
-      `${measurement.description} (${measurement.name})`
+      `${measurement.description} (${measurement.name})`,
     );
   }, [materialData]);
 
@@ -77,7 +82,7 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
           nfpaYellow,
         },
         materialType: {
-          id: materialTypeParsed.id
+          id: materialTypeParsed.id,
         },
         measurement: {
           id: measurement,
@@ -85,7 +90,7 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
         storagePlace: {
           id: storagePlace,
         },
-        sgaClassif: sgaClassif.map(sga => ({ idSgaClassif: sga })),
+        sgaClassif: sgaClassif.map((sga) => ({ idSgaClassif: sga })),
         weight: weight?.toString(),
         superUse: !!superUse,
         sensibleMaterial: !!sensibleMaterial,
@@ -93,7 +98,8 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
       };
       const sessionToken = sessionData?.user.token;
 
-      if (typeof sessionToken === "undefined") throw new Error("Sesión vencida");
+      if (typeof sessionToken === "undefined")
+        throw new Error("Sesión vencida");
 
       if (!!materialData) {
         await updateMaterial(materialData.id, materialToSave, sessionToken);
@@ -105,11 +111,16 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
         "success",
         "Material guardado con exito",
         `El material ${values.name} ha sido creado con exito.`,
-        "topRight"
+        "topRight",
       );
       void router.push(Routes.Inventory);
     } catch (error) {
-      openNotification("error", "Ha ocurrido un error al guardar el material", "", "topRight");
+      openNotification(
+        "error",
+        "Ha ocurrido un error al guardar el material",
+        "",
+        "topRight",
+      );
       console.log("ERROR: ", error);
     }
   };
@@ -128,5 +139,5 @@ export default function useMaterialForm (formIntance: FormInstance, materialData
     hasField,
     onFinish,
     setCurrentMaterialType,
-  }
-};
+  };
+}

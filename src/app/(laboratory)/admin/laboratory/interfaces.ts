@@ -13,11 +13,11 @@ export interface ILaboratory extends IGenericId {
   description?: string;
   area?: string;
   status?: string;
-};
+}
 
 export type TLaboratory = ILaboratory;
 
 export interface ILaboratoryForm {
   formIntance: FormInstance;
   LaboratoryData?: TLaboratory;
-};
+}

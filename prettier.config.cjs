@@ -11,9 +11,7 @@ const config = {
   semi: true,
   trailingComma: "all",
   tabWidth: 2,
-  plugins: [
-    "prettier-plugin-tailwindcss",
-  ],
+  plugins: ["prettier-plugin-tailwindcss"],
   importOrder: [
     "^(react/(.*)$)|^(react$)|^(react-native(.*)$)",
     "^(next/(.*)$)|^(next$)",

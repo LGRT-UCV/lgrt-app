@@ -13,7 +13,7 @@ import useNotification from "@/hooks/useNotification";
 import { useLabProvider } from "@/context/labProvider";
 import { Roles, Routes } from "@/lib/constants";
 
-export default function NewMaterial () {
+export default function NewMaterial() {
   const { role } = useLabProvider();
   const [form] = useForm();
   const searchParams = useSearchParams();
@@ -42,22 +42,27 @@ export default function NewMaterial () {
 
         return await await getMaterial(
           sessionData?.user.token ?? "",
-          materialId
+          materialId,
         );
       } catch (error) {
-        openNotification("error", "Ha ocurrido un error al obtener el material", "", "topRight");
+        openNotification(
+          "error",
+          "Ha ocurrido un error al obtener el material",
+          "",
+          "topRight",
+        );
         return;
       }
     },
     enabled: !!sessionData?.user.token,
   });
 
-
-  if (isLoading) return (
-    <div className="w-full text-center pt-4">
-      <LoadingOutlined className="text-3xl" />
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <>
@@ -77,4 +82,4 @@ export default function NewMaterial () {
       </div>
     </>
   );
-};
+}

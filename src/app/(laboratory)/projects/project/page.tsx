@@ -11,7 +11,7 @@ import ProjectForm from "./components/projectForm";
 import { getProject } from "../utils";
 import useNotification from "@/hooks/useNotification";
 
-export default function NewProject () {
+export default function NewProject() {
   const [form] = useForm();
   const searchParams = useSearchParams();
   const { data: sessionData } = useSession();
@@ -65,4 +65,4 @@ export default function NewProject () {
       </div>
     </>
   );
-};
+}

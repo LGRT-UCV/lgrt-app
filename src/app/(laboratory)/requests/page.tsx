@@ -1,7 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import { Modal, Button, Divider, Popover, Tag, type TableColumnsType } from "antd";
+import {
+  Modal,
+  Button,
+  Divider,
+  Popover,
+  Tag,
+  type TableColumnsType,
+} from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import type { AnyObject } from "antd/es/_util/type";
@@ -16,7 +23,7 @@ import DetailsModal from "./components/modals/detailsModal";
 import CreateRequestModal from "./components/modals/createRequestModal";
 import { isMobile } from "react-device-detect";
 
-export default function Requests () {
+export default function Requests() {
   const [form] = useForm();
   const {
     openDetailsModal,
@@ -35,23 +42,30 @@ export default function Requests () {
   } = useRequest();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columsList = requestFields.filter(fields => "status" !== fields.id);
-    const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
-      title: column.label,
-      width: "idRequester" === column.id ? 50 : "id" === column.id ? 7 : 20,
-      dataIndex: column.id,
-      key: column.id,
-      fixed: ["id", "idRequester"].includes(column.id) && !isMobile ? "left" : undefined,
-      align: "center",
-    }));
+    const columsList = requestFields.filter((fields) => "status" !== fields.id);
+    const columnToShow: TableColumnsType<AnyObject> = columsList.map(
+      (column) => ({
+        title: column.label,
+        width: "idRequester" === column.id ? 50 : "id" === column.id ? 7 : 20,
+        dataIndex: column.id,
+        key: column.id,
+        fixed:
+          ["id", "idRequester"].includes(column.id) && !isMobile
+            ? "left"
+            : undefined,
+        align: "center",
+      }),
+    );
     const renderColumns = columnToShow.concat([
       {
         title: "Status",
         align: "center",
         width: 20,
         render: (record: IRequest & { key: string }) => (
-          <Tag color={getStatus(record.status).statusColor} className="mx-auto">{getStatus(record.status).status}</Tag>
-        )
+          <Tag color={getStatus(record.status).statusColor} className="mx-auto">
+            {getStatus(record.status).status}
+          </Tag>
+        ),
       },
       {
         width: isMobile ? 4 : 10,
@@ -60,32 +74,32 @@ export default function Requests () {
         render: (record: IRequest & { key: string }) => (
           <Popover
             placement="topRight"
-            content={(
+            content={
               <div className="text-center">
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => handleRequestDetails(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Ver solicitud
                 </span>
-                <Divider className="m-2"/>
-                {ableToDelete(record) ?
+                <Divider className="m-2" />
+                {ableToDelete(record) ? (
                   <span
                     onClick={() => void handleDeleteRequest(record)}
                     className="h-full w-full cursor-pointer"
                   >
                     Eliminar
                   </span>
-                  : null}
+                ) : null}
               </div>
-            )}
+            }
             title="Opciones"
           >
-            <MoreOutlined className="cursor-pointer"/>
+            <MoreOutlined className="cursor-pointer" />
           </Popover>
         ),
-      }
+      },
     ]);
     return renderColumns;
   }, []);
@@ -113,8 +127,8 @@ export default function Requests () {
         }}
       />
 
-      <TableFilter filters={filters}/>
-      
+      <TableFilter filters={filters} />
+
       <Table
         columns={columns}
         data={tableData.reverse()}
@@ -136,7 +150,7 @@ export default function Requests () {
             onClick={form.submit}
           >
             Crear solicitud
-          </Button>
+          </Button>,
         ]}
       >
         <CreateRequestModal form={form} closeModal={handleUpdateRequest} />
@@ -152,27 +166,31 @@ export default function Requests () {
         }}
         width={600}
         okButtonProps={{
-          className: "bg-blue-500"
+          className: "bg-blue-500",
         }}
-        footer={ableToDelete() ? [
-          <Button
-            key="delete"
-            className="bg-red-500 hover:!bg-red-400 !text-white border-none"
-            onClick={() => void handleDeleteRequest(currentRequest)}
-          >
-            Eliminar solcitud
-          </Button>
-        ] : []}
+        footer={
+          ableToDelete()
+            ? [
+                <Button
+                  key="delete"
+                  className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                  onClick={() => void handleDeleteRequest(currentRequest)}
+                >
+                  Eliminar solcitud
+                </Button>,
+              ]
+            : []
+        }
       >
         <DetailsModal
-          request={currentRequest} 
-          closeModal={ () => {
+          request={currentRequest}
+          closeModal={() => {
             setOpenDetailsModal(false);
             handleUpdateRequest();
-            handleRequestDetails(undefined, false)
+            handleRequestDetails(undefined, false);
           }}
         />
       </Modal>
     </>
-  )
-};
+  );
+}

@@ -9,11 +9,11 @@ export type TSaveStorage = {
 export interface IStorage extends IGenericId {
   name: string;
   description?: string;
-};
+}
 
 export type TStorage = IStorage;
 
 export interface IStorageForm {
   formIntance: FormInstance;
   StorageData?: TStorage;
-};
+}

@@ -16,7 +16,7 @@ type TLoginFormData = {
   remember: boolean;
 };
 
-export default function LoginForm () {
+export default function LoginForm() {
   const { openNotification, notificationElement } = useNotification();
   const router = useRouter();
 
@@ -29,9 +29,11 @@ export default function LoginForm () {
 
     if (responseNextAuth?.error) {
       responseNextAuth.error.split(",").map((error, index) => {
-        const msg = error.includes("Bad credentials") || error.includes("CredentialsSignin") ?
-          "Email o contraseña inválido" :
-          error;
+        const msg =
+          error.includes("Bad credentials") ||
+          error.includes("CredentialsSignin")
+            ? "Email o contraseña inválido"
+            : error;
         openNotification("error", msg, "", "topRight");
         console.log("ERROR: ", error);
       });
@@ -44,9 +46,9 @@ export default function LoginForm () {
   return (
     <>
       {notificationElement}
-      <div className="text-center my-8">
+      <div className="my-8 text-center">
         <Title className="py-2">Iniciar Sesión</Title>
-        <Text className="py-4 w-3/4 mx-auto">
+        <Text className="mx-auto w-3/4 py-4">
           {`Bienvenido al ${LAB_DETAILS.longName}. Por favor ingrese los datos abajo para iniciar sesión`}
         </Text>
       </div>
@@ -59,7 +61,7 @@ export default function LoginForm () {
         layout="vertical"
         requiredMark="optional"
         size="large"
-        className="w-3/4 mx-auto"
+        className="mx-auto w-3/4"
       >
         <Form.Item
           name="email"
@@ -71,10 +73,7 @@ export default function LoginForm () {
             },
           ]}
         >
-          <Input
-            prefix={<MailOutlined />}
-            placeholder="Correo"
-          />
+          <Input prefix={<MailOutlined />} placeholder="Correo" />
         </Form.Item>
         <Form.Item
           name="password"
@@ -97,7 +96,11 @@ export default function LoginForm () {
           </Link>
         </Form.Item>
         <Form.Item className="mb-0">
-          <Button block className="bg-brand-primary text-brand-dark-light" htmlType="submit">
+          <Button
+            block
+            className="bg-brand-primary text-brand-dark-light"
+            htmlType="submit"
+          >
             Iniciar sesión
           </Button>
           {/* <div className="mt-16 text-center w-full">
@@ -108,4 +111,4 @@ export default function LoginForm () {
       </Form>
     </>
   );
-};
+}

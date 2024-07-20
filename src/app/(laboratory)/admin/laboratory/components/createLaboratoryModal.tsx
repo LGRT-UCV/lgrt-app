@@ -6,27 +6,32 @@ import TextArea from "antd/es/input/TextArea";
 import { ILaboratory } from "../interfaces";
 
 type TCreateLaboratoryModal = {
-  form: FormInstance,
-  data?: ILaboratory,
-  closeModal: () => void
+  form: FormInstance;
+  data?: ILaboratory;
+  closeModal: () => void;
 };
 
-export default function CreateLaboratoryModal ({ form, data, closeModal } : TCreateLaboratoryModal) {
-  const {
-    isLoading,
-    notificationElement,
-    onFinish,
-  } = useLaboratoryForm(() => {
-    form.resetFields();
-    closeModal();
-  }, form, data);
-
-  if (isLoading) return (
-    <div className="w-full text-center pt-4">
-      {notificationElement}
-      <LoadingOutlined className="text-3xl" />
-    </div>
+export default function CreateLaboratoryModal({
+  form,
+  data,
+  closeModal,
+}: TCreateLaboratoryModal) {
+  const { isLoading, notificationElement, onFinish } = useLaboratoryForm(
+    () => {
+      form.resetFields();
+      closeModal();
+    },
+    form,
+    data,
   );
+
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        {notificationElement}
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <div>
@@ -41,7 +46,7 @@ export default function CreateLaboratoryModal ({ form, data, closeModal } : TCre
         scrollToFirstError
         className="p-4"
       >
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col gap-4 md:flex-row">
           <Form.Item
             label="Nombre del laboratorio"
             name="name"
@@ -58,20 +63,20 @@ export default function CreateLaboratoryModal ({ form, data, closeModal } : TCre
             <Input placeholder="Nombre del laboratorio" maxLength={120} />
           </Form.Item>
           <Form.Item
-          label="Área"
-          name="area"
-          className="w-full md:w-1/3"
-          rules={[
-            {
-              required: true,
-              type: "string",
-              max: 120,
-              message: "Por favor verifique el área del laboratorio",
-            },
-          ]}
-        >
-          <Input placeholder="Área del laboratorio" maxLength={120} />
-        </Form.Item>
+            label="Área"
+            name="area"
+            className="w-full md:w-1/3"
+            rules={[
+              {
+                required: true,
+                type: "string",
+                max: 120,
+                message: "Por favor verifique el área del laboratorio",
+              },
+            ]}
+          >
+            <Input placeholder="Área del laboratorio" maxLength={120} />
+          </Form.Item>
         </div>
         <Form.Item
           name="description"
@@ -85,9 +90,13 @@ export default function CreateLaboratoryModal ({ form, data, closeModal } : TCre
             },
           ]}
         >
-          <TextArea placeholder="Descripción del laboratorio..." rows={4} maxLength={500}/>
+          <TextArea
+            placeholder="Descripción del laboratorio..."
+            rows={4}
+            maxLength={500}
+          />
         </Form.Item>
       </Form>
     </div>
   );
-};
+}

@@ -24,9 +24,7 @@ export default function RootLayout({
         <main className="min-h-screen">
           <SessionAuthProvider>
             <QueryClientProvider>
-              <LabProvider>
-                {children}
-              </LabProvider>
+              <LabProvider>{children}</LabProvider>
             </QueryClientProvider>
           </SessionAuthProvider>
         </main>

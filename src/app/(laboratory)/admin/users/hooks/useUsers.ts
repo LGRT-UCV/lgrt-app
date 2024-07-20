@@ -7,7 +7,7 @@ import useNotification from "@/hooks/useNotification";
 import { getAllUsers, updateUser, userRoles } from "../utils";
 import type { IUser, TStatus } from "../interfaces";
 
-export default function useUser () {
+export default function useUser() {
   const [form] = useForm();
   const [searchValue, setSearchValue] = useState("");
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -16,7 +16,11 @@ export default function useUser () {
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
-  const { data: userList= [], isLoading, refetch } = useQuery({
+  const {
+    data: userList = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
       try {
@@ -26,7 +30,7 @@ export default function useUser () {
           "error",
           "Ha ocurrido un error al obtener los usuarios",
           "",
-          "topRight"
+          "topRight",
         );
         return [];
       }
@@ -39,12 +43,17 @@ export default function useUser () {
     void refetch();
   };
 
-  const handleUserStatus = async (userId: string, status: TStatus) => {  
+  const handleUserStatus = async (userId: string, status: TStatus) => {
     if (userId === "") {
-      openNotification("error", "No se ha seleccionado un usuario a eliminar", "", "topRight");
+      openNotification(
+        "error",
+        "No se ha seleccionado un usuario a eliminar",
+        "",
+        "topRight",
+      );
       return;
     }
-    
+
     try {
       await updateUser(
         userId,
@@ -55,20 +64,20 @@ export default function useUser () {
       );
       void refetch();
       setOpenDetailsModal(false);
-      openNotification(
-        "success",
-        "",
-        "Usuario actualizado",
-        "topRight"
-      );
+      openNotification("success", "", "Usuario actualizado", "topRight");
     } catch (error) {
       console.error("Error", error);
-      openNotification("error", "Ha ocurrido un error al eliminar el usuario", "", "topRight");
+      openNotification(
+        "error",
+        "Ha ocurrido un error al eliminar el usuario",
+        "",
+        "topRight",
+      );
     }
   };
 
   const handleUserDetails = (user?: IUser, show = true) => {
-    setCurrentUser(user)
+    setCurrentUser(user);
     setOpenDetailsModal(show);
   };
 
@@ -76,17 +85,23 @@ export default function useUser () {
     const search = searchValue.toLocaleLowerCase();
     const users = userList.filter((user) => {
       const userFullName = `${user.name} ${user.lastName}`;
-      return user.id.toLocaleLowerCase().includes(search) ||
+      return (
+        user.id.toLocaleLowerCase().includes(search) ||
         userFullName.toLocaleLowerCase().includes(search) ||
-        user.laboratory.name.toLocaleLowerCase().includes(search);
+        user.laboratory.name.toLocaleLowerCase().includes(search)
+      );
     });
-    return users.map((user, index) => ({
-      ...user,
-      key: `user-${index}`,
-      idRoleId: Number(user.idRoleId),
-      laboratoryName: user.laboratory.name,
-      role: userRoles.find(role => role.id === Number(user.idRoleId))?.roleName ?? "External",
-    })) ?? [];
+    return (
+      users.map((user, index) => ({
+        ...user,
+        key: `user-${index}`,
+        idRoleId: Number(user.idRoleId),
+        laboratoryName: user.laboratory.name,
+        role:
+          userRoles.find((role) => role.id === Number(user.idRoleId))
+            ?.roleName ?? "External",
+      })) ?? []
+    );
   }, [userList, searchValue]);
 
   useEffect(() => {
@@ -113,4 +128,4 @@ export default function useUser () {
     handleUpdateUser,
     setCurrentUser,
   };
-};
+}

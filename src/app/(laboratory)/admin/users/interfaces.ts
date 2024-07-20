@@ -26,14 +26,14 @@ export interface IUser extends IGenericId {
   status: TStatus;
   idRoleId: string;
   laboratory: TLaboratory;
-};
+}
 
 export type TUser = IUser;
 
 export interface IUserForm {
   formIntance: FormInstance;
   UserData?: TUser;
-};
+}
 
 export type TStatus = "A" | "I";
 

@@ -10,10 +10,14 @@ import type { IProject, TSaveProject } from "../../interfaces";
 import { createProject } from "../../utils";
 import { Routes } from "@/lib/constants";
 
-export default function useProjectForm (formIntance: FormInstance, projectData?: IProject) {
+export default function useProjectForm(
+  formIntance: FormInstance,
+  projectData?: IProject,
+) {
   const [measurements, setMeasurements] = useState<Array<string>>([]);
   const { openNotification, notificationElement } = useNotification();
-  const { materialTypeList, isLoading: isMaterialInitLoading } = useMaterialInit(["materialType"]);
+  const { materialTypeList, isLoading: isMaterialInitLoading } =
+    useMaterialInit(["materialType"]);
   const { data: sessionData } = useSession();
   const router = useRouter();
 
@@ -23,14 +27,16 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
       try {
         const materials = await getAllMaterials(sessionData?.user.token ?? "");
         const materialsToList = [];
-        
+
         for (const materialType of materialTypeList) {
-          const childrenByType = materials.filter(material => material.materialType.id === materialType.id);
+          const childrenByType = materials.filter(
+            (material) => material.materialType.id === materialType.id,
+          );
           materialsToList.push({
             value: materialType.id,
             title: materialType.name,
             disabled: true,
-            children: childrenByType.map(material => ({
+            children: childrenByType.map((material) => ({
               value: material.id,
               title: `#${material.id} - ${material.name}`,
             })),
@@ -41,7 +47,12 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
           materialsToList,
         };
       } catch (error) {
-        openNotification("error", "Ha ocurrido un error al obtener los materiales", "", "topRight");
+        openNotification(
+          "error",
+          "Ha ocurrido un error al obtener los materiales",
+          "",
+          "topRight",
+        );
         return;
       }
     },
@@ -52,35 +63,49 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
     try {
       const sessionToken = sessionData?.user.token;
 
-      if (typeof sessionToken === "undefined") throw new Error("Sesión vencida");
+      if (typeof sessionToken === "undefined")
+        throw new Error("Sesión vencida");
 
-      const projectMaterial = values.projectMaterial?.map(material => ({
+      const projectMaterial = values.projectMaterial?.map((material) => ({
         idMaterial: material.idMaterial,
         quantity: material.quantity.toString(),
       }));
 
-      await createProject({
-        ...values,
-        projectMaterial,
-        file: []
-      } , sessionToken);
+      await createProject(
+        {
+          ...values,
+          projectMaterial,
+          file: [],
+        },
+        sessionToken,
+      );
 
       openNotification(
         "success",
         "Proyecto guardado con exito",
         `El proyecto ${values.name} ha sido creado con exito.`,
-        "topRight"
+        "topRight",
       );
       void router.push(Routes.Inventory);
     } catch (error) {
-      openNotification("error", "Ha ocurrido un error al guardar el proyecto", "", "topRight");
+      openNotification(
+        "error",
+        "Ha ocurrido un error al guardar el proyecto",
+        "",
+        "topRight",
+      );
       console.log("ERROR: ", error);
     }
   };
 
   const handleMeasurements = (id: string) => {
-    const materialData = materialList?.materials?.find((material) => material.id === id);
-    setMeasurements([...measurements, materialData?.measurement.description ?? ""]);
+    const materialData = materialList?.materials?.find(
+      (material) => material.id === id,
+    );
+    setMeasurements([
+      ...measurements,
+      materialData?.measurement.description ?? "",
+    ]);
   };
 
   return {
@@ -91,4 +116,4 @@ export default function useProjectForm (formIntance: FormInstance, projectData?:
     onFinish,
     handleMeasurements,
   };
-};
+}

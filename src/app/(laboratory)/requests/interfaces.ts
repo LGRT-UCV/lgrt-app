@@ -8,9 +8,9 @@ export enum RequestStatus {
   Delivered = "E",
   Returned = "D",
   Rejected = "R",
-};
+}
 
-export type TStatus = typeof RequestStatus[keyof typeof RequestStatus];
+export type TStatus = (typeof RequestStatus)[keyof typeof RequestStatus];
 
 export type TRequestStatus = {
   label: string;
@@ -56,9 +56,9 @@ export interface IRequest {
   returnDate: string;
   dateupd: string;
   datecre: string;
-};
+}
 
 export interface IRequestForm {
   formIntance: FormInstance;
   RequestData?: IRequest;
-};
+}

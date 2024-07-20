@@ -6,27 +6,32 @@ import TextArea from "antd/es/input/TextArea";
 import { IStorage } from "../interfaces";
 
 type TCreateStorageModal = {
-  form: FormInstance,
-  data?: IStorage,
-  closeModal: () => void
+  form: FormInstance;
+  data?: IStorage;
+  closeModal: () => void;
 };
 
-export default function CreateStorageModal ({ form, data, closeModal } : TCreateStorageModal) {
-  const {
-    isLoading,
-    notificationElement,
-    onFinish,
-  } = useStorageForm(() => {
-    form.resetFields();
-    closeModal();
-  }, form, data);
-
-  if (isLoading) return (
-    <div className="w-full text-center pt-4">
-      {notificationElement}
-      <LoadingOutlined className="text-3xl" />
-    </div>
+export default function CreateStorageModal({
+  form,
+  data,
+  closeModal,
+}: TCreateStorageModal) {
+  const { isLoading, notificationElement, onFinish } = useStorageForm(
+    () => {
+      form.resetFields();
+      closeModal();
+    },
+    form,
+    data,
   );
+
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        {notificationElement}
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <div>
@@ -41,7 +46,7 @@ export default function CreateStorageModal ({ form, data, closeModal } : TCreate
         scrollToFirstError
         className="p-4"
       >
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col gap-4 md:flex-row">
           <Form.Item
             label="Identificador"
             name="id"
@@ -53,7 +58,11 @@ export default function CreateStorageModal ({ form, data, closeModal } : TCreate
               },
             ]}
           >
-            <InputNumber className="w-full" placeholder="Número de identificador" max={9999} />
+            <InputNumber
+              className="w-full"
+              placeholder="Número de identificador"
+              max={9999}
+            />
           </Form.Item>
           <Form.Item
             label="Nombre del almacenamiento"
@@ -83,9 +92,13 @@ export default function CreateStorageModal ({ form, data, closeModal } : TCreate
             },
           ]}
         >
-          <TextArea placeholder="Descripción del almacenamiento..." rows={4} maxLength={500}/>
+          <TextArea
+            placeholder="Descripción del almacenamiento..."
+            rows={4}
+            maxLength={500}
+          />
         </Form.Item>
       </Form>
     </div>
   );
-};
+}

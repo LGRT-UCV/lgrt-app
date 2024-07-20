@@ -16,14 +16,17 @@ type TResetPasswordFormData = {
   confirmPassword: string;
 };
 
-export default function ResetPassword () {
+export default function ResetPassword() {
   const { openNotification, notificationElement } = useNotification();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const onFinish = async (values: TResetPasswordFormData) => {
     try {
-      if (values.password !== values.confirmPassword || values.password.length < 6)
+      if (
+        values.password !== values.confirmPassword ||
+        values.password.length < 6
+      )
         throw new Error("Verifique su contraseña");
 
       const email = searchParams.get("email") ?? "";
@@ -31,20 +34,23 @@ export default function ResetPassword () {
         email,
         values.token,
         values.password,
-        values.confirmPassword
+        values.confirmPassword,
       );
       openNotification(
         "success",
         "Contraseña establecida correctamente",
         "",
-        "topRight"
+        "topRight",
       );
       void router.push(Routes.Login);
-    // @ts-expect-error
+      // @ts-expect-error
     } catch (error: Error) {
-      const msg = error.message.includes("The user does not have any token available.") || error.message.includes("The token is wrong") || error.message.includes("The token has expired") ?
-          "Token o inválido" :
-          error.message;
+      const msg =
+        error.message.includes("The user does not have any token available.") ||
+        error.message.includes("The token is wrong") ||
+        error.message.includes("The token has expired")
+          ? "Token o inválido"
+          : error.message;
       openNotification("error", msg, "", "topRight");
       console.log("ERROR: ", error);
     }
@@ -53,9 +59,9 @@ export default function ResetPassword () {
   return (
     <>
       {notificationElement}
-      <div className="text-center my-8">
+      <div className="my-8 text-center">
         <Title className="py-2">Recuperar contraseña</Title>
-        <Text className="py-4 w-3/4 mx-auto">
+        <Text className="mx-auto w-3/4 py-4">
           {`Bienvenido al ${LAB_DETAILS.longName}. Por favor ingrese su email para recuperar su contraseña`}
         </Text>
       </div>
@@ -68,7 +74,7 @@ export default function ResetPassword () {
         layout="vertical"
         requiredMark="optional"
         size="large"
-        className="w-3/4 mx-auto"
+        className="mx-auto w-3/4"
       >
         <Form.Item
           name="token"
@@ -118,7 +124,11 @@ export default function ResetPassword () {
           />
         </Form.Item>
         <Form.Item className="mb-0">
-          <Button block className="bg-brand-primary text-brand-dark-light" htmlType="submit">
+          <Button
+            block
+            className="bg-brand-primary text-brand-dark-light"
+            htmlType="submit"
+          >
             Cambiar contraseña
           </Button>
         </Form.Item>
@@ -130,4 +140,4 @@ export default function ResetPassword () {
       </Form>
     </>
   );
-};
+}

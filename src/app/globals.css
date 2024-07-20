@@ -22,12 +22,12 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #2B2F29;
+  background-color: #2b2f29;
   border-radius: 3px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #2B2F29;
+  background: #2b2f29;
 }
 
 @layer utilities {

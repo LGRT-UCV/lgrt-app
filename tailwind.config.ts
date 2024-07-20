@@ -15,13 +15,13 @@ const config: Config = {
       },
       colors: {
         brand: {
-          "primary": "#CEDAF3",
-          "secondary": "#76ABAE",
-          "dark": "#222831",
+          primary: "#CEDAF3",
+          secondary: "#76ABAE",
+          dark: "#222831",
           "dark-light": "#31363F",
-          "light": "#EEEEEE"
-        }
-      }
+          light: "#EEEEEE",
+        },
+      },
     },
   },
   plugins: [],

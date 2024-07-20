@@ -40,7 +40,7 @@ export interface IMaterial {
     nfpaYellow: number;
     nfpaWhite: string;
   };
-  sgaClassif: Array<{ idSgaClassif: string } | undefined>
+  sgaClassif: Array<{ idSgaClassif: string } | undefined>;
   presentation?: string;
   brand?: string;
   batch?: string;
@@ -52,15 +52,21 @@ export interface IMaterial {
   additionalInfo?: string;
   capacity?: string;
   code?: string;
-};
+}
 
-export type TMaterial = IMaterial & IGenericId & { measurement: TMeasurements } & { materialType: TMaterialType } & { storagePlace: TStoragePlace };
-export type TSaveMaterial = IMaterial & TMaterialTypeRequest & TMesurementsRequest & TStoragePlaceRequest;
+export type TMaterial = IMaterial &
+  IGenericId & { measurement: TMeasurements } & {
+    materialType: TMaterialType;
+  } & { storagePlace: TStoragePlace };
+export type TSaveMaterial = IMaterial &
+  TMaterialTypeRequest &
+  TMesurementsRequest &
+  TStoragePlaceRequest;
 
 export interface IMaterialForm {
   formIntance: FormInstance;
   materialData?: TMaterial;
-};
+}
 
 export type TMaterialTypeRequest = {
   materialType: IGenericId;
@@ -84,7 +90,7 @@ export type TMeasurements = {
   id: string;
   name: string;
   description: string;
-}
+};
 
 export type TSGAClassification = {
   id: number;
@@ -94,7 +100,7 @@ export type TSGAClassification = {
 };
 
 export type TStoragePlace = {
-  id: string;  
+  id: string;
   name: string;
   description: string;
 };

@@ -1,9 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import { Modal, Button, Divider, Popover, Tag, type TableColumnsType } from "antd";
+import {
+  Modal,
+  Button,
+  Divider,
+  Popover,
+  Tag,
+  type TableColumnsType,
+} from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
-import { useForm } from "antd/es/form/Form";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
@@ -13,41 +19,51 @@ import { fileFields } from "./utils";
 import type { IFile } from "./interfaces";
 import useFile from "./hooks/useFiles";
 import CreateFileModal from "./components/modals/createFileModal";
+import { isMobile } from "react-device-detect";
+import { useLabProvider } from "@/context/labProvider";
+import { Roles } from "@/lib/constants";
 
-export default function Files () {
-  const [form] = useForm();
+export default function Files() {
+  const { role } = useLabProvider();
   const {
+    form,
     tableData,
     isLoading,
+    currentFile,
     notificationElement,
     openCreateModal,
-    handleFileDetails,
+    handleEditFile,
     handleUpdateFile,
     handleDeleteFile,
     setOpenCreateModal,
-    setSearchValue
+    setSearchValue,
   } = useFile();
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
-    const columnToShow: TableColumnsType<AnyObject> = fileFields.map((column) => ({
-      title: column.label,
-      width: ["name", "description"].includes(column.id) ? 60 : 20,
-      dataIndex: column.id,
-      key: column.id,
-      fixed: ["name", "fileType"].includes(column.id) ? "left" : undefined,
-      align: "center",
-    }));
+    const columnToShow: TableColumnsType<AnyObject> = fileFields.map(
+      (column) => ({
+        title: column.label,
+        width: ["name", "description"].includes(column.id) ? 60 : 20,
+        dataIndex: column.id,
+        key: column.id,
+        fixed:
+          ["name", "fileType"].includes(column.id) && !isMobile
+            ? "left"
+            : undefined,
+        align: "center",
+      }),
+    );
     const renderColumns = columnToShow.concat([
       {
         align: "center",
         width: 20,
         render: (record: IFile & { key: string }) => (
-          <div className="text-center mx-auto">
+          <div className="mx-auto text-center">
             <a href={record.fileUri} target="_blank">
               <strong>Descargar</strong>
             </a>
           </div>
-        )
+        ),
       },
       {
         width: 10,
@@ -56,16 +72,16 @@ export default function Files () {
         render: (record: IFile & { key: string }) => (
           <Popover
             placement="topRight"
-            content={(
+            content={
               <div className="text-center">
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
-                  onClick={() => handleFileDetails(record)}
+                  onClick={() => handleEditFile(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Editar
                 </span>
-                <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => void handleDeleteFile(record)}
                   className="h-full w-full cursor-pointer"
@@ -73,13 +89,13 @@ export default function Files () {
                   Eliminar
                 </span>
               </div>
-            )}
+            }
             title="Opciones"
           >
-            <MoreOutlined className="cursor-pointer"/>
+            <MoreOutlined className="cursor-pointer" />
           </Popover>
         ),
-      }
+      },
     ]);
     return renderColumns;
   }, []);
@@ -99,16 +115,20 @@ export default function Files () {
     <>
       {notificationElement}
       <Header
-        title="Solicitudes"
-        btn={{
-          label: "Añadir nuevo",
-          icon: <PlusOutlined />,
-          onClick: () => setOpenCreateModal(true),
-        }}
+        title="Archivos"
+        btn={
+          [Roles.Admin, Roles.Personal, Roles.PersonalExtra].includes(role)
+            ? {
+                label: "Añadir nuevo",
+                icon: <PlusOutlined />,
+                onClick: () => setOpenCreateModal(true),
+              }
+            : undefined
+        }
       />
 
-      <TableFilter filters={filters}/>
-      
+      <TableFilter filters={filters} />
+
       <Table
         columns={columns}
         data={tableData.reverse()}
@@ -121,7 +141,10 @@ export default function Files () {
         centered
         open={openCreateModal}
         okText={"Editar"}
-        onCancel={() => setOpenCreateModal(false)}
+        onCancel={() => {
+          setOpenCreateModal(false);
+          form.resetFields();
+        }}
         width={800}
         footer={[
           <Button
@@ -129,12 +152,16 @@ export default function Files () {
             className="bg-blue-500 text-white"
             onClick={form.submit}
           >
-            Subir archivo
-          </Button>
+            {!!currentFile ? "Actualizar" : "Subir archivo"}
+          </Button>,
         ]}
       >
-        <CreateFileModal form={form} closeModal={handleUpdateFile} />
+        <CreateFileModal
+          form={form}
+          fileData={currentFile}
+          closeModal={handleUpdateFile}
+        />
       </Modal>
     </>
-  )
-};
+  );
+}

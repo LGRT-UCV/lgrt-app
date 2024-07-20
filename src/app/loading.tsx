@@ -1,9 +1,9 @@
-import { LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from "@ant-design/icons";
 
-export default function RootLoading () {
+export default function RootLoading() {
   return (
-    <div className="w-screen h-screen">
-      <LoadingOutlined className="mx-auto"/>
+    <div className="h-screen w-screen">
+      <LoadingOutlined className="mx-auto" />
     </div>
   );
-};
+}

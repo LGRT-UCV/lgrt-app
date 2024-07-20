@@ -1,7 +1,16 @@
 import type { IGenericId } from "@/types/app";
 import type { FormInstance } from "antd/lib";
+import type { TUser } from "../admin/users/interfaces";
 
-export type TStatus = "P" | "A" | "E" | "D" | "R";
+export enum RequestStatus {
+  Pending = "P",
+  Approved = "A",
+  Delivered = "E",
+  Returned = "D",
+  Rejected = "R",
+}
+
+export type TStatus = (typeof RequestStatus)[keyof typeof RequestStatus];
 
 export type TRequestStatus = {
   label: string;
@@ -10,10 +19,10 @@ export type TRequestStatus = {
 
 export type TUpdateRequestStatus = {
   status?: TStatus;
-  commentsRequester?: string;
-  commentsResponsible?: string;
-  commentsRequesterReturn?: string;
-  commentsResponsibleReturn?: string;
+  commentsRequester?: string | null;
+  commentsResponsible?: string | null;
+  commentsRequesterReturn?: string | null;
+  commentsResponsibleReturn?: string | null;
 };
 
 export type TSaveRequest = {
@@ -31,19 +40,6 @@ export type TRequestMaterial = {
   quantity: string | number;
 };
 
-export type TLaboratory = {
-  id: string;
-  name: string;
-};
-
-export interface IUser extends IGenericId {
-  name: string;
-  lastName: string;
-  laboratory: TLaboratory;
-};
-
-export type TUser = IUser;
-
 export interface IRequest {
   id: string;
   commentsRequester: string;
@@ -60,9 +56,9 @@ export interface IRequest {
   returnDate: string;
   dateupd: string;
   datecre: string;
-};
+}
 
 export interface IRequestForm {
   formIntance: FormInstance;
   RequestData?: IRequest;
-};
+}

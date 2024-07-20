@@ -13,14 +13,13 @@ type TagRender = SelectProps["tagRender"];
 interface IDetailsModal {
   project?: IProject;
   closeModal: () => void;
-};
+}
 
-export default function DetailsModal ({
-  project,
-  closeModal,
-}: IDetailsModal) {
+export default function DetailsModal({ project, closeModal }: IDetailsModal) {
   const [statusSelected, setStatusSelected] = useState<string>();
-  const [currentMaterials, setCurrentMaterials] = useState<Array<TMaterial>>([]);
+  const [currentMaterials, setCurrentMaterials] = useState<Array<TMaterial>>(
+    [],
+  );
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
@@ -46,8 +45,14 @@ export default function DetailsModal ({
       const materials: Array<TMaterial> = [];
       const sessionToken = sessionData?.user.token ?? "";
       for (const material of project.projectMaterial) {
-        const materialData = await getMaterial(sessionToken, material.idMaterial);
-        materials.push({ ...materialData, quantity: material.quantity.toString() });
+        const materialData = await getMaterial(
+          sessionToken,
+          material.idMaterial,
+        );
+        materials.push({
+          ...materialData,
+          quantity: material.quantity.toString(),
+        });
       }
       setCurrentMaterials([...materials]);
     };
@@ -84,7 +89,7 @@ export default function DetailsModal ({
         "success",
         "Proyecto actualizado con exito",
         `El status ${statusSelected} ha sido guardado con exito.`,
-        "topRight"
+        "topRight",
       );
       closeModal();
     } catch (error) {
@@ -92,83 +97,87 @@ export default function DetailsModal ({
         "error",
         "Error al guardar el proyecto",
         "Ha ocurrido un error al cambiar el status del proyecto",
-        "topRight"
+        "topRight",
       );
       console.log("ERROR: ", error);
     }
   };
-  
-  return (<>
-    {notificationElement}
-    <div className="mx-auto p-4 max-h-[calc(100vh-200px)] overflow-auto">
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-        <h2 className="text-xl font-bold">{project.name}</h2>
-        <Tag color={statusColor}>
-          {status}
-        </Tag>
-      </div>
-      <div className="p-4 space-y-4">
-        <div className="w-full">
-          <strong>Descripción:</strong>
-          <br />
-          <p>{project.description}</p>
-        </div>
-        <div className="w-full grid grid-cols-2 space-y-4">
-          <div className="mt-4">
-            <strong>Responsable:</strong> {project.projectManager}
-          </div>
-          <div>
-            <a href={project.projectUri} target="_blank"><strong>Ver Archivo</strong></a>
-          </div>
-        </div>
 
-        <div className="w-full flex flex-col gap-1">
-          <strong>Materiales:</strong>
-          {currentMaterials.map((material, index) => (
-            <div key={`material-${index}`} className="w-full grid grid-cols-2">
-              <p>
-                {material.name}
-              </p>
-              <p>
-                {material.quantity}{material.measurement.name}
-              </p>
-            </div>
-          ))}
+  return (
+    <>
+      {notificationElement}
+      <div className="mx-auto max-h-[calc(100vh-200px)] overflow-auto p-4">
+        <div className="flex items-center justify-between border-b border-gray-200 p-4">
+          <h2 className="text-xl font-bold">{project.name}</h2>
+          <Tag color={statusColor}>{status}</Tag>
         </div>
-
-        <div className="w-full flex flex-col gap-1">
-          <strong>Cambiar status:</strong>
-          <div className="w-full grid grid-cols-2 items-center space-x-4">
-            <div className="flex gap-2 items-center">
-              <Select
-                tagRender={tagRender}
-                defaultValue={[project.status ?? "I"]}
-                onSelect={value => setStatusSelected(value)}
-                style={{ width: "100%" }}
-                options={[
-                  {
-                    label: "Activo",
-                    value: "A",
-                  },
-                  {
-                    label: "Inactivo",
-                    value: "I",
-                  },
-                  {
-                    label: "En revisión",
-                    value: "R",
-                  },
-                  {
-                    label: "Finalizado",
-                    value: "D",
-                  },
-                ]}
-              />
+        <div className="space-y-4 p-4">
+          <div className="w-full">
+            <strong>Descripción:</strong>
+            <br />
+            <p>{project.description}</p>
+          </div>
+          <div className="grid w-full grid-cols-2 space-y-4">
+            <div className="mt-4">
+              <strong>Responsable:</strong> {project.projectManager}
             </div>
-            <Button onClick={onChangeStatus}>Cambiar</Button>
+            <div>
+              <a href={project.projectUri} target="_blank">
+                <strong>Ver Archivo</strong>
+              </a>
+            </div>
+          </div>
+
+          <div className="flex w-full flex-col gap-1">
+            <strong>Materiales:</strong>
+            {currentMaterials.map((material, index) => (
+              <div
+                key={`material-${index}`}
+                className="grid w-full grid-cols-2"
+              >
+                <p>{material.name}</p>
+                <p>
+                  {material.quantity}
+                  {material.measurement.name}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex w-full flex-col gap-1">
+            <strong>Cambiar status:</strong>
+            <div className="grid w-full grid-cols-2 items-center space-x-4">
+              <div className="flex items-center gap-2">
+                <Select
+                  tagRender={tagRender}
+                  defaultValue={[project.status ?? "I"]}
+                  onSelect={(value) => setStatusSelected(value)}
+                  style={{ width: "100%" }}
+                  options={[
+                    {
+                      label: "Activo",
+                      value: "A",
+                    },
+                    {
+                      label: "Inactivo",
+                      value: "I",
+                    },
+                    {
+                      label: "En revisión",
+                      value: "R",
+                    },
+                    {
+                      label: "Finalizado",
+                      value: "D",
+                    },
+                  ]}
+                />
+              </div>
+              <Button onClick={onChangeStatus}>Cambiar</Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </>);
-};
+    </>
+  );
+}

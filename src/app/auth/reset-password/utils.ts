@@ -7,9 +7,15 @@ export const resetPassword = async (
   newPassword: string,
   confirmPassword: string,
 ) => {
-  const password = createHash('sha256').update(newPassword).digest('base64');
-  const confirm = createHash('sha256').update(confirmPassword).digest('base64');
-  
+  const password = createHash("sha256")
+    .update(newPassword)
+    .digest("hex")
+    .toString();
+  const confirm = createHash("sha256")
+    .update(confirmPassword)
+    .digest("hex")
+    .toString();
+
   return await newRequest(
     `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/password/reset?id=${email}`,
     RequestMethods.POST,
@@ -18,6 +24,6 @@ export const resetPassword = async (
       token,
       newPassword: password,
       confirmPassword: confirm,
-    })
+    }),
   );
 };

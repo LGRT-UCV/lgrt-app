@@ -1,10 +1,10 @@
-import { Table as TableComponent } from 'antd';
-import type { TableColumnsType } from 'antd';
-import { AnyObject } from 'antd/es/_util/type';
+import { Table as TableComponent } from "antd";
+import type { TableColumnsType } from "antd";
+import { AnyObject } from "antd/es/_util/type";
 
 /**
  * Table interface
- * 
+ *
  * @property `columns` table columns
  * @property `data` registries list
  * @property `isLoading` loading data
@@ -17,20 +17,20 @@ export interface ITable {
   isLoading?: boolean;
   scrollX?: number;
   scrollY?: number;
-};
+}
 
 /**
  * Table component
- * 
+ *
  * @param columns table columns array
  * @param data table data
  * @param isLoading loading data
  * @param scrollX scroll x axis
  * @param scrollY scroll y axis
- * 
+ *
  * @returns Table component view
  */
-export default function Table ({
+export default function Table({
   columns,
   data,
   isLoading,
@@ -45,4 +45,4 @@ export default function Table ({
       loading={isLoading}
     />
   );
-};
+}

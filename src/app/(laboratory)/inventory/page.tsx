@@ -2,21 +2,23 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Modal, Button, Divider, Popover, type TableColumnsType  } from "antd";
+import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { Routes } from "@/lib/constants";
+import { Roles, Routes } from "@/lib/constants";
 import DetailsModal from "./material/components/detailsModal";
 import { fieldsToList } from "./material/utils";
 import useInventory from "./useInventory";
 import type { TMaterial } from "./interfaces";
+import { isMobile } from "react-device-detect";
+import { useLabProvider } from "@/context/labProvider";
 
-
-export default function Inventory () {
+export default function Inventory() {
+  const { role } = useLabProvider();
   const router = useRouter();
   const {
     openModal,
@@ -38,38 +40,49 @@ export default function Inventory () {
 
     const materialFileds = currentMaterialType.fields?.split(";") ?? [];
     materialFileds.push("id");
-    const columsList = fieldsToList.filter((field) => materialFileds.includes(field.id));
-    const columnToShow: TableColumnsType<AnyObject> = columsList.map((column) => ({
-      title: column.label,
-      width: column.id === "id" ? 30 : 100,
-      dataIndex: column.id,
-      key: column.id,
-      fixed: ["id", "name"].includes(column.id) ? "left" : undefined,
-      align: "center",
-    }));
-    columnToShow.push(({
-      width: 30,
+    const columsList = fieldsToList.filter((field) =>
+      materialFileds.includes(field.id),
+    );
+    const columnToShow: TableColumnsType<AnyObject> = columsList.map(
+      (column) => ({
+        title: column.label,
+        width: column.id === "id" ? 25 : 100,
+        dataIndex: column.id,
+        key: column.id,
+        fixed:
+          ["id", "name"].includes(column.id) &&
+          !isMobile &&
+          column.id !== "name"
+            ? "left"
+            : undefined,
+        align: "center",
+      }),
+    );
+    columnToShow.push({
+      width: 20,
       fixed: "right",
       render: (record: TMaterial & { key: string }) => (
         <Popover
           placement="topRight"
-          content={(
+          content={
             <div className="text-center">
-              <Divider className="m-2"/>
+              <Divider className="m-2" />
               <span
                 onClick={() => handleMaterialDetails(record)}
                 className="h-full w-full cursor-pointer"
               >
                 Ver material
               </span>
-              <Divider className="m-2"/>
+              <Divider className="m-2" />
               <span
-                onClick={() => void router.push(`${Routes.SaveMaterial}?id=${record.id}`)}
+                onClick={() =>
+                  void router.push(`${Routes.SaveMaterial}?id=${record.id}`)
+                }
                 className="h-full w-full cursor-pointer"
               >
-                  Editar
+                Editar
               </span>
-              <Divider className="m-2"/>
+              <Divider className="m-2" />
               <span
                 onClick={() => void handleDeleteMaterial(record)}
                 className="h-full w-full cursor-pointer"
@@ -77,13 +90,13 @@ export default function Inventory () {
                 Eliminar
               </span>
             </div>
-          )}
+          }
           title="Opciones"
         >
-          <MoreOutlined className="cursor-pointer"/>
+          <MoreOutlined className="cursor-pointer" />
         </Popover>
       ),
-    }));
+    });
     return columnToShow;
   }, [currentMaterialType]);
 
@@ -98,7 +111,9 @@ export default function Inventory () {
       })),
       defaultValue: currentMaterialType?.id,
       onChange(value) {
-        setCurrentMaterialType(materialTypeList.find((material) => material.id === value))
+        setCurrentMaterialType(
+          materialTypeList.find((material) => material.id === value),
+        );
       },
     },
     {
@@ -116,15 +131,19 @@ export default function Inventory () {
       {notificationElement}
       <Header
         title="Inventario"
-        btn={{
-          label: "Añadir nuevo",
-          icon: <PlusOutlined />,
-          onClick: () => void router.push(Routes.SaveMaterial),
-        }}
+        btn={
+          [Roles.Admin, Roles.Personal, Roles.PersonalExtra].includes(role)
+            ? {
+                label: "Añadir nuevo",
+                icon: <PlusOutlined />,
+                onClick: () => void router.push(Routes.SaveMaterial),
+              }
+            : undefined
+        }
       />
 
-      <TableFilter filters={filters}/>
-      
+      <TableFilter filters={filters} />
+
       <Table
         columns={columns}
         data={tableData.reverse()}
@@ -140,20 +159,20 @@ export default function Inventory () {
         onCancel={() => setOpenModal(false)}
         width={600}
         okButtonProps={{
-          className: "bg-blue-500"
+          className: "bg-blue-500",
         }}
         footer={[
           <Button
             key="delete"
-            className="bg-red-500 hover:!bg-red-400 !text-white border-none"
+            className="border-none bg-red-500 !text-white hover:!bg-red-400"
             onClick={() => void handleDeleteMaterial(currentMaterial)}
           >
             Eliminar material
-          </Button>
+          </Button>,
         ]}
       >
         <DetailsModal material={currentMaterial} />
       </Modal>
     </>
-  )
-};
+  );
+}

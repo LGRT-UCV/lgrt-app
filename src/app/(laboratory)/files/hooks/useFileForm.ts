@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
 import type { IFile, TFileForm } from "../interfaces";
@@ -73,6 +72,7 @@ export default function useFileForm(callback: () => void, fileData?: IFile) {
           "topRight",
         );
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       openNotification(
         "error",

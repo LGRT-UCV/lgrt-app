@@ -28,6 +28,7 @@ export default function RequestResetPassword() {
         "topRight",
       );
       void router.push(`${Routes.ResetPassword}?email=${values.email}`);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
     } catch (error: Error) {
       const msg =

@@ -91,7 +91,7 @@ export default function Projects() {
         width: 20,
         render: (record: IProject & { key: string }) => (
           <div className="mx-auto text-center">
-            <a href={record.projectUri} target="_blank">
+            <a href={record.projectUri} target="_blank" rel="noreferrer">
               <strong>Ver Archivo</strong>
             </a>
           </div>

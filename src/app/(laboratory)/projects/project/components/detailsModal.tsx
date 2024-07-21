@@ -61,6 +61,7 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
   }, []);
 
   const tagRender: TagRender = (props) => {
+    // eslint-disable-next-line react/prop-types
     const { label, value, closable, onClose } = props;
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
       event.preventDefault();
@@ -122,7 +123,7 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
               <strong>Responsable:</strong> {project.projectManager}
             </div>
             <div>
-              <a href={project.projectUri} target="_blank">
+              <a href={project.projectUri} target="_blank" rel="noreferrer">
                 <strong>Ver Archivo</strong>
               </a>
             </div>

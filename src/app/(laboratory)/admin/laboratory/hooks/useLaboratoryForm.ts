@@ -27,7 +27,7 @@ export default function useLaboratoryForm(
 
       setIsLoading(true);
 
-      if (!!labData) {
+      if (labData) {
         await updateLaboratory(labData.id, values, user.token);
       } else {
         await createLaboratory(values, user.token);
@@ -40,6 +40,7 @@ export default function useLaboratoryForm(
         "topRight",
       );
       callback();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       openNotification(
         "error",

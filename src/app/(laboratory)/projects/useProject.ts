@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
@@ -77,8 +77,6 @@ export default function useProject() {
     setOpenModal(show);
   };
 
-  const handleRequestMaterials = (project?: IProject) => {};
-
   const tableData: Array<AnyObject> = useMemo(() => {
     const search = searchValue.toLocaleLowerCase();
     const projects = projectList.filter(
@@ -107,6 +105,5 @@ export default function useProject() {
     setOpenModal,
     setSearchValue,
     handleUpdateProject,
-    handleRequestMaterials,
   };
 }

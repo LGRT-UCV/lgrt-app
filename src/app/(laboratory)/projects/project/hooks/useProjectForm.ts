@@ -6,14 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import useNotification from "@/hooks/useNotification";
 import { getAllMaterials } from "@/(laboratory)/inventory/utils";
 import useMaterialInit from "@/(laboratory)/inventory/material/hooks/useMaterialInit";
-import type { IProject, TSaveProject } from "../../interfaces";
+import type { TSaveProject } from "../../interfaces";
 import { createProject } from "../../utils";
 import { Routes } from "@/lib/constants";
 
-export default function useProjectForm(
-  formIntance: FormInstance,
-  projectData?: IProject,
-) {
+export default function useProjectForm(formIntance: FormInstance) {
   const [measurements, setMeasurements] = useState<Array<string>>([]);
   const { openNotification, notificationElement } = useNotification();
   const { materialTypeList, isLoading: isMaterialInitLoading } =
@@ -86,6 +83,7 @@ export default function useProjectForm(
         `El proyecto ${values.name} ha sido creado con exito.`,
         "topRight",
       );
+      formIntance.resetFields();
       void router.push(Routes.Inventory);
     } catch (error) {
       openNotification(

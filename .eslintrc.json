@@ -25,5 +25,15 @@
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
     "no-extra-boolean-cast": "off"
-  }
+  },
+  "ignorePatterns": [
+    "**/*.config.js",
+    "**/*.config.cjs",
+    "packages/config/**",
+    "packages/**/dist",
+    "babel.config.js",
+    "tsup.config.ts",
+    "**/build/**",
+    "**/dist/**"
+  ]
 }

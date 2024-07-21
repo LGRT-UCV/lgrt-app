@@ -27,7 +27,6 @@ export default function Storage() {
     currentStorage,
     handleUpdateStorage,
     handleStorageDetails,
-    handleDeleteStorage,
     setSearchValue,
     setOpenDetailsModal,
     setOpenCreateModal,

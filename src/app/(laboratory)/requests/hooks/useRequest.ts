@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
 import { deleteRequest, getAllRequests } from "../utils";
-import { RequestStatus, TStatus, type IRequest } from "../interfaces";
+import { RequestStatus, type IRequest } from "../interfaces";
 import { Roles } from "@/lib/constants";
 import { getUserRole } from "@/(laboratory)/admin/users/utils";
 

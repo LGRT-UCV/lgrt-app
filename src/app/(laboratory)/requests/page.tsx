@@ -18,7 +18,7 @@ import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
 import useRequest from "./hooks/useRequest";
 import { getStatus, requestFields } from "./utils";
-import { IRequest, RequestStatus } from "./interfaces";
+import { IRequest } from "./interfaces";
 import DetailsModal from "./components/modals/detailsModal";
 import CreateRequestModal from "./components/modals/createRequestModal";
 import { isMobile } from "react-device-detect";

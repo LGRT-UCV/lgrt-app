@@ -6,7 +6,6 @@ import {
   type TUpdateRequestStatus,
 } from "../../interfaces";
 import { useEffect, useMemo, useState } from "react";
-import { SelectProps } from "antd/lib";
 import { requestStatus, getStatus, updateRequestStatus } from "../../utils";
 import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";

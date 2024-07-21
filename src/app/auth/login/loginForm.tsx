@@ -28,7 +28,7 @@ export default function LoginForm() {
     });
 
     if (responseNextAuth?.error) {
-      responseNextAuth.error.split(",").map((error, index) => {
+      responseNextAuth.error.split(",").map((error) => {
         const msg =
           error.includes("Bad credentials") ||
           error.includes("CredentialsSignin")

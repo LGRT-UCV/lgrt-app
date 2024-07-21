@@ -84,6 +84,7 @@ export default function useRequestForm(callback: () => void) {
         "topRight",
       );
       callback();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (
         String(error.details).includes(

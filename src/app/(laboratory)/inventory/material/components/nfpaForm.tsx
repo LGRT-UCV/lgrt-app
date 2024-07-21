@@ -6,7 +6,7 @@ interface INFPAForm {
   readOnly?: boolean;
 }
 
-export default function NFPAForm({ nfpaData, readOnly = false }: INFPAForm) {
+export default function NFPAForm({ readOnly = false }: INFPAForm) {
   return (
     <div className="w-full md:w-1/2">
       <h5>Clasificación NFPA</h5>

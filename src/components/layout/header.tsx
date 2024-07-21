@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { Button } from "antd";
-import Title from "antd/es/typography/Title";
 
 /**
  * Button props

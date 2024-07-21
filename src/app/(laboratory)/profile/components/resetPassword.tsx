@@ -37,6 +37,7 @@ export default function ResetPassword() {
         "",
         "topRight",
       );
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
     } catch (error: Error) {
       const msg =

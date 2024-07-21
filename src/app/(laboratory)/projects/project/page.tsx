@@ -2,20 +2,13 @@
 
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import { SaveOutlined, LoadingOutlined } from "@ant-design/icons";
+import { SaveOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
 import Header from "@/components/layout/header";
 import ProjectForm from "./components/projectForm";
-import { getProject } from "../utils";
-import useNotification from "@/hooks/useNotification";
-
 export default function NewProject() {
   const [form] = useForm();
   const searchParams = useSearchParams();
-  const { data: sessionData } = useSession();
-  const { openNotification, notificationElement } = useNotification();
 
   const projectId = useMemo(() => {
     return searchParams.get("id");

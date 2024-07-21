@@ -1,14 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  Modal,
-  Button,
-  Divider,
-  Popover,
-  Tag,
-  type TableColumnsType,
-} from "antd";
+import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
@@ -59,7 +52,7 @@ export default function Files() {
         width: 20,
         render: (record: IFile & { key: string }) => (
           <div className="mx-auto text-center">
-            <a href={record.fileUri} target="_blank">
+            <a href={record.fileUri} target="_blank" rel="noreferrer">
               <strong>Descargar</strong>
             </a>
           </div>

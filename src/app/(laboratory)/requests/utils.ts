@@ -87,7 +87,7 @@ export const updateRequestStatus = async (
     Authorization: `Bearer ${sessionToken}`,
   };
   return newRequest(
-    `${REQUEST_URI}/${id}`,
+    `${REQUEST_URI}/${id}/statuschange`,
     RequestMethods.PUT,
     headers,
     JSON.stringify(data),

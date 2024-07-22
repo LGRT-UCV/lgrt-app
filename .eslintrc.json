@@ -21,10 +21,19 @@
     }
   },
   "rules": {
-    "@typescript-eslint/no-unused-vars": "error",
-    "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
-    "no-extra-boolean-cast": "off"
+    "prettier/prettier": "error",
+    "no-extra-boolean-cast": "off",
+    "@next/next/no-html-link-for-pages": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
   },
   "ignorePatterns": [
     "**/*.config.js",
@@ -35,5 +44,6 @@
     "tsup.config.ts",
     "**/build/**",
     "**/dist/**"
-  ]
+  ],
+  "reportUnusedDisableDirectives": true
 }

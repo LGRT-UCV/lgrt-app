@@ -73,22 +73,24 @@ export default function Inventory() {
               >
                 Ver material
               </span>
-              <Divider className="m-2" />
-              <span
-                onClick={() =>
-                  void router.push(`${Routes.SaveMaterial}?id=${record.id}`)
-                }
-                className="h-full w-full cursor-pointer"
-              >
-                Editar
-              </span>
-              <Divider className="m-2" />
-              <span
-                onClick={() => void handleDeleteMaterial(record)}
-                className="h-full w-full cursor-pointer"
-              >
-                Eliminar
-              </span>
+              {Roles.External !== role && (<>
+                <Divider className="m-2" />
+                <span
+                  onClick={() =>
+                    void router.push(`${Routes.SaveMaterial}?id=${record.id}`)
+                  }
+                  className="h-full w-full cursor-pointer"
+                >
+                  Editar
+                </span>
+                <Divider className="m-2" />
+                <span
+                  onClick={() => void handleDeleteMaterial(record)}
+                  className="h-full w-full cursor-pointer"
+                >
+                  Eliminar
+                </span>
+              </>)}
             </div>
           }
           title="Opciones"

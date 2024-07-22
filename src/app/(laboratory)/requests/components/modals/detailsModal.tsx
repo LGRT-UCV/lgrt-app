@@ -1,13 +1,18 @@
-import { Button, Tag } from "antd";
+import { Button, InputNumber, Tag } from "antd";
 import {
   RequestStatus,
+  TRequestReturnedMaterials,
   type IRequest,
   type TRequestStatus,
   type TUpdateRequestStatus,
 } from "../../interfaces";
 import { useEffect, useMemo, useState } from "react";
-import { SelectProps } from "antd/lib";
-import { requestStatus, getStatus, updateRequestStatus } from "../../utils";
+import {
+  requestStatus,
+  getStatus,
+  updateRequestStatus,
+  updateRequest,
+} from "../../utils";
 import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
 import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
@@ -15,6 +20,7 @@ import { getMaterial } from "@/(laboratory)/inventory/utils";
 import TextArea from "antd/es/input/TextArea";
 import { Roles } from "@/lib/constants";
 import { getUserRole } from "@/(laboratory)/admin/users/utils";
+import { useLabProvider } from "@/context/labProvider";
 
 interface IDetailsModal {
   request?: IRequest;
@@ -22,7 +28,11 @@ interface IDetailsModal {
 }
 
 export default function DetailsModal({ request, closeModal }: IDetailsModal) {
+  const { role } = useLabProvider();
   const [comments, setComments] = useState<string>("");
+  const [returnedMaterials, setReturnedMaterials] = useState<
+    Array<TRequestReturnedMaterials>
+  >([]);
   const [currentMaterials, setCurrentMaterials] = useState<Array<TMaterial>>(
     [],
   );
@@ -127,11 +137,16 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
             break;
           case RequestStatus.Delivered:
             data.commentsResponsibleReturn = comments;
+            data.materialRequestMaterial = returnedMaterials;
             break;
         }
       }
 
-      await updateRequestStatus(request.id, data, sessionToken);
+      if (role === Roles.External) {
+        await updateRequest(request.id, data, sessionToken);
+      } else {
+        await updateRequestStatus(request.id, data, sessionToken);
+      }
       setComments("");
       openNotification(
         "success",
@@ -152,6 +167,29 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
       console.log("ERROR: ", error);
     }
   };
+
+  const handleReturnMaterial = (material: TMaterial, quantity: number = 0) => {
+    setReturnedMaterials((prev) => {
+      const materialIndex = prev.findIndex(
+        (mat) => mat.idMaterial === material.id,
+      );
+      if (materialIndex === -1) {
+        return [
+          ...prev,
+          {
+            idMaterial: material.id,
+            quantity: quantity.toString(),
+          },
+        ];
+      }
+      const newMaterials = [...prev];
+      if (newMaterials[materialIndex]) {
+        newMaterials[materialIndex].quantity = quantity.toString();
+      }
+
+      return newMaterials;
+    });
+  }
 
   return (
     <>
@@ -192,7 +230,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
             ))}
           </div>
 
-          <div className="mt-4 grid w-full grid-cols-2 space-y-4">
+          <div className="mt-4 grid w-full grid-cols-2 mb-4">
             {!!request.idResponsibleDrop && (
               <div>
                 <p className="mt-4">
@@ -265,14 +303,14 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
             </div>
           )}
 
-          {((isRequester &&
+          {((isRequester && ![RequestStatus.Pending, RequestStatus.Approved].includes(request.status) &&
             (!request.commentsRequester || !request.commentsRequesterReturn)) ||
-            [Roles.Admin, Roles.PersonalExtra].includes(userRole)) &&
+            [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(userRole)) &&
             nextStatus?.value !== RequestStatus.Pending && (
-              <div className="flex w-full flex-col gap-1">
-                <strong>
+              <div className="mt-8 flex w-full flex-col gap-1">
+                <p className="mb-4 text-center text-xl font-bold">
                   {isRequester ? "Deja tu comentario" : "Cambiar status"}:
-                </strong>
+                </p>
                 {isRequester && (
                   <p className="text-xs">{messageForRequester}</p>
                 )}
@@ -280,16 +318,43 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                   {![RequestStatus.Pending, RequestStatus.Rejected].includes(
                     request.status,
                   ) && (
-                    <TextArea
-                      placeholder={"Comentarios"}
-                      rows={4}
-                      maxLength={500}
-                      value={comments}
-                      onChange={(e) => setComments(e.target.value)}
-                    />
+                    <>
+                      {request.status === RequestStatus.Delivered && role !== Roles.External && (
+                        <div>
+                          <p className="text-base font-bold">
+                            Materiales devueltos:
+                          </p>
+                          {currentMaterials.map((material, index) => (
+                            <div
+                              key={`material-${index}`}
+                              className="grid w-full grid-cols-2 space-y-2 items-center justify-center"
+                            >
+                              <p className="font-semibold">{material.name}</p>
+                              <InputNumber
+                                className="w-full"
+                                placeholder="Cantidad devuelta"
+                                min={0}
+                                defaultValue={0}
+                                onChange={(value) => handleReturnMaterial(material, value ?? 0)}
+                                suffix={material.measurement.name}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <p className="text-base font-bold">Comentarios:</p>
+                      <TextArea
+                        placeholder={"Comentarios"}
+                        rows={4}
+                        maxLength={500}
+                        value={comments}
+                        onChange={(e) => setComments(e.target.value)}
+                      />
+                    </>
                   )}
                   <div
-                    className={`flex w-full gap-4 ${request.status !== RequestStatus.Pending ? "justify-end" : ""}`}
+                    className={`flex w-full gap-4 ${request.status !== RequestStatus.Pending ? "justify-end" : "justify-center"}`}
                   >
                     <Button
                       className="border-none bg-green-500 !text-white hover:!bg-green-400"
@@ -297,7 +362,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                     >
                       {isRequester
                         ? "Enviar"
-                        : nextStatus?.label ?? "Pendiente"}
+                        : nextStatus?.value === RequestStatus.Approved ? "Aprobar" : nextStatus?.label ?? "Pendiente"}
                     </Button>
                     {request.status === RequestStatus.Pending &&
                       currentUser?.id !== request.idRequester.id && (

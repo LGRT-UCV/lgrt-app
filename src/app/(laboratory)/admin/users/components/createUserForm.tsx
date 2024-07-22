@@ -17,6 +17,7 @@ type TCreateUserForm = {
     description: string,
     placement: NotificationPlacement,
   ) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onFinish: (values: any) => void;
 };
 

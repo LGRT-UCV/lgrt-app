@@ -7,6 +7,8 @@ import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
 import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
 import { getMaterial } from "@/(laboratory)/inventory/utils";
+import { Roles } from "@/lib/constants";
+import { useLabProvider } from "@/context/labProvider";
 
 type TagRender = SelectProps["tagRender"];
 
@@ -16,6 +18,7 @@ interface IDetailsModal {
 }
 
 export default function DetailsModal({ project, closeModal }: IDetailsModal) {
+  const { role } = useLabProvider();
   const [statusSelected, setStatusSelected] = useState<string>();
   const [currentMaterials, setCurrentMaterials] = useState<Array<TMaterial>>(
     [],
@@ -61,6 +64,7 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
   }, []);
 
   const tagRender: TagRender = (props) => {
+    // eslint-disable-next-line react/prop-types
     const { label, value, closable, onClose } = props;
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
       event.preventDefault();
@@ -122,7 +126,7 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
               <strong>Responsable:</strong> {project.projectManager}
             </div>
             <div>
-              <a href={project.projectUri} target="_blank">
+              <a href={project.projectUri} target="_blank" rel="noreferrer">
                 <strong>Ver Archivo</strong>
               </a>
             </div>
@@ -144,38 +148,40 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
             ))}
           </div>
 
-          <div className="flex w-full flex-col gap-1">
-            <strong>Cambiar status:</strong>
-            <div className="grid w-full grid-cols-2 items-center space-x-4">
-              <div className="flex items-center gap-2">
-                <Select
-                  tagRender={tagRender}
-                  defaultValue={[project.status ?? "I"]}
-                  onSelect={(value) => setStatusSelected(value)}
-                  style={{ width: "100%" }}
-                  options={[
-                    {
-                      label: "Activo",
-                      value: "A",
-                    },
-                    {
-                      label: "Inactivo",
-                      value: "I",
-                    },
-                    {
-                      label: "En revisión",
-                      value: "R",
-                    },
-                    {
-                      label: "Finalizado",
-                      value: "D",
-                    },
-                  ]}
-                />
+          {Roles.External !== role && (
+            <div className="flex w-full flex-col gap-1">
+              <strong>Cambiar status:</strong>
+              <div className="grid w-full grid-cols-2 items-center space-x-4">
+                <div className="flex items-center gap-2">
+                  <Select
+                    tagRender={tagRender}
+                    defaultValue={[project.status ?? "I"]}
+                    onSelect={(value) => setStatusSelected(value)}
+                    style={{ width: "100%" }}
+                    options={[
+                      {
+                        label: "Activo",
+                        value: "A",
+                      },
+                      {
+                        label: "Inactivo",
+                        value: "I",
+                      },
+                      {
+                        label: "En revisión",
+                        value: "R",
+                      },
+                      {
+                        label: "Finalizado",
+                        value: "D",
+                      },
+                    ]}
+                  />
+                </div>
+                <Button onClick={onChangeStatus}>Cambiar</Button>
               </div>
-              <Button onClick={onChangeStatus}>Cambiar</Button>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

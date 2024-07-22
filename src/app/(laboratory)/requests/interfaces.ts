@@ -19,10 +19,16 @@ export type TRequestStatus = {
 
 export type TUpdateRequestStatus = {
   status?: TStatus;
+  materialRequestMaterial?: Array<TRequestReturnedMaterials>;
   commentsRequester?: string | null;
   commentsResponsible?: string | null;
   commentsRequesterReturn?: string | null;
   commentsResponsibleReturn?: string | null;
+};
+
+export type TRequestReturnedMaterials = {
+  quantity: string;
+  idMaterial: string;
 };
 
 export type TSaveRequest = {

@@ -1,12 +1,4 @@
-import {
-  Button,
-  Form,
-  Input,
-  InputNumber,
-  Space,
-  TreeSelect,
-  Upload,
-} from "antd";
+import { Button, Form, Input, InputNumber, TreeSelect } from "antd";
 import {
   LoadingOutlined,
   PlusOutlined,
@@ -16,10 +8,7 @@ import TextArea from "antd/es/input/TextArea";
 import useProjectForm from "../hooks/useProjectForm";
 import type { IProjectForm } from "../../interfaces";
 
-export default function ProjectForm({
-  formIntance,
-  projectData,
-}: IProjectForm) {
+export default function ProjectForm({ formIntance }: IProjectForm) {
   const {
     materialList,
     measurements,
@@ -27,7 +16,7 @@ export default function ProjectForm({
     notificationElement,
     onFinish,
     handleMeasurements,
-  } = useProjectForm(formIntance, projectData);
+  } = useProjectForm(formIntance);
 
   if (isLoading)
     return (

@@ -90,6 +90,13 @@ export default function Storage() {
                 >
                   Editar
                 </span>
+                <Divider className="m-2" />
+                <span
+                  onClick={() => void handleDeleteStorage(record)}
+                  className="h-full w-full cursor-pointer"
+                >
+                  Eliminar
+                </span>
               </div>
             }
             title="Opciones"

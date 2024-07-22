@@ -30,7 +30,7 @@ export default function useUserForm(
 
       setIsLoading(true);
 
-      if (!!usrData) {
+      if (usrData) {
         const { id, ...rest } = values;
         await updateUser(
           id,
@@ -61,6 +61,7 @@ export default function useUserForm(
         "topRight",
       );
       callback();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       openNotification(
         "error",

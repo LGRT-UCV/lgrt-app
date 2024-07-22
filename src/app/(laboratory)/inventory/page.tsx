@@ -73,24 +73,26 @@ export default function Inventory() {
               >
                 Ver material
               </span>
-              {Roles.External !== role && (<>
-                <Divider className="m-2" />
-                <span
-                  onClick={() =>
-                    void router.push(`${Routes.SaveMaterial}?id=${record.id}`)
-                  }
-                  className="h-full w-full cursor-pointer"
-                >
-                  Editar
-                </span>
-                <Divider className="m-2" />
-                <span
-                  onClick={() => void handleDeleteMaterial(record)}
-                  className="h-full w-full cursor-pointer"
-                >
-                  Eliminar
-                </span>
-              </>)}
+              {Roles.External !== role && (
+                <>
+                  <Divider className="m-2" />
+                  <span
+                    onClick={() =>
+                      void router.push(`${Routes.SaveMaterial}?id=${record.id}`)
+                    }
+                    className="h-full w-full cursor-pointer"
+                  >
+                    Editar
+                  </span>
+                  <Divider className="m-2" />
+                  <span
+                    onClick={() => void handleDeleteMaterial(record)}
+                    className="h-full w-full cursor-pointer"
+                  >
+                    Eliminar
+                  </span>
+                </>
+              )}
             </div>
           }
           title="Opciones"
@@ -134,7 +136,7 @@ export default function Inventory() {
       <Header
         title="Inventario"
         btn={
-          [Roles.Admin, Roles.Personal, Roles.PersonalExtra].includes(role)
+          Roles.External !== role
             ? {
                 label: "Añadir nuevo",
                 icon: <PlusOutlined />,
@@ -163,15 +165,19 @@ export default function Inventory() {
         okButtonProps={{
           className: "bg-blue-500",
         }}
-        footer={[
-          <Button
-            key="delete"
-            className="border-none bg-red-500 !text-white hover:!bg-red-400"
-            onClick={() => void handleDeleteMaterial(currentMaterial)}
-          >
-            Eliminar material
-          </Button>,
-        ]}
+        footer={
+          Roles.External !== role
+            ? [
+                <Button
+                  key="delete"
+                  className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                  onClick={() => void handleDeleteMaterial(currentMaterial)}
+                >
+                  Eliminar material
+                </Button>,
+              ]
+            : undefined
+        }
       >
         <DetailsModal material={currentMaterial} />
       </Modal>

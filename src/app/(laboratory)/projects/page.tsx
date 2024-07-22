@@ -16,14 +16,16 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { Routes } from "@/lib/constants";
+import { Roles, Routes } from "@/lib/constants";
 import type { IProject } from "./interfaces";
 import useProject from "./useProject";
 import { fieldsProject } from "./utils";
 import DetailsModal from "./project/components/detailsModal";
 import { isMobile } from "react-device-detect";
+import { useLabProvider } from "@/context/labProvider";
 
 export default function Projects() {
+  const { role } = useLabProvider();
   const router = useRouter();
   const {
     openModal,
@@ -121,13 +123,17 @@ export default function Projects() {
                 >
                   Ver proyecto
                 </span>
-                <Divider className="m-2" />
-                <span
-                  onClick={() => void handleDeleteProject(record)}
-                  className="h-full w-full cursor-pointer"
-                >
-                  Eliminar
-                </span>
+                {Roles.External !== role && (
+                  <>
+                    <Divider className="m-2" />
+                    <span
+                      onClick={() => void handleDeleteProject(record)}
+                      className="h-full w-full cursor-pointer"
+                    >
+                      Eliminar
+                    </span>
+                  </>
+                )}
               </div>
             }
             title="Opciones"
@@ -183,19 +189,21 @@ export default function Projects() {
         }}
         footer={[
           <Button
-            key="delete"
-            className="border-none bg-red-500 !text-white hover:!bg-red-400"
+            key="request"
+            className="border-none bg-blue-500 !text-white hover:!bg-red-400"
             onClick={() => void handleDeleteProject(currentProject)}
           >
             Solicitar materiales
           </Button>,
-          <Button
-            key="delete"
-            className="border-none bg-red-500 !text-white hover:!bg-red-400"
-            onClick={() => void handleDeleteProject(currentProject)}
-          >
-            Eliminar proyecto
-          </Button>,
+          Roles.External !== role ? (
+            <Button
+              key="delete"
+              className="border-none bg-red-500 !text-white hover:!bg-red-400"
+              onClick={() => void handleDeleteProject(currentProject)}
+            >
+              Eliminar proyecto
+            </Button>
+          ) : undefined,
         ]}
       >
         <DetailsModal

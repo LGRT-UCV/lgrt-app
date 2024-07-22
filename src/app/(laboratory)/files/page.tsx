@@ -46,19 +46,20 @@ export default function Files() {
         align: "center",
       }),
     );
-    const renderColumns = columnToShow.concat([
-      {
-        align: "center",
-        width: 20,
-        render: (record: IFile & { key: string }) => (
-          <div className="mx-auto text-center">
-            <a href={record.fileUri} target="_blank" rel="noreferrer">
-              <strong>Descargar</strong>
-            </a>
-          </div>
-        ),
-      },
-      {
+    columnToShow.push({
+      align: "center",
+      width: 20,
+      render: (record: IFile & { key: string }) => (
+        <div className="mx-auto text-center">
+          <a href={record.fileUri} target="_blank" rel="noreferrer">
+            <strong>Descargar</strong>
+          </a>
+        </div>
+      ),
+    });
+
+    if (Roles.External !== role) {
+      columnToShow.push({
         width: 10,
         fixed: "right",
         align: "center",
@@ -88,9 +89,9 @@ export default function Files() {
             <MoreOutlined className="cursor-pointer" />
           </Popover>
         ),
-      },
-    ]);
-    return renderColumns;
+      });
+    }
+    return columnToShow;
   }, []);
 
   const filters: Array<TFilter> = [

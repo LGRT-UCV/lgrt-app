@@ -20,10 +20,10 @@ export default function DetailsModal({ material }: IDetailsModal) {
         <div className="space-y-4 p-4">
           <div className="flex w-full justify-around">
             <span className="text-yellow-600">
-              {material.superUse && "Usar bajo supervisión"}
+              {material.superUse ? "Usar bajo supervisión" : ""}
             </span>
             <span className="text-red-500">
-              {material.sensibleMaterial && "Material Sensible"}
+              {material.sensibleMaterial ? "Material Sensible" : ""}
             </span>
           </div>
           <div>

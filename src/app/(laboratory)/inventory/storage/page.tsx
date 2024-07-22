@@ -27,6 +27,7 @@ export default function Storage() {
     currentStorage,
     handleUpdateStorage,
     handleStorageDetails,
+    handleDeleteStorage,
     setSearchValue,
     setOpenDetailsModal,
     setOpenCreateModal,
@@ -88,6 +89,13 @@ export default function Storage() {
                   className="h-full w-full cursor-pointer"
                 >
                   Editar
+                </span>
+                <Divider className="m-2" />
+                <span
+                  onClick={() => void handleDeleteStorage(record)}
+                  className="h-full w-full cursor-pointer"
+                >
+                  Eliminar
                 </span>
               </div>
             }

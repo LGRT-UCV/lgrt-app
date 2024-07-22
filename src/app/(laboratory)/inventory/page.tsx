@@ -176,7 +176,7 @@ export default function Inventory() {
                   Eliminar material
                 </Button>,
               ]
-            : undefined
+            : []
         }
       >
         <DetailsModal material={currentMaterial} />

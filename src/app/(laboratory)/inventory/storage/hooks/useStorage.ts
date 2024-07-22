@@ -63,14 +63,24 @@ export default function useStorage() {
         `Se ha eliminado el almacenamiento ${storage.name}`,
         "topRight",
       );
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.error("Error", error);
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar el almacenamiento",
-        "",
-        "topRight",
-      );
+      if ((error as Error).message.includes("Storage place is in use")) {
+        openNotification(
+          "error",
+          "Error al eliminar el almacenamiento",
+          "El almacenamiento se encuentra en uso",
+          "topRight",
+        );
+      } else {
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar el almacenamiento",
+          "",
+          "topRight",
+        );
+      }
     }
   };
 

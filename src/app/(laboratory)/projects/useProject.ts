@@ -5,6 +5,7 @@ import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
 import { deleteProject, getAllProjects } from "./utils";
 import type { IProject } from "./interfaces";
+import { createRequest } from "../requests/utils";
 
 export default function useProject() {
   const [searchValue, setSearchValue] = useState("");
@@ -77,6 +78,44 @@ export default function useProject() {
     setOpenModal(show);
   };
 
+  const handleRequestMaterials = async () => {
+    try {
+      if (
+        typeof currentProject === "undefined" ||
+        currentProject.status === "I"
+      )
+        return;
+
+      const materialRequestMaterial = currentProject.projectMaterial.map(
+        (material) => ({
+          idMaterial: material.idMaterial,
+          quantity: material.quantity.toString(),
+        }),
+      );
+
+      await createRequest(
+        {
+          materialRequestMaterial,
+        },
+        sessionData?.user.token ?? "",
+      );
+
+      openNotification(
+        "info",
+        "Solicitud de materiales",
+        "Se ha solicitado los materiales para el proyecto",
+        "topRight",
+      );
+    } catch (error) {
+      openNotification(
+        "error",
+        "Ha ocurrido un error al solicitar los materiales",
+        "",
+        "topRight",
+      );
+    }
+  };
+
   const tableData: Array<AnyObject> = useMemo(() => {
     const search = searchValue.toLocaleLowerCase();
     const projects = projectList.filter(
@@ -105,5 +144,6 @@ export default function useProject() {
     setOpenModal,
     setSearchValue,
     handleUpdateProject,
+    handleRequestMaterials,
   };
 }

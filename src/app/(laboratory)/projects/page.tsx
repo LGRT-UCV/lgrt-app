@@ -104,7 +104,7 @@ export default function Projects() {
                   Ver proyecto
                 </span>
                 {Roles.External !== role &&
-                  ["A", "I"].includes(currentProject?.status ?? "") && (
+                  ["A", "I"].includes(record?.status ?? "") && (
                     <>
                       <Divider className="m-2" />
                       <span

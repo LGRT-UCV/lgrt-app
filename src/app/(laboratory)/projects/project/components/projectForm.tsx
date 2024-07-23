@@ -33,7 +33,6 @@ export default function ProjectForm({ formIntance }: IProjectForm) {
         form={formIntance}
         onFinish={onFinish}
         layout="vertical"
-        requiredMark="optional"
         size="large"
         scrollToFirstError
       >
@@ -152,6 +151,7 @@ export default function ProjectForm({ formIntance }: IProjectForm) {
                       placeholder="cantidad"
                       min={0}
                       max={100}
+                      decimalSeparator=","
                       suffix={measurements[key]}
                     />
                   </Form.Item>

@@ -112,3 +112,56 @@ export const fieldsProject = [
     label: "Materiales",
   },
 ];
+
+export const projectStatus = [
+  {
+    label: "Activo",
+    value: "A",
+  },
+  {
+    label: "Inactivo",
+    value: "I",
+  },
+  {
+    label: "En revisión",
+    value: "R",
+  },
+  {
+    label: "Finalizado",
+    value: "D",
+  },
+];
+
+export const getProjectStatus = (status: string) => {
+  return (
+    projectStatus.find((project) => project.value === status) ?? {
+      label: "Inactivo",
+      value: "I",
+    }
+  );
+};
+
+export const getProjectStatusStyle = (status: string) => {
+  switch (status) {
+    case "A":
+      return {
+        status: "Activo",
+        statusColor: "green",
+      };
+    case "R":
+      return {
+        status: "En revisión",
+        statusColor: "orange",
+      };
+    case "D":
+      return {
+        status: "Finalizado",
+        statusColor: "blue",
+      };
+    default:
+      return {
+        status: "Inactivo",
+        statusColor: "red",
+      };
+  }
+};

@@ -19,7 +19,7 @@ import Header from "@/components/layout/header";
 import { Roles, Routes } from "@/lib/constants";
 import type { IProject } from "./interfaces";
 import useProject from "./useProject";
-import { fieldsProject } from "./utils";
+import { fieldsProject, getProjectStatusStyle } from "./utils";
 import DetailsModal from "./project/components/detailsModal";
 import { isMobile } from "react-device-detect";
 import { useLabProvider } from "@/context/labProvider";
@@ -39,21 +39,6 @@ export default function Projects() {
     setOpenModal,
     handleUpdateProject,
   } = useProject();
-
-  const getStatus = (status: string) => {
-    switch (status) {
-      case "A":
-        return {
-          status: "Activo",
-          statusColor: "green",
-        };
-      default:
-        return {
-          status: "Inactivo",
-          statusColor: "red",
-        };
-    }
-  };
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columsList = fieldsProject.filter(
@@ -81,11 +66,14 @@ export default function Projects() {
         title: "Status",
         align: "center",
         width: 20,
-        render: (record: IProject & { key: string }) => (
-          <Tag color={getStatus(record.status).statusColor} className="mx-auto">
-            {getStatus(record.status).status}
-          </Tag>
-        ),
+        render: (record: IProject & { key: string }) => {
+          const statusStyle = getProjectStatusStyle(record.status);
+          return (
+            <Tag color={statusStyle.statusColor} className="mx-auto">
+              {statusStyle.status}
+            </Tag>
+          );
+        },
       },
       {
         title: "Archivo",
@@ -97,14 +85,6 @@ export default function Projects() {
               <strong>Ver Archivo</strong>
             </a>
           </div>
-        ),
-      },
-      {
-        title: "Comentarios",
-        align: "center",
-        width: 10,
-        render: (record: IProject & { key: string }) => (
-          <p className="text-center">{record.comments?.length ?? 0}</p>
         ),
       },
       {
@@ -188,14 +168,18 @@ export default function Projects() {
           className: "bg-blue-500",
         }}
         footer={[
-          <Button
-            key="request"
-            className="border-none bg-blue-500 !text-white hover:!bg-red-400"
-            onClick={() => void handleDeleteProject(currentProject)}
-          >
-            Solicitar materiales
-          </Button>,
-          Roles.External !== role ? (
+          typeof currentProject === "undefined" ||
+          (currentProject.status === "I" && false) ? (
+            <Button
+              key="request"
+              className="border-none bg-blue-500 !text-white hover:!bg-blue-400"
+              onClick={() => void handleDeleteProject(currentProject)}
+            >
+              Solicitar materiales
+            </Button>
+          ) : undefined,
+          Roles.External !== role &&
+          ["A", "I"].includes(currentProject?.status ?? "") ? (
             <Button
               key="delete"
               className="border-none bg-red-500 !text-white hover:!bg-red-400"

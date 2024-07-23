@@ -79,7 +79,7 @@ export default function CreateFileModal({
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        requiredMark="optional"
+        
         size="large"
         scrollToFirstError
       >

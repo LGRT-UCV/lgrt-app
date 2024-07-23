@@ -33,7 +33,6 @@ export default function ProjectForm({ formIntance }: IProjectForm) {
         form={formIntance}
         onFinish={onFinish}
         layout="vertical"
-        requiredMark="optional"
         size="large"
         scrollToFirstError
       >

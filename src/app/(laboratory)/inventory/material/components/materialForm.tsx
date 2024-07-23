@@ -30,7 +30,6 @@ export default function MaterialForm({
         form={formIntance}
         onFinish={onFinish}
         layout="vertical"
-        requiredMark="optional"
         size="large"
         scrollToFirstError
       >

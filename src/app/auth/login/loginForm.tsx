@@ -59,7 +59,7 @@ export default function LoginForm() {
         }}
         onFinish={onFinish}
         layout="vertical"
-        requiredMark="optional"
+        
         size="large"
         className="mx-auto w-3/4"
       >

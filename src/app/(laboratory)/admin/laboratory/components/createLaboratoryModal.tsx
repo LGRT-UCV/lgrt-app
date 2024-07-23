@@ -41,7 +41,6 @@ export default function CreateLaboratoryModal({
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        requiredMark="optional"
         size="large"
         scrollToFirstError
         className="p-4"

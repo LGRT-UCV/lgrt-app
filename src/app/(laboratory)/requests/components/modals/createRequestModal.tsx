@@ -42,7 +42,6 @@ export default function CreateRequestModal({
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        requiredMark="optional"
         size="large"
         scrollToFirstError
         initialValues={{ items: [{}] }}

@@ -163,6 +163,7 @@ export default function Requests() {
         onCancel={() => {
           setOpenDetailsModal(false);
           handleUpdateRequest();
+          form.resetFields();
         }}
         width={600}
         okButtonProps={{

@@ -152,6 +152,7 @@ export default function ProjectForm({ formIntance }: IProjectForm) {
                       placeholder="cantidad"
                       min={0}
                       max={100}
+                      decimalSeparator=","
                       suffix={measurements[key]}
                     />
                   </Form.Item>

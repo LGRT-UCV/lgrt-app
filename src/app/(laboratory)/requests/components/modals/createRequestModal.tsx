@@ -81,9 +81,9 @@ export default function CreateRequestModal({
                   </Form.Item>
                   <Form.Item
                     {...restField}
-                    label="Cantiadad a user"
+                    label="Cantiadad a usar"
                     name={[name, "quantity"]}
-                    className="w- mb-4"
+                    className="mb-4"
                     rules={[
                       {
                         required: true,
@@ -101,6 +101,7 @@ export default function CreateRequestModal({
                       className="w-full"
                       placeholder="cantidad"
                       min={0}
+                      decimalSeparator=","
                       suffix={measurements[key]}
                     />
                   </Form.Item>

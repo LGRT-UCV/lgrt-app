@@ -30,7 +30,6 @@ export default function MaterialForm({
         form={formIntance}
         onFinish={onFinish}
         layout="vertical"
-        requiredMark="optional"
         size="large"
         scrollToFirstError
       >
@@ -105,6 +104,7 @@ export default function MaterialForm({
                   <InputNumber
                     className="w-full"
                     placeholder="Capacidad"
+                    decimalSeparator=","
                     suffix={currentMeasurement}
                   />
                 </Form.Item>
@@ -124,6 +124,7 @@ export default function MaterialForm({
                   <InputNumber
                     className="w-full"
                     placeholder="Peso"
+                    decimalSeparator=","
                     suffix={currentMeasurement}
                   />
                 </Form.Item>
@@ -142,6 +143,7 @@ export default function MaterialForm({
                 <InputNumber
                   className="w-full"
                   placeholder="Cantidad existente"
+                  decimalSeparator=","
                   suffix={currentMeasurement}
                 />
               </Form.Item>
@@ -211,6 +213,7 @@ export default function MaterialForm({
                   <InputNumber
                     className="w-full"
                     placeholder="Concentración"
+                    decimalSeparator=","
                     min={0}
                     max={100}
                     suffix="%"

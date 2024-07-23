@@ -2,7 +2,12 @@ import { Button, Select, Tag } from "antd";
 import type { IProject, TUpdateProject } from "../../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { SelectProps } from "antd/lib";
-import { updateProject } from "../../utils";
+import {
+  getProjectStatus,
+  getProjectStatusStyle,
+  projectStatus,
+  updateProject,
+} from "../../utils";
 import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
 import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
@@ -29,18 +34,7 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
   if (typeof project === "undefined") return <></>;
 
   const { status, statusColor } = useMemo(() => {
-    switch (project.status) {
-      case "A":
-        return {
-          status: "Activo",
-          statusColor: "green",
-        };
-      default:
-        return {
-          status: "Inactivo",
-          statusColor: "red",
-        };
-    }
+    return getProjectStatusStyle(project.status);
   }, [project.status]);
 
   useEffect(() => {
@@ -92,7 +86,7 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
       openNotification(
         "success",
         "Proyecto actualizado con exito",
-        `El status ${statusSelected} ha sido guardado con exito.`,
+        `El status ${getProjectStatus(statusSelected ?? "I").label.toLowerCase()} ha sido guardado con exito.`,
         "topRight",
       );
       closeModal();
@@ -158,24 +152,7 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
                     defaultValue={[project.status ?? "I"]}
                     onSelect={(value) => setStatusSelected(value)}
                     style={{ width: "100%" }}
-                    options={[
-                      {
-                        label: "Activo",
-                        value: "A",
-                      },
-                      {
-                        label: "Inactivo",
-                        value: "I",
-                      },
-                      {
-                        label: "En revisión",
-                        value: "R",
-                      },
-                      {
-                        label: "Finalizado",
-                        value: "D",
-                      },
-                    ]}
+                    options={projectStatus}
                   />
                 </div>
                 <Button onClick={onChangeStatus}>Cambiar</Button>

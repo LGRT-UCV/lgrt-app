@@ -153,7 +153,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
         "Solicitud actualizada con exito",
         isRequester
           ? "Su comentario ha sido enviado"
-          : `El status ${statusToSave?.label} ha sido guardado con exito.`,
+          : `El estado de la solicitud ha sido actualizada con éxito.`,
         "topRight",
       );
       closeModal();
@@ -189,7 +189,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
 
       return newMaterials;
     });
-  }
+  };
 
   return (
     <>
@@ -230,7 +230,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
             ))}
           </div>
 
-          <div className="mt-4 grid w-full grid-cols-2 mb-4">
+          <div className="mb-4 mt-4 grid w-full grid-cols-2">
             {!!request.idResponsibleDrop && (
               <div>
                 <p className="mt-4">
@@ -303,9 +303,14 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
             </div>
           )}
 
-          {((isRequester && ![RequestStatus.Pending, RequestStatus.Approved].includes(request.status) &&
+          {((isRequester &&
+            ![RequestStatus.Pending, RequestStatus.Approved].includes(
+              request.status,
+            ) &&
             (!request.commentsRequester || !request.commentsRequesterReturn)) ||
-            [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(userRole)) &&
+            [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(
+              userRole,
+            )) &&
             nextStatus?.value !== RequestStatus.Pending && (
               <div className="mt-8 flex w-full flex-col gap-1">
                 <p className="mb-4 text-center text-xl font-bold">
@@ -319,29 +324,33 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                     request.status,
                   ) && (
                     <>
-                      {request.status === RequestStatus.Delivered && role !== Roles.External && (
-                        <div>
-                          <p className="text-base font-bold">
-                            Materiales devueltos:
-                          </p>
-                          {currentMaterials.map((material, index) => (
-                            <div
-                              key={`material-${index}`}
-                              className="grid w-full grid-cols-2 space-y-2 items-center justify-center"
-                            >
-                              <p className="font-semibold">{material.name}</p>
-                              <InputNumber
-                                className="w-full"
-                                placeholder="Cantidad devuelta"
-                                min={0}
-                                defaultValue={0}
-                                onChange={(value) => handleReturnMaterial(material, value ?? 0)}
-                                suffix={material.measurement.name}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      {request.status === RequestStatus.Delivered &&
+                        role !== Roles.External && (
+                          <div>
+                            <p className="text-base font-bold">
+                              Materiales devueltos:
+                            </p>
+                            {currentMaterials.map((material, index) => (
+                              <div
+                                key={`material-${index}`}
+                                className="grid w-full grid-cols-2 items-center justify-center space-y-2"
+                              >
+                                <p className="font-semibold">{material.name}</p>
+                                <InputNumber
+                                  className="w-full"
+                                  placeholder="Cantidad devuelta"
+                                  min={0}
+                                  defaultValue={0}
+                                  onChange={(value) =>
+                                    handleReturnMaterial(material, value ?? 0)
+                                  }
+                                  decimalSeparator=","
+                                  suffix={material.measurement.name}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
 
                       <p className="text-base font-bold">Comentarios:</p>
                       <TextArea
@@ -362,7 +371,9 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                     >
                       {isRequester
                         ? "Enviar"
-                        : nextStatus?.value === RequestStatus.Approved ? "Aprobar" : nextStatus?.label ?? "Pendiente"}
+                        : nextStatus?.value === RequestStatus.Approved
+                          ? "Aprobar"
+                          : nextStatus?.label ?? "Pendiente"}
                     </Button>
                     {request.status === RequestStatus.Pending &&
                       currentUser?.id !== request.idRequester.id && (

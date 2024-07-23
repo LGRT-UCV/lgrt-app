@@ -103,17 +103,18 @@ export default function Projects() {
                 >
                   Ver proyecto
                 </span>
-                {Roles.External !== role && (
-                  <>
-                    <Divider className="m-2" />
-                    <span
-                      onClick={() => void handleDeleteProject(record)}
-                      className="h-full w-full cursor-pointer"
-                    >
-                      Eliminar
-                    </span>
-                  </>
-                )}
+                {Roles.External !== role &&
+                  ["A", "I"].includes(currentProject?.status ?? "") && (
+                    <>
+                      <Divider className="m-2" />
+                      <span
+                        onClick={() => void handleDeleteProject(record)}
+                        className="h-full w-full cursor-pointer"
+                      >
+                        Eliminar
+                      </span>
+                    </>
+                  )}
               </div>
             }
             title="Opciones"

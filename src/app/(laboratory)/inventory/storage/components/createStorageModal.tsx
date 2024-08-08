@@ -41,7 +41,6 @@ export default function CreateStorageModal({
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        
         size="large"
         scrollToFirstError
         className="p-4"

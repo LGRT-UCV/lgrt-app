@@ -4,7 +4,7 @@ import { useForm } from "antd/es/form/Form";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
-import { deleteFile, getAllFiles } from "../utils";
+import { deleteFile, getAllFiles, getFileURI } from "../utils";
 import type { IFile } from "../interfaces";
 
 export default function useFile() {
@@ -85,6 +85,16 @@ export default function useFile() {
     setOpenCreateModal(show);
   };
 
+  const getFileUri = async (fileUri: string, fileType: string) => {
+    const url = await getFileURI(
+      fileUri,
+      fileType,
+      sessionData?.user.token ?? "",
+    );
+    console.log(url);
+    window.open(url);
+  };
+
   const tableData: Array<AnyObject> = useMemo(() => {
     const search = searchValue.toLocaleLowerCase();
     const files = fileList.filter((file) => {
@@ -111,6 +121,7 @@ export default function useFile() {
     fileList,
     isLoading,
     notificationElement,
+    getFileUri,
     handleDeleteFile,
     handleEditFile,
     setOpenDetailsModal,

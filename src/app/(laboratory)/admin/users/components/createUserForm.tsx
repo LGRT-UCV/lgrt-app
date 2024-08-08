@@ -63,7 +63,6 @@ export default function CreateUserForm({
       form={form}
       onFinish={onFinish}
       layout="vertical"
-      
       size="large"
       scrollToFirstError
       className="p-4"

@@ -25,6 +25,7 @@ export default function Files() {
     currentFile,
     notificationElement,
     openCreateModal,
+    getFileUri,
     handleEditFile,
     handleUpdateFile,
     handleDeleteFile,
@@ -49,13 +50,18 @@ export default function Files() {
     columnToShow.push({
       align: "center",
       width: 20,
-      render: (record: IFile & { key: string }) => (
-        <div className="mx-auto text-center">
-          <a href={record.fileUri} target="_blank" rel="noreferrer">
-            <strong>Descargar</strong>
-          </a>
-        </div>
-      ),
+      render: (record: IFile & { key: string }) => {
+        return (
+          <div className="mx-auto text-center">
+            <a
+              onClick={() => void getFileUri(record.fileUri, record.fileType)}
+              download={`${record.name}${record.fileType}`}
+            >
+              <strong>Descargar</strong>
+            </a>
+          </div>
+        );
+      },
     });
 
     if (Roles.External !== role) {

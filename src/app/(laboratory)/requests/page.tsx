@@ -141,7 +141,11 @@ export default function Requests() {
         centered
         open={openCreateModal}
         okText={"Editar"}
-        onCancel={() => setOpenCreateModal(false)}
+        onCancel={() => {
+          setOpenCreateModal(false);
+          handleUpdateRequest();
+          form.resetFields();
+        }}
         width={800}
         footer={[
           <Button

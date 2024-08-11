@@ -21,9 +21,12 @@ export default function CreateRequestModal({
     measurements,
     notificationElement,
     handleMeasurements,
+    handleRemoveMaterial,
     onFinish,
+    resetValues,
   } = useRequestForm(() => {
     form.resetFields();
+    resetValues();
     closeModal();
   });
 
@@ -75,7 +78,9 @@ export default function CreateRequestModal({
                           input.toLowerCase(),
                         )
                       }
-                      onSelect={(_, option) => handleMeasurements(option.value)}
+                      onSelect={(_, option) =>
+                        handleMeasurements(option.value, key)
+                      }
                     />
                   </Form.Item>
                   <Form.Item
@@ -103,9 +108,18 @@ export default function CreateRequestModal({
                       decimalSeparator=","
                       suffix={measurements[key]}
                     />
+                    <p className="mt-1 w-full text-xs">
+                      Disponibles: {materialsSelected[key]?.quantity}{" "}
+                      {measurements[key]}
+                    </p>
                   </Form.Item>
                   {fields.length > 1 && (
-                    <MinusCircleOutlined onClick={() => remove(name)} />
+                    <MinusCircleOutlined
+                      onClick={() => {
+                        handleRemoveMaterial(key);
+                        remove(name);
+                      }}
+                    />
                   )}
                 </div>
               ))}

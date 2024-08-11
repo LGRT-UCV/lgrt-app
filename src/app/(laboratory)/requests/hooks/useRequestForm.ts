@@ -108,17 +108,51 @@ export default function useRequestForm(callback: () => void) {
     }
   };
 
-  const handleMeasurements = (id: string) => {
+  const handleMeasurements = (id: string, key: number) => {
+    console.log("id: ", id, "key: ", key);
     const materialData = materialList?.materials?.find(
       (material) => material.id === id,
     );
     if (materialData === undefined) return;
 
-    setMaterialsSelected([...materialsSelected, materialData]);
-    setMeasurements([
-      ...measurements,
-      materialData?.measurement.description ?? "",
-    ]);
+    setMaterialsSelected((prev) => {
+      if (key >= prev.length) {
+        return [...prev, materialData];
+      }
+      const materials = prev.map((material, index) =>
+        index === key ? materialData : material,
+      );
+      return materials;
+    });
+
+    const newMeasurement = materialData.measurement.description;
+    setMeasurements((prev) => {
+      if (key >= prev.length) {
+        return [...prev, newMeasurement];
+      }
+      const updateMeasurements = prev.map((measurement, index) =>
+        index === key ? newMeasurement : measurement,
+      );
+      return updateMeasurements;
+    });
+    console.log("materialData: ", materialsSelected, measurements);
+  };
+
+  const handleRemoveMaterial = (key: number) => {
+    setMaterialsSelected((prev) => {
+      const materials = prev.filter((_, index) => index !== key);
+      return materials;
+    });
+
+    setMeasurements((prev) => {
+      const measurements = prev.filter((_, index) => index !== key);
+      return measurements;
+    });
+  };
+
+  const resetValues = () => {
+    setMaterialsSelected([]);
+    setMeasurements([]);
   };
 
   return {
@@ -129,5 +163,7 @@ export default function useRequestForm(callback: () => void) {
     notificationElement,
     onFinish,
     handleMeasurements,
+    handleRemoveMaterial,
+    resetValues,
   };
 }

@@ -53,10 +53,7 @@ export default function Files() {
       render: (record: IFile & { key: string }) => {
         return (
           <div className="mx-auto text-center">
-            <a
-              onClick={() => void getFileUri(record.fileUri, record.fileType)}
-              download={`${record.name}${record.fileType}`}
-            >
+            <a href={record.fileUri} target="_blank" rel="noreferrer">
               <strong>Descargar</strong>
             </a>
           </div>

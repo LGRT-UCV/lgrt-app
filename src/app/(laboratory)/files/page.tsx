@@ -25,7 +25,6 @@ export default function Files() {
     currentFile,
     notificationElement,
     openCreateModal,
-    getFileUri,
     handleEditFile,
     handleUpdateFile,
     handleDeleteFile,

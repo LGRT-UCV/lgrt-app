@@ -58,8 +58,7 @@ const handler = NextAuth({
       return { ...token, ...user };
     },
     async redirect({ url, baseUrl }) {
-      console.log("URL: ", url, baseUrl);
-      return baseUrl;
+      return url.startsWith(baseUrl) ? url : baseUrl;
     },
     async session({ session, token }) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

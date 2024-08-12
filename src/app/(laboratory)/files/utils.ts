@@ -3,7 +3,7 @@ import {
   RequestMethods,
   API_REQUEST_HEADERS,
 } from "@/utils/requests";
-import type { IFile, TSaveFile } from "./interfaces";
+import type { IFile, TFileData, TSaveFile } from "./interfaces";
 
 export const FILE_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/quality/files`;
 
@@ -59,35 +59,24 @@ export const updateFile = async (
     ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`,
   };
-  return newRequest(
+  const response = await newRequest(
     `${FILE_URI}/${id}`,
     RequestMethods.PUT,
     headers,
     JSON.stringify(data),
   );
+  return response as TFileData;
 };
 
-export const getFileURI = async (
-  fileUri: string,
-  fileType: string,
-  sessionToken: string,
-) => {
-  const contentType = getContentTypeByFileType(fileType);
+export const getFileURI = async (id: string, sessionToken: string) => {
   const headers = {
-    "Content-Type": `application/${contentType}`,
+    ...API_REQUEST_HEADERS,
     Authorization: `Bearer ${sessionToken}`,
   };
-  const requestURI = `${process.env.NEXT_PUBLIC_API_URL?.replace("/api", "")}${fileUri}`;
-  const response = await fetch(requestURI, {
-    method: RequestMethods.GET,
-    headers,
-  });
-  const blob = await response.blob();
-  const url = window.URL.createObjectURL(new Blob([blob]));
-  return url;
+  return newRequest(`${FILE_URI}/${id}/download`, RequestMethods.GET, headers);
 };
 
-const getContentTypeByFileType = (fileType: string) => {
+export const getContentTypeByFileType = (fileType: string) => {
   switch (fileType) {
     case ".pdf":
       return "application/pdf";

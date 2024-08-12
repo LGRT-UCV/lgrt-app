@@ -1,8 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
-import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
+import {
+  Modal,
+  Button,
+  Divider,
+  Popover,
+  Spin,
+  type TableColumnsType,
+} from "antd";
+import { PlusOutlined, MoreOutlined, LoadingOutlined } from "@ant-design/icons";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
@@ -23,11 +30,13 @@ export default function Files() {
     tableData,
     isLoading,
     currentFile,
+    isDownloading,
     notificationElement,
     openCreateModal,
     handleEditFile,
     handleUpdateFile,
     handleDeleteFile,
+    getFileUri,
     setOpenCreateModal,
     setSearchValue,
   } = useFile();
@@ -52,8 +61,12 @@ export default function Files() {
       render: (record: IFile & { key: string }) => {
         return (
           <div className="mx-auto text-center">
-            <a href={record.fileUri} target="_blank" rel="noreferrer">
-              <strong>Descargar</strong>
+            <a onClick={() => getFileUri(record.id)}>
+              {isDownloading ? (
+                <Spin indicator={<LoadingOutlined spin />} size="small" />
+              ) : (
+                <strong>Descargar</strong>
+              )}
             </a>
           </div>
         );

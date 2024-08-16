@@ -109,7 +109,6 @@ export default function useRequestForm(callback: () => void) {
   };
 
   const handleMeasurements = (id: string, key: number) => {
-    console.log("id: ", id, "key: ", key);
     const materialData = materialList?.materials?.find(
       (material) => material.id === id,
     );
@@ -135,7 +134,6 @@ export default function useRequestForm(callback: () => void) {
       );
       return updateMeasurements;
     });
-    console.log("materialData: ", materialsSelected, measurements);
   };
 
   const handleRemoveMaterial = (key: number) => {

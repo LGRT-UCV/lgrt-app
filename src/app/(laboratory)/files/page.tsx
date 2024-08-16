@@ -47,6 +47,10 @@ export default function Files() {
         title: column.label,
         width: ["name", "description"].includes(column.id) ? 60 : 20,
         dataIndex: column.id,
+        sorter:
+          column.id === "name"
+            ? (a, b) => a.name.localeCompare(b.name)
+            : undefined,
         key: column.id,
         fixed:
           ["name", "fileType"].includes(column.id) && !isMobile

@@ -9,6 +9,7 @@ import { createRequest } from "../requests/utils";
 
 export default function useProject() {
   const [searchValue, setSearchValue] = useState("");
+  const [projectStatus, setProjectStatus] = useState<string>("all");
   const [openModal, setOpenModal] = useState(false);
   const [currentProject, setCurrentProject] = useState<IProject>();
   const { openNotification, notificationElement } = useNotification();
@@ -120,8 +121,9 @@ export default function useProject() {
     const search = searchValue.toLocaleLowerCase();
     const projects = projectList.filter(
       (project) =>
-        project.name.toLocaleLowerCase().includes(search) ||
-        project.description.toLocaleLowerCase().includes(search),
+        (project.name.toLocaleLowerCase().includes(search) ||
+          project.description.toLocaleLowerCase().includes(search)) &&
+        (project.status === projectStatus || projectStatus === "all"),
     );
     return (
       projects.map((project, index) => ({
@@ -130,7 +132,7 @@ export default function useProject() {
         description: project.description.substring(0, 120) + "...",
       })) ?? []
     );
-  }, [projectList, searchValue]);
+  }, [projectList, searchValue, projectStatus]);
 
   return {
     openModal,
@@ -143,6 +145,7 @@ export default function useProject() {
     handleProjectDetails,
     setOpenModal,
     setSearchValue,
+    setProjectStatus,
     handleUpdateProject,
     handleRequestMaterials,
   };

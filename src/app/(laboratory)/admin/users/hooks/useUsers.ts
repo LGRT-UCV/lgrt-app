@@ -10,6 +10,8 @@ import type { IUser, TStatus } from "../interfaces";
 export default function useUser() {
   const [form] = useForm();
   const [searchValue, setSearchValue] = useState("");
+  const [userStatus, setUserStatus] = useState<string>("all");
+  const [userRole, setUserRole] = useState<string>("all");
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUser>();
@@ -86,9 +88,11 @@ export default function useUser() {
     const users = userList.filter((user) => {
       const userFullName = `${user.name} ${user.lastName}`;
       return (
-        user.id.toLocaleLowerCase().includes(search) ||
-        userFullName.toLocaleLowerCase().includes(search) ||
-        user.laboratory.name.toLocaleLowerCase().includes(search)
+        (user.id.toLocaleLowerCase().includes(search) ||
+          userFullName.toLocaleLowerCase().includes(search) ||
+          user.laboratory.name.toLocaleLowerCase().includes(search)) &&
+        (userStatus === "all" || user.status === userStatus) &&
+        (userRole === "all" || user.idRoleId === userRole)
       );
     });
     return (
@@ -102,7 +106,7 @@ export default function useUser() {
             ?.roleName ?? "External",
       })) ?? []
     );
-  }, [userList, searchValue]);
+  }, [userList, searchValue, userStatus, userRole]);
 
   useEffect(() => {
     if (!openCreateModal) {
@@ -124,6 +128,8 @@ export default function useUser() {
     handleUserDetails,
     setOpenCreateModal,
     setOpenDetailsModal,
+    setUserStatus,
+    setUserRole,
     setSearchValue,
     handleUpdateUser,
     setCurrentUser,

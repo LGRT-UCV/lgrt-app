@@ -15,7 +15,7 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { getStatus, userFields } from "./utils";
+import { getStatus, userFields, userRoles, userStatus } from "./utils";
 import type { IUser } from "./interfaces";
 import useUser from "./hooks/useUsers";
 import { CreateUserModal } from "./components/createUserModal";
@@ -37,6 +37,8 @@ export default function Users() {
     setOpenCreateModal,
     setOpenDetailsModal,
     setCurrentUser,
+    setUserRole,
+    setUserStatus,
     setSearchValue,
   } = useUser();
 
@@ -122,6 +124,30 @@ export default function Users() {
       type: FilterType.SEARCH,
       onChange(value) {
         setSearchValue(String(value));
+      },
+    },
+    {
+      label: "Roles de usuario",
+      placeholder: "Roles de usuario",
+      type: FilterType.SELECT,
+      values: [
+        { label: "Todos los roles", value: "all" },
+        ...userRoles.map((role) => ({
+          label: role.roleName,
+          value: role.id,
+        })),
+      ],
+      onChange(value) {
+        setUserRole(String(value));
+      },
+    },
+    {
+      label: "Filtrar por estado",
+      placeholder: "Selecciona el estado",
+      type: FilterType.SELECT,
+      values: [{ label: "Todos los estados", value: "all" }, ...userStatus],
+      onChange(value) {
+        setUserStatus(String(value));
       },
     },
   ];

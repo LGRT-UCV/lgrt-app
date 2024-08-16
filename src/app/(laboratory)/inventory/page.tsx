@@ -16,6 +16,7 @@ import useInventory from "./useInventory";
 import type { TMaterial } from "./interfaces";
 import { isMobile } from "react-device-detect";
 import { useLabProvider } from "@/context/labProvider";
+import { extractNumber } from "@/utils";
 
 export default function Inventory() {
   const { role } = useLabProvider();
@@ -35,6 +36,23 @@ export default function Inventory() {
     setOpenModal,
   } = useInventory();
 
+  const sorter = (a: AnyObject, b: AnyObject, column: string) => {
+    switch (column) {
+      case "id":
+        return Number(a.id) - Number(b.id);
+      case "name":
+        return a.name.localeCompare(b.name);
+      case "weight":
+        return (
+          extractNumber(String(a.weight)) - extractNumber(String(b.weight))
+        );
+      case "quantity":
+        return (
+          extractNumber(String(a.quantity)) - extractNumber(String(b.quantity))
+        );
+    }
+  };
+
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     if (typeof currentMaterialType === "undefined") return [];
 
@@ -49,6 +67,9 @@ export default function Inventory() {
         width: column.id === "id" ? 25 : 100,
         dataIndex: column.id,
         key: column.id,
+        sorter: ["id", "name", "weight", "quantity"].includes(column.id)
+          ? (a, b) => sorter(a, b, column.id)
+          : undefined,
         fixed:
           ["id", "name"].includes(column.id) &&
           !isMobile &&

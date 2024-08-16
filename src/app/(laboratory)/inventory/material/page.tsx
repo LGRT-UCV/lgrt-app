@@ -77,7 +77,7 @@ export default function NewMaterial() {
         }}
       />
 
-      <div className="h-[calc(100vh-250px)] overflow-y-auto p-4">
+      <div className="h-[calc(100vh-190px)] overflow-y-auto p-4">
         <MaterialForm formIntance={form} materialData={currentMaterial} />
       </div>
     </>

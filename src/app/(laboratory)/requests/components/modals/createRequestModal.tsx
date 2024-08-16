@@ -58,7 +58,7 @@ export default function CreateRequestModal({
                   <div className="flex w-full gap-8">
                     <Form.Item
                       {...restField}
-                      label="Materiales a usar"
+                      label="Material a usar"
                       name={[name, "idMaterial"]}
                       className="mb-0 w-2/3"
                       shouldUpdate

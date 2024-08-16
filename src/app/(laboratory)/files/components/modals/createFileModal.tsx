@@ -4,6 +4,7 @@ import type { FormInstance } from "antd/lib";
 import useFileForm from "../../hooks/useFileForm";
 import TextArea from "antd/lib/input/TextArea";
 import { IFile } from "../../interfaces";
+import RequiredLegend from "@/components/feedback/requiredLegend";
 
 export default function CreateFileModal({
   form,
@@ -132,6 +133,7 @@ export default function CreateFileModal({
           </Form.Item>
         )}
       </Form>
+      <RequiredLegend />
     </div>
   );
 }

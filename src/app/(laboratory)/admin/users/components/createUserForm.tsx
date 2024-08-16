@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllLaboratories } from "../../laboratory/utils";
 import type { FormInstance } from "antd/lib";
 import type { NotificationPlacement } from "antd/es/notification/interface";
+import RequiredLegend from "@/components/feedback/requiredLegend";
 
 type TCreateUserForm = {
   form: FormInstance;
@@ -164,6 +165,7 @@ export default function CreateUserForm({
           />
         </Form.Item>
       </div>
+      <RequiredLegend />
     </Form>
   );
 }

@@ -4,6 +4,7 @@ import type { FormInstance } from "antd/lib";
 import useLaboratoryForm from "../hooks/useLaboratoryForm";
 import TextArea from "antd/es/input/TextArea";
 import { ILaboratory } from "../interfaces";
+import RequiredLegend from "@/components/feedback/requiredLegend";
 
 type TCreateLaboratoryModal = {
   form: FormInstance;
@@ -95,6 +96,7 @@ export default function CreateLaboratoryModal({
             maxLength={500}
           />
         </Form.Item>
+        <RequiredLegend />
       </Form>
     </div>
   );

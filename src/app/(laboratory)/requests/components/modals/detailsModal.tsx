@@ -183,8 +183,9 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
         ];
       }
       const newMaterials = [...prev];
-      if (newMaterials[materialIndex]) {
-        newMaterials[materialIndex].quantity = quantity.toString();
+      if (typeof newMaterials[materialIndex] !== "undefined") {
+        (newMaterials[materialIndex] as TRequestReturnedMaterials).quantity =
+          quantity.toString();
       }
 
       return newMaterials;

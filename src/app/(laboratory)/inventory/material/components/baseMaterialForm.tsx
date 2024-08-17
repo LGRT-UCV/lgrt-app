@@ -52,6 +52,7 @@ export default function BaseMaterialForm({
       </div>
       <Form.Item
         name="description"
+        label="Descripción"
         className="px-2"
         rules={[
           {

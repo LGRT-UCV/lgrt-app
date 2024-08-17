@@ -34,6 +34,17 @@ export default function Laboratory() {
     setCurrentLaboratory,
   } = useLaboratory();
 
+  const sorter = (a: AnyObject, b: AnyObject, column: string) => {
+    switch (column) {
+      case "id":
+        return Number(a.id) - Number(b.id);
+      case "name":
+        return a.name.localeCompare(b.name);
+      case "area":
+        return a.area.localeCompare(b.area);
+    }
+  };
+
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columnToShow: TableColumnsType<AnyObject> = laboratoryFields
       .filter((field) => field.id !== "description")
@@ -41,6 +52,9 @@ export default function Laboratory() {
         title: column.label,
         width: "name" === column.id ? 60 : "id" === column.id ? 15 : 30,
         dataIndex: column.id,
+        sorter: ["id", "name", "area"].includes(column.id)
+          ? (a, b) => sorter(a, b, column.id)
+          : undefined,
         key: column.id,
         fixed: "name" === column.id && !isMobile ? "left" : undefined,
         align: "center",

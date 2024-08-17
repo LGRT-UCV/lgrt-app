@@ -20,7 +20,7 @@ export default function LabLayout({
             {children}
           </Content>
           <Footer className="text-center">
-            LGRT ©{new Date().getFullYear()}
+            LGRT App ©{new Date().getFullYear()}
           </Footer>
         </Layout>
       </Layout>

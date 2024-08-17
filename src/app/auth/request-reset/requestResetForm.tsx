@@ -57,7 +57,6 @@ export default function RequestResetPassword() {
         }}
         onFinish={onFinish}
         layout="vertical"
-        
         size="large"
         className="mx-auto w-3/4"
       >

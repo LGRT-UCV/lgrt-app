@@ -10,6 +10,7 @@ import { getUserRole } from "@/(laboratory)/admin/users/utils";
 
 export default function useRequest() {
   const [searchValue, setSearchValue] = useState("");
+  const [requestStatus, setRequestStatus] = useState<string>("all");
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
@@ -99,9 +100,10 @@ export default function useRequest() {
     const requests = requestList.filter((request) => {
       const requesterFullName = `${request.idRequester.name} ${request.idRequester.lastName}`;
       return (
-        request.id.toLocaleLowerCase().includes(search) ||
-        request.idRequester.id.toLocaleLowerCase().includes(search) ||
-        requesterFullName.toLocaleLowerCase().includes(search)
+        (request.id.toLocaleLowerCase().includes(search) ||
+          request.idRequester.id.toLocaleLowerCase().includes(search) ||
+          requesterFullName.toLocaleLowerCase().includes(search)) &&
+        (requestStatus === "all" || request.status === requestStatus)
       );
     });
     return (
@@ -114,7 +116,7 @@ export default function useRequest() {
         ).toLocaleDateString("es-VE"),
       })) ?? []
     );
-  }, [requestList, searchValue]);
+  }, [requestList, searchValue, requestStatus]);
 
   return {
     openDetailsModal,
@@ -130,6 +132,7 @@ export default function useRequest() {
     setOpenDetailsModal,
     setOpenCreateModal,
     setSearchValue,
+    setRequestStatus,
     handleUpdateRequest,
   };
 }

@@ -5,6 +5,7 @@ import type { IMaterialForm } from "../../interfaces";
 import useMaterialForm from "../hooks/useMaterialForm";
 import BaseMaterialForm from "./baseMaterialForm";
 import useMaterialInit from "../hooks/useMaterialInit";
+import RequiredLegend from "@/components/feedback/requiredLegend";
 
 export default function MaterialForm({
   formIntance,
@@ -202,13 +203,6 @@ export default function MaterialForm({
                   label="Concentración"
                   name="concentration"
                   className="mb-4 w-full px-2 md:w-1/3"
-                  rules={[
-                    {
-                      min: 0,
-                      max: 100,
-                      message: "Por favor verifique la concentración",
-                    },
-                  ]}
                 >
                   <InputNumber
                     className="w-full"
@@ -343,6 +337,7 @@ export default function MaterialForm({
           </>
         )}
       </Form>
+      <RequiredLegend />
     </div>
   );
 }

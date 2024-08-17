@@ -19,7 +19,7 @@ import Header from "@/components/layout/header";
 import { Roles, Routes } from "@/lib/constants";
 import type { IProject } from "./interfaces";
 import useProject from "./useProject";
-import { fieldsProject, getProjectStatusStyle } from "./utils";
+import { fieldsProject, getProjectStatusStyle, projectStatus } from "./utils";
 import DetailsModal from "./project/components/detailsModal";
 import { isMobile } from "react-device-detect";
 import { useLabProvider } from "@/context/labProvider";
@@ -36,6 +36,7 @@ export default function Projects() {
     handleProjectDetails,
     handleDeleteProject,
     setSearchValue,
+    setProjectStatus,
     setOpenModal,
     handleUpdateProject,
   } = useProject();
@@ -56,6 +57,10 @@ export default function Projects() {
         title: column.label,
         width: "description" === column.id ? 50 : 20,
         dataIndex: column.id,
+        sorter:
+          column.id === "name"
+            ? (a, b) => a.name.localeCompare(b.name)
+            : undefined,
         key: column.id,
         fixed: column.id === "name" && !isMobile ? "left" : undefined,
         align: "center",
@@ -134,6 +139,15 @@ export default function Projects() {
       type: FilterType.SEARCH,
       onChange(value) {
         setSearchValue(String(value));
+      },
+    },
+    {
+      label: "Filtrar por estado",
+      placeholder: "Selecciona el estado",
+      type: FilterType.SELECT,
+      values: [{ label: "Todos los estados", value: "all" }, ...projectStatus],
+      onChange(value) {
+        setProjectStatus(String(value));
       },
     },
   ];

@@ -34,6 +34,15 @@ export default function Storage() {
     setCurrentStorage,
   } = useStorage();
 
+  const sorter = (a: AnyObject, b: AnyObject, column: string) => {
+    switch (column) {
+      case "id":
+        return Number(a.id) - Number(b.id);
+      case "name":
+        return a.name.localeCompare(b.name);
+    }
+  };
+
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columnToShow: TableColumnsType<AnyObject> = storageFields
       .filter((field) => field.id !== "description")
@@ -41,6 +50,9 @@ export default function Storage() {
         title: column.label,
         width: "name" === column.id ? 30 : "id" === column.id ? 10 : 60,
         dataIndex: column.id,
+        sorter: ["id", "name"].includes(column.id)
+          ? (a, b) => sorter(a, b, column.id)
+          : undefined,
         key: column.id,
         fixed:
           ["id", "name"].includes(column.id) &&

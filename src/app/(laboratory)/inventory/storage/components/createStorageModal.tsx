@@ -4,6 +4,7 @@ import type { FormInstance } from "antd/lib";
 import useStorageForm from "../hooks/useStorageForm";
 import TextArea from "antd/es/input/TextArea";
 import { IStorage } from "../interfaces";
+import RequiredLegend from "@/components/feedback/requiredLegend";
 
 type TCreateStorageModal = {
   form: FormInstance;
@@ -41,7 +42,6 @@ export default function CreateStorageModal({
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        
         size="large"
         scrollToFirstError
         className="p-4"
@@ -99,6 +99,7 @@ export default function CreateStorageModal({
           />
         </Form.Item>
       </Form>
+      <RequiredLegend />
     </div>
   );
 }

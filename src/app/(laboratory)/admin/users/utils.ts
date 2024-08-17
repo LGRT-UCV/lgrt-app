@@ -68,7 +68,7 @@ export const updateUser = async (
   );
 };
 
-export const requestStatus: Array<TUserStatus> = [
+export const userStatus: Array<TUserStatus> = [
   {
     label: "Activo",
     value: "A",

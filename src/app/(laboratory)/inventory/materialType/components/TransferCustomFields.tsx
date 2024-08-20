@@ -1,44 +1,53 @@
-import { useState } from "react";
-import { Transfer, type TransferProps } from "antd";
+import { useEffect, useState } from "react";
+import { type FormInstance, Transfer, type TransferProps } from "antd";
 import { basicMaterialTypeFields } from "../utils";
+import { type IMaterialType } from "../interfaces";
 
 interface RecordType {
   key: string;
   name: string;
   required: boolean;
+  disabled?: boolean;
+}
+
+interface TransferCustomFieldsProps {
+  form: FormInstance;
+  initialFields?: IMaterialType["fields"];
 }
 
 const mockData = basicMaterialTypeFields.map<RecordType>((field) => ({
   key: field.key,
   name: field.name,
   required: field.required,
+  disabled: field.required,
 }));
 
 const initialTargetKeys = mockData
   .filter((item) => item.required)
   .map((item) => item.key);
 
-export default function TransferCustomFields() {
+export default function TransferCustomFields({
+  form,
+  initialFields,
+}: TransferCustomFieldsProps) {
   const [targetKeys, setTargetKeys] =
     useState<TransferProps["targetKeys"]>(initialTargetKeys);
 
-  const onChange: TransferProps["onChange"] = (
-    nextTargetKeys,
-    direction,
-    moveKeys,
-  ) => {
-    console.log("targetKeys:", nextTargetKeys);
-    console.log("direction:", direction);
-    console.log("moveKeys:", moveKeys);
-    setTargetKeys(nextTargetKeys);
-  };
+  useEffect(() => {
+    if (typeof initialFields === "undefined") return;
 
-  const onSelectChange: TransferProps["onSelectChange"] = (
-    sourceSelectedKeys,
-    targetSelectedKeys,
-  ) => {
-    console.log("sourceSelectedKeys:", sourceSelectedKeys);
-    console.log("targetSelectedKeys:", targetSelectedKeys);
+    const initialFieldsKeys = initialFields.split(";");
+    const initialKeys = mockData
+      .filter((field) => initialFieldsKeys.includes(field.key))
+      .map((item) => item.key);
+    setTargetKeys(initialKeys);
+    form.setFieldValue("predefinedFields", initialKeys);
+  }, [initialFields]);
+
+  const onChange: TransferProps["onChange"] = (nextTargetKeys) => {
+    console.log("targetKeys:", nextTargetKeys);
+    setTargetKeys(nextTargetKeys);
+    form.setFieldValue("predefinedFields", nextTargetKeys);
   };
 
   return (
@@ -49,11 +58,16 @@ export default function TransferCustomFields() {
         width: 300,
         height: 250,
       }}
-      titles={["Campos disponibles", "Campos del tipo de material"]}
+      titles={["Campos disponibles", "Campos asignados"]}
       targetKeys={targetKeys}
       onChange={onChange}
-      onSelectChange={onSelectChange}
       render={(item) => item.name}
+      locale={{
+        itemsUnit: "campos",
+        searchPlaceholder: "Buscar campos",
+        selectAll: "Seleccionar todos",
+        selectInvert: "Invertir selección",
+      }}
     />
   );
 }

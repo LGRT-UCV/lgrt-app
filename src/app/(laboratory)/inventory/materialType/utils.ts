@@ -213,3 +213,24 @@ export const basicMaterialTypeFields = [
     required: false,
   },
 ];
+
+export const customFields = [
+  {
+    key: "custom",
+    name: "Texto",
+    fieldType: "string",
+    required: false,
+  },
+  {
+    key: "custom",
+    name: "Fecha",
+    fieldType: "date",
+    required: false,
+  },
+  {
+    key: "custom",
+    name: "Lista",
+    fieldType: "list",
+    required: false,
+  },
+];

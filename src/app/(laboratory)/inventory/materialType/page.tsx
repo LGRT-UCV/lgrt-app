@@ -129,7 +129,7 @@ export default function MaterialType() {
       />
 
       <Modal
-        title="Crear tipo de material"
+        title={`${!!currentMaterialType ? "Editar" : "Crear"} tipo de material`}
         centered
         open={openCreateModal}
         onCancel={() => {

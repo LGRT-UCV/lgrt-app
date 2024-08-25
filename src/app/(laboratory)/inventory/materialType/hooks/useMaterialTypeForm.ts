@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
-import type { IMaterialType, TSaveMaterialType } from "../interfaces";
+import type {
+  IMaterialType,
+  TFields,
+  TSaveMaterialType,
+  TSaveMaterialTypeForm,
+} from "../interfaces";
 import { createMaterialType, updateMaterialType } from "../utils";
 import { FormInstance } from "antd";
 
@@ -19,7 +24,7 @@ export default function useMaterialTypeForm(
     formIntance.setFieldsValue(materialTypeData);
   }, [materialTypeData]);
 
-  const onFinish = async (values: TSaveMaterialType) => {
+  const onFinish = async (values: TSaveMaterialTypeForm) => {
     try {
       const user = sessionData?.user;
 
@@ -27,11 +32,29 @@ export default function useMaterialTypeForm(
 
       setIsLoading(true);
 
-      if (!!materialTypeData) {
-        await updateMaterialType(materialTypeData.id, values, user.token);
-      } else {
-        await createMaterialType(values, user.token);
-      }
+      const predefinedFields: Array<TFields> = values.predefinedFields.map(
+        (field) => ({
+          name: field,
+          fieldType: "default",
+        }),
+      );
+      const customFields: Array<TFields> = values.customFields.map((field) => ({
+        name: field.name,
+        fieldType: JSON.parse(field.fieldType).fieldType,
+        fieldList: Array.isArray(field.fieldList)
+          ? field.fieldList?.join(";")
+          : undefined,
+      }));
+      const valuesToSend: TSaveMaterialType = {
+        name: values.name,
+        fields: predefinedFields.concat(customFields),
+      };
+      console.log("values: ", valuesToSend);
+      // if (!!materialTypeData) {
+      //   await updateMaterialType(materialTypeData.id, values, user.token);
+      // } else {
+      //   await createMaterialType(values, user.token);
+      // }
 
       openNotification(
         "success",
@@ -39,7 +62,7 @@ export default function useMaterialTypeForm(
         `El tipo de material ${values.name} ha sido creado con exito.`,
         "topRight",
       );
-      callback();
+      //callback();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log("ERROR: ", error);

@@ -10,6 +10,8 @@ import { IMaterialType } from "../interfaces";
 import RequiredLegend from "@/components/feedback/requiredLegend";
 import TransferCustomFields from "./TransferCustomFields";
 import { customFields } from "../utils";
+import { useState } from "react";
+import { Option } from "antd/es/mentions";
 
 type TCreateMaterialTypeModal = {
   form: FormInstance;
@@ -22,6 +24,8 @@ export default function CreateMaterialTypeModal({
   data,
   closeModal,
 }: TCreateMaterialTypeModal) {
+  const [fieldType, setFieldType] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[][]>([]);
   const { isLoading, notificationElement, onFinish } = useMaterialTypeForm(
     () => {
       form.resetFields();
@@ -30,6 +34,16 @@ export default function CreateMaterialTypeModal({
     form,
     data,
   );
+
+  const handleTagsChange = (key: number, value: string[]) => {
+    let newTags = tags;
+    if (key >= tags.length) {
+      newTags = [...tags, value];
+    } else {
+      newTags = tags.map((tag, index) => (index === key ? value : tag));
+    }
+    setTags(newTags);
+  };
 
   if (isLoading)
     return (
@@ -73,7 +87,7 @@ export default function CreateMaterialTypeModal({
         >
           <TransferCustomFields form={form} initialFields={data?.fields} />
         </Form.Item>
-        <Form.List name="materialRequestMaterial">
+        <Form.List name="customFields">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
@@ -94,6 +108,17 @@ export default function CreateMaterialTypeModal({
                     >
                       <Select
                         placeholder="Tipo de campo"
+                        onChange={(value) => {
+                          if (name >= fieldType.length) {
+                            setFieldType([...fieldType, value]);
+                          } else {
+                            setFieldType(
+                              fieldType.map((type, index) =>
+                                index === name ? value : type,
+                              ),
+                            );
+                          }
+                        }}
                         options={customFields.map((fields) => {
                           return {
                             label: fields.name,
@@ -105,7 +130,7 @@ export default function CreateMaterialTypeModal({
                     <Form.Item
                       {...restField}
                       label="Nombre del campo"
-                      name={[name, "fieldName"]}
+                      name={[name, "name"]}
                       className="mb-0 w-1/2 md:w-3/4"
                       rules={[
                         {
@@ -121,9 +146,44 @@ export default function CreateMaterialTypeModal({
                         maxLength={60}
                       />
                     </Form.Item>
+                    {fieldType[name] &&
+                      JSON.parse(fieldType[name]).fieldType === "list" && (
+                        <Form.Item
+                          {...restField}
+                          label="Valores de la lista"
+                          name={[name, "fieldList"]}
+                          className="mb-0 w-1/2"
+                          shouldUpdate
+                          rules={[
+                            {
+                              required: true,
+                              message:
+                                "Por favor coloque los valores de la lista",
+                            },
+                          ]}
+                        >
+                          <Select
+                            mode="tags"
+                            style={{ width: "100%" }}
+                            placeholder="Coloque los valores separados por coma (,)"
+                            onChange={(value) => handleTagsChange(name, value)}
+                            tokenSeparators={[","]}
+                          >
+                            {tags[name]?.map((tag) => (
+                              <Option key={tag} value={tag}>
+                                {tag}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                      )}
 
                     <MinusCircleOutlined
                       onClick={() => {
+                        setFieldType(
+                          fieldType.filter((_, index) => index !== name),
+                        );
+                        setTags(tags.filter((_, index) => index !== name));
                         remove(name);
                       }}
                     />

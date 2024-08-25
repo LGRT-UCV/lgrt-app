@@ -34,6 +34,15 @@ export default function TransferCustomFields({
     useState<TransferProps["targetKeys"]>(initialTargetKeys);
 
   useEffect(() => {
+    if (
+      typeof initialTargetKeys === "undefined" ||
+      initialTargetKeys.length === 0
+    )
+      return;
+    form.setFieldValue("predefinedFields", initialTargetKeys);
+  }, [initialTargetKeys]);
+
+  useEffect(() => {
     if (typeof initialFields === "undefined") return;
 
     const initialFieldsKeys = initialFields.split(";");
@@ -45,7 +54,6 @@ export default function TransferCustomFields({
   }, [initialFields]);
 
   const onChange: TransferProps["onChange"] = (nextTargetKeys) => {
-    console.log("targetKeys:", nextTargetKeys);
     setTargetKeys(nextTargetKeys);
     form.setFieldValue("predefinedFields", nextTargetKeys);
   };

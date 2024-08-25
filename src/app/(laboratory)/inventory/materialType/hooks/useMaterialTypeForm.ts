@@ -38,13 +38,15 @@ export default function useMaterialTypeForm(
           fieldType: "default",
         }),
       );
-      const customFields: Array<TFields> = values.customFields.map((field) => ({
-        name: field.name,
-        fieldType: JSON.parse(field.fieldType).fieldType,
-        fieldList: Array.isArray(field.fieldList)
-          ? field.fieldList?.join(";")
-          : undefined,
-      }));
+      const customFields: Array<TFields> = values.customFields
+        ? values.customFields.map((field) => ({
+            name: field.name,
+            fieldType: JSON.parse(field.fieldType).fieldType,
+            fieldList: Array.isArray(field.fieldList)
+              ? field.fieldList?.join(";")
+              : undefined,
+          }))
+        : [];
       const valuesToSend: TSaveMaterialType = {
         name: values.name,
         fields: predefinedFields.concat(customFields),

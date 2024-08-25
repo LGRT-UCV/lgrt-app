@@ -6,6 +6,7 @@ import useMaterialForm from "../hooks/useMaterialForm";
 import BaseMaterialForm from "./baseMaterialForm";
 import useMaterialInit from "../hooks/useMaterialInit";
 import RequiredLegend from "@/components/feedback/requiredLegend";
+import CustomFieldsForm from "./customFieldsForm";
 
 export default function MaterialForm({
   formIntance,
@@ -336,6 +337,7 @@ export default function MaterialForm({
             </div>
           </>
         )}
+        <CustomFieldsForm />
       </Form>
       <RequiredLegend />
     </div>

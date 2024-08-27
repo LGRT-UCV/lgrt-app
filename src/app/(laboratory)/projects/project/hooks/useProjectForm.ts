@@ -71,15 +71,22 @@ export default function useProjectForm(formIntance: FormInstance) {
         idMaterial: material.idMaterial,
         quantity: material.quantity.toString(),
       }));
-
-      await createProject(
-        {
-          ...values,
-          projectMaterial,
-          file: [],
-        },
-        sessionToken,
+      const projectTasks = values.projectTasks?.map((task) =>
+        typeof task === "object" ? task.name : "",
       );
+      const project = {
+        ...values,
+        projectTasks,
+        projectMaterial,
+        file: [],
+      };
+
+      console.log("projectMaterial: ", project);
+
+      // await createProject(
+      //   project,
+      //   sessionToken,
+      // );
 
       openNotification(
         "success",
@@ -87,8 +94,8 @@ export default function useProjectForm(formIntance: FormInstance) {
         `El proyecto ${values.name} ha sido creado con exito.`,
         "topRight",
       );
-      formIntance.resetFields();
-      void router.push(Routes.Inventory);
+      // formIntance.resetFields();
+      // void router.push(Routes.Projects);
     } catch (error) {
       openNotification(
         "error",

@@ -10,6 +10,11 @@ export type TSaveProject = {
   projectMaterial?: Array<TProjectMaterial>;
   comments?: string;
   file?: Array<string>;
+  projectTasks?:
+    | Array<string>
+    | {
+        name: string;
+      }[];
 };
 
 export type TUpdateProject = {

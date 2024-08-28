@@ -103,7 +103,9 @@ export default function Projects() {
               <div className="text-center">
                 <Divider className="m-2" />
                 <span
-                  onClick={() => handleProjectDetails(record)}
+                  onClick={() =>
+                    void router.push(Routes.SaveProject + `/${record.id}`)
+                  }
                   className="h-full w-full cursor-pointer"
                 >
                   Ver proyecto

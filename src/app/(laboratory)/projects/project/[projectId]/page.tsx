@@ -1,22 +1,58 @@
 "use client";
 
-import { SaveOutlined } from "@ant-design/icons";
+import { SaveOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useForm } from "antd/lib/form/Form";
 import Header from "@/components/layout/header";
+import { useQuery } from "@tanstack/react-query";
+import { getProject } from "../../utils";
+import useNotification from "@/hooks/useNotification";
+import { useSession } from "next-auth/react";
 
 export default function ProjectDetails({
   params,
 }: {
   params: { projectId: string };
 }) {
+  const { data: sessionData } = useSession();
+  const { openNotification, notificationElement } = useNotification();
+  const { projectId } = params;
   const [form] = useForm();
 
-  console.log("projectId", params);
+  const { data: currentProject, isLoading } = useQuery({
+    queryKey: ["project"],
+    queryFn: async () => {
+      try {
+        if (!projectId) {
+          form.resetFields();
+          return;
+        }
+
+        return await getProject(sessionData?.user.token ?? "", projectId);
+      } catch (error) {
+        openNotification(
+          "error",
+          "Ha ocurrido un error al obtener el proyecto",
+          "",
+          "topRight",
+        );
+        return;
+      }
+    },
+    enabled: !!sessionData?.user.token,
+  });
+
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <>
+      {notificationElement}
       <Header
-        title={params.projectId}
+        title={currentProject?.name || `Proyecto #${projectId}`}
         btn={{
           label: "Editar",
           icon: <SaveOutlined />,

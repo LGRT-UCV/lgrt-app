@@ -20,7 +20,7 @@ import { Roles, Routes } from "@/lib/constants";
 import type { IProject } from "./interfaces";
 import useProject from "./useProject";
 import { fieldsProject, getProjectStatusStyle, projectStatus } from "./utils";
-import DetailsModal from "./project/components/detailsModal";
+import DetailsModal from "./project/components/projectDetails";
 import { isMobile } from "react-device-detect";
 import { useLabProvider } from "@/context/labProvider";
 

@@ -1,4 +1,4 @@
-import { Button, Select, Tag } from "antd";
+import { Button, Card, Descriptions, Select, Tag } from "antd";
 import type { IProject, TUpdateProject } from "../../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { SelectProps } from "antd/lib";
@@ -17,12 +17,15 @@ import { useLabProvider } from "@/context/labProvider";
 
 type TagRender = SelectProps["tagRender"];
 
-interface IDetailsModal {
+interface IProjectDetails {
   project?: IProject;
-  closeModal: () => void;
+  closeModal?: () => void;
 }
 
-export default function DetailsModal({ project, closeModal }: IDetailsModal) {
+export default function ProjectDetails({
+  project,
+  closeModal,
+}: IProjectDetails) {
   const { role } = useLabProvider();
   const [statusSelected, setStatusSelected] = useState<string>();
   const [currentMaterials, setCurrentMaterials] = useState<Array<TMaterial>>(
@@ -89,7 +92,7 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
         `El status ${getProjectStatus(statusSelected ?? "I").label.toLowerCase()} ha sido guardado con exito.`,
         "topRight",
       );
-      closeModal();
+      closeModal?.();
     } catch (error) {
       openNotification(
         "error",
@@ -104,62 +107,72 @@ export default function DetailsModal({ project, closeModal }: IDetailsModal) {
   return (
     <>
       {notificationElement}
-      <div className="mx-auto max-h-[calc(100vh-200px)] overflow-auto p-4">
-        <div className="flex items-center justify-between border-b border-gray-200 p-4">
-          <h2 className="text-xl font-bold">{project.name}</h2>
-          <Tag color={statusColor}>{status}</Tag>
-        </div>
-        <div className="space-y-4 p-4">
-          <div className="w-full">
-            <strong>Descripción:</strong>
-            <br />
-            <p>{project.description}</p>
-          </div>
-          <div className="grid w-full grid-cols-2 space-y-4">
-            <div className="mt-4">
-              <strong>Responsable:</strong> {project.projectManager}
+      <div
+        style={{
+          padding: "16px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 24,
+          maxHeight: "90vh",
+          overflow: "auto",
+        }}
+      >
+        <Card title="Información del proyecto" style={{ width: "100%" }}>
+          <Descriptions bordered column={1} labelStyle={{ width: "15%" }}>
+            <Descriptions.Item key={"id"} label="ID">
+              #{project.id}
+            </Descriptions.Item>
+            <Descriptions.Item key={"status"} label="Estado">
+              <Tag color={statusColor}>{status}</Tag>
+            </Descriptions.Item>
+            <Descriptions.Item key={"name"} label="Nombre">
+              {project.name}
+            </Descriptions.Item>
+            <Descriptions.Item key={"description"} label="Descripción">
+              {project.description}
+            </Descriptions.Item>
+            <Descriptions.Item key={"projectManager"} label="Responsable">
+              {project.projectManager}
+            </Descriptions.Item>
+            {project.projectUri && (
+              <Descriptions.Item key={"projectManager"} label="Responsable">
+                <a href={project.projectUri} target="_blank" rel="noreferrer">
+                  <strong>Ver Archivo</strong>
+                </a>
+              </Descriptions.Item>
+            )}
+          </Descriptions>
+        </Card>
+        <Card title="Materiales a usar" style={{ width: "100%" }}>
+          {currentMaterials.map((material) => (
+            <Descriptions
+              key={`material-${material.id}`}
+              bordered
+              column={1}
+              labelStyle={{ width: "15%" }}
+              title={material.name}
+            >
+              <Descriptions.Item key="quantity" label="Cantidad">
+                {material.quantity}
+                {material.measurement.name}
+              </Descriptions.Item>
+            </Descriptions>
+          ))}
+        </Card>
+        {Roles.External !== role && (
+          <Card title="Cambiar Estado" style={{ width: "100%" }}>
+            <div className="flex items-center justify-center gap-4">
+              <Select
+                tagRender={tagRender}
+                defaultValue={[project.status ?? "I"]}
+                onSelect={(value) => setStatusSelected(value)}
+                className="w-full md:w-1/3"
+                options={projectStatus}
+              />
+              <Button onClick={onChangeStatus}>Cambiar</Button>
             </div>
-            <div>
-              <a href={project.projectUri} target="_blank" rel="noreferrer">
-                <strong>Ver Archivo</strong>
-              </a>
-            </div>
-          </div>
-
-          <div className="flex w-full flex-col gap-1">
-            <strong>Materiales:</strong>
-            {currentMaterials.map((material, index) => (
-              <div
-                key={`material-${index}`}
-                className="grid w-full grid-cols-2"
-              >
-                <p>{material.name}</p>
-                <p>
-                  {material.quantity}
-                  {material.measurement.name}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {Roles.External !== role && (
-            <div className="flex w-full flex-col gap-1">
-              <strong>Cambiar status:</strong>
-              <div className="grid w-full grid-cols-2 items-center space-x-4">
-                <div className="flex items-center gap-2">
-                  <Select
-                    tagRender={tagRender}
-                    defaultValue={[project.status ?? "I"]}
-                    onSelect={(value) => setStatusSelected(value)}
-                    style={{ width: "100%" }}
-                    options={projectStatus}
-                  />
-                </div>
-                <Button onClick={onChangeStatus}>Cambiar</Button>
-              </div>
-            </div>
-          )}
-        </div>
+          </Card>
+        )}
       </div>
     </>
   );

@@ -7,6 +7,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getProject } from "../../utils";
 import useNotification from "@/hooks/useNotification";
 import { useSession } from "next-auth/react";
+import Details from "../components/projectDetails";
+import { useRouter } from "next/navigation";
+import { Routes } from "@/lib/constants";
 
 export default function ProjectDetails({
   params,
@@ -17,6 +20,7 @@ export default function ProjectDetails({
   const { openNotification, notificationElement } = useNotification();
   const { projectId } = params;
   const [form] = useForm();
+  const router = useRouter();
 
   const { data: currentProject, isLoading } = useQuery({
     queryKey: ["project"],
@@ -57,11 +61,14 @@ export default function ProjectDetails({
           label: "Editar",
           icon: <SaveOutlined />,
           type: "primary",
-          onClick: form.submit,
+          onClick: () =>
+            void router.push(`${Routes.SaveMaterial}?id=${currentProject?.id}`),
         }}
       />
 
-      <div className="h-[calc(100vh-250px)] overflow-y-auto p-4">Data</div>
+      <div className="h-[calc(100vh-250px)] overflow-y-auto p-4">
+        <Details project={currentProject} />
+      </div>
     </>
   );
 }

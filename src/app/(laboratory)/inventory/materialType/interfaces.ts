@@ -29,7 +29,8 @@ export type TSaveMaterialTypeForm = {
 
 export interface IMaterialType extends IGenericId {
   name: string;
-  fields?: string;
+  fields: string;
+  customFields: Array<TFields>;
 }
 
 export type TMaterialType = IMaterialType;

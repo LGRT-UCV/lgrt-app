@@ -15,14 +15,44 @@ export default function useMaterialTypeForm(
   formIntance: FormInstance,
   materialTypeData?: IMaterialType,
 ) {
+  const [tagsList, setTagsList] = useState<string[][]>([]);
+  const [fieldType, setFieldType] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
   useEffect(() => {
     if (typeof materialTypeData === "undefined") return;
-    formIntance.setFieldsValue(materialTypeData);
+    const tags = materialTypeData.customFields.map((field) =>
+      String(field.fieldList).split(";"),
+    );
+    const customFields = materialTypeData.customFields.map((field) => {
+      return JSON.stringify({
+        key: "custom",
+        fieldType: field.fieldType,
+      });
+    });
+    formIntance.setFieldsValue({
+      ...materialTypeData,
+      customFields: materialTypeData.customFields.map((customField, index) => ({
+        ...customField,
+        fieldType: customFields[index],
+        fieldList: tags[index],
+      })),
+    });
+    setTagsList(tags);
+    setFieldType(customFields);
   }, [materialTypeData]);
+
+  const handleTagsChange = (key: number, value: string[]) => {
+    let newTags = tagsList;
+    if (key >= tagsList.length) {
+      newTags = [...tagsList, value];
+    } else {
+      newTags = tagsList.map((tag, index) => (index === key ? value : tag));
+    }
+    setTagsList(newTags);
+  };
 
   const onFinish = async (values: TSaveMaterialTypeForm) => {
     try {
@@ -52,19 +82,19 @@ export default function useMaterialTypeForm(
         fields: predefinedFields.concat(customFields),
       };
       console.log("values: ", valuesToSend);
-      // if (!!materialTypeData) {
-      //   await updateMaterialType(materialTypeData.id, values, user.token);
-      // } else {
-      //   await createMaterialType(values, user.token);
-      // }
+      if (!!materialTypeData) {
+        await updateMaterialType(materialTypeData.id, valuesToSend, user.token);
+      } else {
+        await createMaterialType(valuesToSend, user.token);
+      }
 
       openNotification(
         "success",
         "Laboratorio guardado con exito",
-        `El tipo de material ${values.name} ha sido creado con exito.`,
+        `El tipo de material ${values.name} ha sido guardado con exito.`,
         "topRight",
       );
-      //callback();
+      callback();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log("ERROR: ", error);
@@ -91,6 +121,11 @@ export default function useMaterialTypeForm(
   return {
     isLoading,
     notificationElement,
+    tagsList,
+    fieldType,
+    setFieldType,
+    setTagsList,
+    handleTagsChange,
     onFinish,
   };
 }

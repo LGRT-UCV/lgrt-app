@@ -33,6 +33,7 @@ export default function MaterialType() {
   const sorter = (a: AnyObject, b: AnyObject, column: string) => {
     switch (column) {
       case "id":
+      case "existentMaterials":
         return Number(a.id) - Number(b.id);
       case "name":
         return a.name.localeCompare(b.name);
@@ -44,9 +45,9 @@ export default function MaterialType() {
       .filter((field) => field.id !== "description")
       .map((column) => ({
         title: column.label,
-        width: "name" === column.id ? 30 : "id" === column.id ? 10 : 60,
+        width: "name" === column.id ? 50 : "id" === column.id ? 10 : 20,
         dataIndex: column.id,
-        sorter: ["id", "name"].includes(column.id)
+        sorter: ["id", "name", "existentMaterials"].includes(column.id)
           ? (a, b) => sorter(a, b, column.id)
           : undefined,
         key: column.id,
@@ -133,9 +134,9 @@ export default function MaterialType() {
         centered
         open={openCreateModal}
         onCancel={() => {
+          form.resetFields();
           setOpenCreateModal(false);
           setCurrentMaterialType(undefined);
-          form.resetFields();
         }}
         width={800}
         footer={[

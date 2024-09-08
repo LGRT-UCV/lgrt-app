@@ -83,6 +83,10 @@ export const materialTypeFields = [
     id: "description",
     label: "Descripción",
   },
+  {
+    id: "existentMaterials",
+    label: "Cantidad de materiales",
+  },
 ];
 
 export const basicMaterialTypeFields = [

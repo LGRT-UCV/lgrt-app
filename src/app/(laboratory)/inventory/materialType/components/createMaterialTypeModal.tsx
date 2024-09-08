@@ -10,7 +10,6 @@ import { IMaterialType } from "../interfaces";
 import RequiredLegend from "@/components/feedback/requiredLegend";
 import TransferCustomFields from "./TransferCustomFields";
 import { customFields } from "../utils";
-import { useState } from "react";
 import { Option } from "antd/es/mentions";
 
 type TCreateMaterialTypeModal = {
@@ -24,9 +23,16 @@ export default function CreateMaterialTypeModal({
   data,
   closeModal,
 }: TCreateMaterialTypeModal) {
-  const [fieldType, setFieldType] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[][]>([]);
-  const { isLoading, notificationElement, onFinish } = useMaterialTypeForm(
+  const {
+    isLoading,
+    notificationElement,
+    fieldType,
+    tagsList,
+    setFieldType,
+    setTagsList,
+    handleTagsChange,
+    onFinish,
+  } = useMaterialTypeForm(
     () => {
       form.resetFields();
       closeModal();
@@ -34,16 +40,6 @@ export default function CreateMaterialTypeModal({
     form,
     data,
   );
-
-  const handleTagsChange = (key: number, value: string[]) => {
-    let newTags = tags;
-    if (key >= tags.length) {
-      newTags = [...tags, value];
-    } else {
-      newTags = tags.map((tag, index) => (index === key ? value : tag));
-    }
-    setTags(newTags);
-  };
 
   if (isLoading)
     return (
@@ -122,7 +118,10 @@ export default function CreateMaterialTypeModal({
                         options={customFields.map((fields) => {
                           return {
                             label: fields.name,
-                            value: JSON.stringify(fields),
+                            value: JSON.stringify({
+                              key: fields.key,
+                              fieldType: fields.fieldType,
+                            }),
                           };
                         })}
                       />
@@ -167,9 +166,9 @@ export default function CreateMaterialTypeModal({
                             style={{ width: "100%" }}
                             placeholder="Coloque los valores separados por coma (,)"
                             onChange={(value) => handleTagsChange(name, value)}
-                            tokenSeparators={[","]}
+                            tokenSeparators={[",", ";"]}
                           >
-                            {tags[name]?.map((tag) => (
+                            {tagsList[name]?.map((tag) => (
                               <Option key={tag} value={tag}>
                                 {tag}
                               </Option>
@@ -183,7 +182,9 @@ export default function CreateMaterialTypeModal({
                         setFieldType(
                           fieldType.filter((_, index) => index !== name),
                         );
-                        setTags(tags.filter((_, index) => index !== name));
+                        setTagsList(
+                          tagsList.filter((_, index) => index !== name),
+                        );
                         remove(name);
                       }}
                     />

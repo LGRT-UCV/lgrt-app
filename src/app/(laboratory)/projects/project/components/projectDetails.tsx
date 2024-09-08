@@ -173,6 +173,27 @@ export default function ProjectDetails({
             </div>
           </Card>
         )}
+        {Roles.External !== role && (
+          <Card title="Tareas" style={{ width: "100%" }}>
+            <Descriptions bordered column={2}>
+              {[
+                {
+                  id: 1,
+                  title: "Tarea 1",
+                  description: "Descripcion de la tarea 1",
+                  status: "A",
+                },
+              ].map((task) => (
+                <Descriptions.Item key={task.id} label={task.title}>
+                  <div className="flex items-center justify-between gap-4">
+                    <p>{task.description}</p>
+                    <Button>Hecho</Button>
+                  </div>
+                </Descriptions.Item>
+              ))}
+            </Descriptions>
+          </Card>
+        )}
       </div>
     </>
   );

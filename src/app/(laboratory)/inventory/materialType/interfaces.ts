@@ -14,6 +14,7 @@ export type TFields = {
   name: string;
   fieldType: TFieldType;
   fieldList?: string | Array<string>;
+  id?: string;
 };
 
 export type TSaveMaterialType = {
@@ -39,3 +40,35 @@ export interface IMaterialTypeForm {
   formIntance: FormInstance;
   MaterialTypeData?: TMaterialType;
 }
+
+enum EFieldDefaultType {
+  id,
+  name,
+  description,
+  materialType,
+  measurement,
+  presentation,
+  capacity,
+  weight,
+  quantity,
+  brand,
+  code,
+  batch,
+  concentration,
+  expirationDate,
+  condition,
+  storagePlace,
+  sensibleMaterial,
+  superUse,
+  additionalInfo,
+  observations,
+  nfpaClassif,
+  sgaClassif,
+}
+
+export type TFieldDefaultType = keyof typeof EFieldDefaultType;
+
+export type TDefaultMaterialFields = {
+  id: TFieldDefaultType;
+  label: string;
+};

@@ -39,12 +39,14 @@ export default function BaseMaterialForm({
           <Select
             placeholder="Tipo de material"
             onSelect={(value: string) =>
-              setCurrentMaterialType(JSON.parse(value))
+              setCurrentMaterialType(
+                materialTypeList.find((type) => type.id === value),
+              )
             }
             options={materialTypeList.map((materialType) => {
               return {
                 label: materialType.name,
-                value: JSON.stringify(materialType),
+                value: materialType.id,
               };
             })}
           />

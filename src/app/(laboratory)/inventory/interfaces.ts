@@ -1,5 +1,6 @@
 import type { FormInstance } from "antd/lib";
 import type { IGenericId } from "@/types/app";
+import type { TFields } from "./materialType/interfaces";
 
 export type TMaterialForm = {
   name: string;
@@ -54,14 +55,25 @@ export interface IMaterial {
   code?: string;
 }
 
+export type TCustomFieldValue = {
+  idMaterialField: string;
+  value: string;
+};
+
+export type TCustomFieldValues = {
+  customFieldValues: Array<TCustomFieldValue>;
+};
+
 export type TMaterial = IMaterial &
   IGenericId & { measurement: TMeasurements } & {
     materialType: TMaterialType;
-  } & { storagePlace: TStoragePlace };
+  } & { storagePlace: TStoragePlace } & TCustomFieldValues;
+
 export type TSaveMaterial = IMaterial &
   TMaterialTypeRequest &
   TMesurementsRequest &
-  TStoragePlaceRequest;
+  TStoragePlaceRequest &
+  TCustomFieldValues;
 
 export interface IMaterialForm {
   formIntance: FormInstance;
@@ -84,6 +96,7 @@ export type TMaterialType = {
   id: string;
   name: string;
   fields: string;
+  customFields: Array<TFields>;
 };
 
 export type TMeasurements = {

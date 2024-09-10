@@ -1,4 +1,6 @@
-export const variableFields = [
+import type { TDefaultMaterialFields } from "../../materialType/interfaces";
+
+export const variableFields: Array<TDefaultMaterialFields> = [
   {
     id: "measurement",
     label: "Unidad de medida",
@@ -63,9 +65,17 @@ export const variableFields = [
     id: "observations",
     label: "Observaciones",
   },
+  {
+    id: "nfpaClassif",
+    label: "Clasificación NFPA",
+  },
+  {
+    id: "sgaClassif",
+    label: "Clasificación SGA",
+  },
 ];
 
-export const baseFields = [
+export const baseFields: Array<TDefaultMaterialFields> = [
   {
     id: "id",
     label: "#",
@@ -84,8 +94,17 @@ export const baseFields = [
   },
 ];
 
-const notListedFieldsId = ["measurement", "additionalInfo", "observations"];
+const notListedFieldsId = [
+  "measurement",
+  "additionalInfo",
+  "observations",
+  "nfpaClassif",
+  "sgaClassif",
+];
 
 export const fieldsToList = baseFields
   .concat(variableFields)
   .filter((field) => !notListedFieldsId.includes(field.id));
+
+export const isoDateRegex =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})?$/;

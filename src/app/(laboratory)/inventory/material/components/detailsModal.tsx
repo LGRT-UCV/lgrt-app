@@ -1,12 +1,17 @@
-import { TMaterial } from "../../interfaces";
+import { TMaterial, TMaterialType } from "../../interfaces";
+import { isoDateRegex } from "../utils";
 import NFPADiamond from "./nfpaDiamond";
 import SGAClassification from "./sgaClassification";
 
 interface IDetailsModal {
   material?: TMaterial;
+  materialType?: TMaterialType;
 }
 
-export default function DetailsModal({ material }: IDetailsModal) {
+export default function DetailsModal({
+  material,
+  materialType,
+}: IDetailsModal) {
   if (typeof material === "undefined") return <></>;
 
   return (
@@ -103,10 +108,32 @@ export default function DetailsModal({ material }: IDetailsModal) {
               {material.additionalInfo}
             </div>
           )}
-          <div>
-            <strong>Clasificación NFPA:</strong>
-            <NFPADiamond nfpaData={material.nfpaClassif} />
-          </div>
+          {material.customFieldValues &&
+            material.customFieldValues.map((field) => {
+              const value = isoDateRegex.test(field.value)
+                ? new Date(field.value).toLocaleDateString("es-VE")
+                : field.value;
+              return (
+                <div key={field.idMaterialField}>
+                  <strong>
+                    {
+                      materialType?.customFields.find(
+                        (custom) => custom.id === field.idMaterialField,
+                      )?.name
+                    }
+                    :
+                  </strong>
+                  {}
+                  {value}
+                </div>
+              );
+            })}
+          {material.nfpaClassif.nfpaWhite && (
+            <div>
+              <strong>Clasificación NFPA:</strong>
+              <NFPADiamond nfpaData={material.nfpaClassif} />
+            </div>
+          )}
           {material.sgaClassif && material.sgaClassif.length > 0 && (
             <SGAClassification sgaClassif={material.sgaClassif} />
           )}

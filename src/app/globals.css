@@ -43,3 +43,10 @@
 #root .ant-form {
   font-size: 16px !important;
 }
+
+/**
+  * Custom styles for the transfer component
+  */
+.transfer-custom-fields button {
+  background-color: #3b82f6;
+}

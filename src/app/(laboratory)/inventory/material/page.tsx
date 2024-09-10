@@ -54,7 +54,7 @@ export default function NewMaterial() {
         return;
       }
     },
-    enabled: !!sessionData?.user.token,
+    enabled: !!sessionData?.user.token || !!materialId,
   });
 
   if (isLoading)

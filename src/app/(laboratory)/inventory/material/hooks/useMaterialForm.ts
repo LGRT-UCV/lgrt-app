@@ -6,7 +6,13 @@ import dayjs from "dayjs";
 import useNotification from "@/hooks/useNotification";
 import { Routes } from "@/lib/constants";
 import { createMaterial, updateMaterial } from "../../utils";
-import type { TMaterial, TMaterialForm, TMaterialType } from "../../interfaces";
+import type {
+  TCustomFieldValues,
+  TMaterial,
+  TMaterialForm,
+  TMaterialType,
+  TSaveMaterial,
+} from "../../interfaces";
 import { TDefaultMaterialFields } from "../../materialType/interfaces";
 
 interface FieldFinalValues {
@@ -94,15 +100,16 @@ export default function useMaterialForm(
       } = values;
 
       // Get custom fields and generate customFieldValues
-      const customFieldValues = Object.entries(fieldValues)
-        .filter(([key]) => key.startsWith("custom-"))
-        .map(([key, value]) => {
-          const idMaterialField = key.split("-")[1];
-          return {
-            idMaterialField,
-            value,
-          };
-        });
+      const customFieldValues: TCustomFieldValues["customFieldValues"] =
+        Object.entries(fieldValues)
+          .filter(([key]) => key.startsWith("custom-"))
+          .map(([key, value]) => {
+            const idMaterialField = key.split("-")[1];
+            return {
+              idMaterialField: idMaterialField ?? "",
+              value,
+            };
+          });
 
       // Remove custom fields from fieldValues
       const fieldFinalValues: FieldFinalValues = Object.entries(fieldValues)
@@ -112,7 +119,7 @@ export default function useMaterialForm(
           return acc;
         }, {} as FieldFinalValues);
 
-      const materialToSave = {
+      const materialToSave: TSaveMaterial = {
         nfpaClassif: {
           nfpaBlue,
           nfpaRed,
@@ -133,6 +140,9 @@ export default function useMaterialForm(
         superUse: !!superUse,
         sensibleMaterial: !!sensibleMaterial,
         customFieldValues,
+        name: fieldFinalValues.name,
+        description: fieldFinalValues.description,
+        quantity: fieldFinalValues.quantity,
         ...fieldFinalValues,
       };
       const sessionToken = sessionData?.user.token;
@@ -142,11 +152,11 @@ export default function useMaterialForm(
       if (typeof sessionToken === "undefined")
         throw new Error("Sesión vencida");
 
-      // if (!!materialData) {
-      //   await updateMaterial(materialData.id, materialToSave, sessionToken);
-      // } else {
-      //   await createMaterial(materialToSave, sessionToken);
-      // }
+      if (!!materialData) {
+        await updateMaterial(materialData.id, materialToSave, sessionToken);
+      } else {
+        await createMaterial(materialToSave, sessionToken);
+      }
 
       openNotification(
         "success",
@@ -154,7 +164,7 @@ export default function useMaterialForm(
         `El material ${values.name} ha sido creado con exito.`,
         "topRight",
       );
-      //void router.push(Routes.Inventory);
+      void router.push(Routes.Inventory);
     } catch (error) {
       openNotification(
         "error",

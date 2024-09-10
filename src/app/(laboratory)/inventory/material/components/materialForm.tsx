@@ -6,6 +6,7 @@ import useMaterialForm from "../hooks/useMaterialForm";
 import BaseMaterialForm from "./baseMaterialForm";
 import useMaterialInit from "../hooks/useMaterialInit";
 import RequiredLegend from "@/components/feedback/requiredLegend";
+import CustomFieldsForm from "./customFieldsForm";
 
 export default function MaterialForm({
   formIntance,
@@ -40,14 +41,14 @@ export default function MaterialForm({
         />
         {!!currentMaterialType && (
           <>
-            <div className="flex flex-wrap justify-between">
+            <div className="flex flex-wrap gap-2">
               <Form.Item
                 name="measurement"
                 label="Unidad de medida"
                 rules={[
                   { required: true, message: "Por favor elija una opción" },
                 ]}
-                className="mb-4 w-full px-2 md:w-1/3"
+                className="mb-4 w-full md:w-1/3"
               >
                 <Select
                   showSearch
@@ -76,7 +77,7 @@ export default function MaterialForm({
                 <Form.Item
                   label="Presentación"
                   name="presentation"
-                  className="mb-4 w-full px-2 md:w-1/3"
+                  className="mb-4 w-full md:w-1/3"
                   rules={[
                     {
                       message: "Por favor verifique la presentación",
@@ -94,7 +95,7 @@ export default function MaterialForm({
                 <Form.Item
                   label="Capacidad"
                   name="capacity"
-                  className="mb-4 w-full px-2 md:w-1/3"
+                  className="mb-4 w-full md:w-1/3"
                   rules={[
                     {
                       required: true,
@@ -114,7 +115,7 @@ export default function MaterialForm({
                 <Form.Item
                   label="Peso"
                   name="weight"
-                  className="mb-4 w-full px-2 md:w-1/3"
+                  className="mb-4 w-full md:w-1/3"
                   rules={[
                     {
                       required: true,
@@ -133,7 +134,7 @@ export default function MaterialForm({
               <Form.Item
                 label="Cantidad existente"
                 name="quantity"
-                className="mb-4 w-full px-2 md:w-1/3"
+                className="mb-4 w-full md:w-1/3"
                 rules={[
                   {
                     required: true,
@@ -153,7 +154,7 @@ export default function MaterialForm({
               <Form.Item
                 label="Marca"
                 name="brand"
-                className="px-2"
+                className=""
                 rules={[
                   {
                     type: "string",
@@ -165,12 +166,12 @@ export default function MaterialForm({
                 <Input placeholder="Marca" maxLength={120} />
               </Form.Item>
             )}
-            <div className="flex flex-wrap justify-between">
+            <div className="flex flex-wrap gap-2">
               {hasField("code") && (
                 <Form.Item
                   label="Código"
                   name="code"
-                  className="mb-4 w-full px-2 md:w-1/3"
+                  className="mb-4 w-full  md:w-1/3"
                   rules={[
                     {
                       type: "string",
@@ -186,7 +187,7 @@ export default function MaterialForm({
                 <Form.Item
                   label="Lote"
                   name="batch"
-                  className="mb-4 w-full px-2 md:w-1/3"
+                  className="mb-4 w-full md:w-1/3"
                   rules={[
                     {
                       type: "string",
@@ -202,7 +203,7 @@ export default function MaterialForm({
                 <Form.Item
                   label="Concentración"
                   name="concentration"
-                  className="mb-4 w-full px-2 md:w-1/3"
+                  className="mb-4 w-full md:w-1/3"
                 >
                   <InputNumber
                     className="w-full"
@@ -215,12 +216,12 @@ export default function MaterialForm({
                 </Form.Item>
               )}
             </div>
-            <div className="flex flex-wrap justify-between">
+            <div className="flex flex-wrap gap-2">
               {hasField("expirationDate") && (
                 <Form.Item
                   label="Fecha de Vencimiento"
                   name="expirationDate"
-                  className="mb-4 w-full px-2 md:w-1/3"
+                  className="mb-4 w-full md:w-1/3"
                   rules={[
                     {
                       type: "date",
@@ -235,7 +236,7 @@ export default function MaterialForm({
                 <Form.Item
                   label="Condición"
                   name="condition"
-                  className="mb-4 w-full px-2 md:w-1/3"
+                  className="mb-4 w-full md:w-1/3"
                   rules={[
                     {
                       type: "string",
@@ -255,7 +256,7 @@ export default function MaterialForm({
                   rules={[
                     { required: true, message: "Por favor elija una opción" },
                   ]}
-                  className={`mb-4 w-full px-2 md:w-2/3 ${hasField("storagePlace") ? "" : "hidden"}`}
+                  className={`mb-4 w-full md:w-2/3 ${hasField("storagePlace") ? "" : "hidden"}`}
                 >
                   <Select
                     showSearch
@@ -309,30 +310,34 @@ export default function MaterialForm({
               />
             </Form.Item>
 
-            <div className="flex-wrap space-y-8 md:flex md:space-y-0">
-              <NFPAForm />
+            <CustomFieldsForm fields={currentMaterialType.customFields} />
 
-              <Form.Item
-                label="Clasificación SGA"
-                name="sgaClassif"
-                className="w-full md:w-1/2"
-              >
-                <Checkbox.Group className="w-full">
-                  <div className="flex flex-wrap justify-between">
-                    {sgaClassification.map((sga, index) => {
-                      return (
-                        <Checkbox
-                          key={`sga-${index}`}
-                          value={sga.id}
-                          className="mb-8 w-1/2 text-base font-bold"
-                        >
-                          {sga.description}
-                        </Checkbox>
-                      );
-                    })}
-                  </div>
-                </Checkbox.Group>
-              </Form.Item>
+            <div className="flex-wrap space-y-8 md:flex md:space-y-0">
+              {hasField("nfpaClassif") && <NFPAForm />}
+
+              {hasField("sgaClassif") && (
+                <Form.Item
+                  label="Clasificación SGA"
+                  name="sgaClassif"
+                  className="w-full md:w-1/2"
+                >
+                  <Checkbox.Group className="w-full">
+                    <div className="flex flex-wrap justify-between">
+                      {sgaClassification.map((sga, index) => {
+                        return (
+                          <Checkbox
+                            key={`sga-${index}`}
+                            value={sga.id}
+                            className="mb-8 w-1/2 text-base font-bold"
+                          >
+                            {sga.description}
+                          </Checkbox>
+                        );
+                      })}
+                    </div>
+                  </Checkbox.Group>
+                </Form.Item>
+              )}
             </div>
           </>
         )}

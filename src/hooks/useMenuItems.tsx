@@ -13,6 +13,7 @@ import {
   DatabaseOutlined,
   UserOutlined,
   CrownOutlined,
+  SlidersOutlined,
 } from "@ant-design/icons";
 import { Roles, Routes } from "@/lib/constants";
 import { getMenuItem } from "@/utils/layout";
@@ -57,8 +58,15 @@ export default function useMenuItems({
                 () => handleMenuClick(Routes.SaveMaterial),
               ),
               getMenuItem(
-                "Almacen",
+                "Materiales",
                 "inv-3",
+                <SlidersOutlined />,
+                undefined,
+                () => handleMenuClick(Routes.MaterialType),
+              ),
+              getMenuItem(
+                "Almacen",
+                "inv-4",
                 <DatabaseOutlined />,
                 undefined,
                 () => handleMenuClick(Routes.Storage),

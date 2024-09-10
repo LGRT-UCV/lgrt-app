@@ -200,7 +200,10 @@ export default function Inventory() {
             : []
         }
       >
-        <DetailsModal material={currentMaterial} />
+        <DetailsModal
+          material={currentMaterial}
+          materialType={currentMaterialType}
+        />
       </Modal>
     </>
   );

@@ -1,9 +1,11 @@
 export enum Routes {
   Files = "/files",
   Home = "/",
+  Credits = "/credits",
   Inventory = "/inventory",
   Login = "/auth/login",
   Laboratory = "/admin/laboratory",
+  MaterialType = "/inventory/materialType",
   SaveMaterial = "/inventory/material",
   Projects = "/projects",
   Storage = "/inventory/storage",
@@ -14,7 +16,6 @@ export enum Routes {
   Profile = "/profile",
   Users = "/admin/users",
   SaveUser = "/admin/users/user",
-  Credits = "/credits",
 }
 
 export enum Roles {

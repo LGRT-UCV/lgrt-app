@@ -14,6 +14,7 @@ import type {
   TSaveMaterial,
 } from "../../interfaces";
 import { TDefaultMaterialFields } from "../../materialType/interfaces";
+import { isoDateRegex } from "../utils";
 
 interface FieldFinalValues {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,8 +49,6 @@ export default function useMaterialForm(
       customFieldValues,
       ...material
     } = materialData;
-    const isoDateRegex =
-      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})?$/;
 
     const customFields = (customFieldValues ?? []).reduce((acc, field) => {
       if (isoDateRegex.test(field.value)) {
@@ -146,8 +145,6 @@ export default function useMaterialForm(
         ...fieldFinalValues,
       };
       const sessionToken = sessionData?.user.token;
-
-      console.log("materialToSave: ", materialToSave);
 
       if (typeof sessionToken === "undefined")
         throw new Error("Sesión vencida");

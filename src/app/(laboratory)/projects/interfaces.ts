@@ -1,4 +1,5 @@
 import type { FormInstance } from "antd/lib";
+import type { IGenericId } from "@/types/app";
 
 export type TSaveProject = {
   name: string;
@@ -43,4 +44,19 @@ export interface IProject {
 export interface IProjectForm {
   formIntance: FormInstance;
   projectData?: IProject;
+}
+
+enum ETaskStatus {
+  P,
+  E,
+  F,
+  C,
+}
+
+export type TTaskStatus = keyof typeof ETaskStatus;
+
+export interface ITaskDetails extends IGenericId {
+  title: string;
+  description: string;
+  status: TTaskStatus;
 }

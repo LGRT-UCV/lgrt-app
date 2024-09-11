@@ -54,7 +54,7 @@ export default function NewProject() {
         }}
       />
 
-      <div className="h-[calc(100vh-250px)] overflow-y-auto p-4">
+      <div className="h-[calc(100vh-200px)] overflow-y-auto p-4">
         <ProjectForm formIntance={form} />
       </div>
     </>

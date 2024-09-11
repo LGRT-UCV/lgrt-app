@@ -122,11 +122,12 @@ export default function useProject() {
     const projects = projectList.filter(
       (project) =>
         (project.name.toLocaleLowerCase().includes(search) ||
-          project.description.toLocaleLowerCase().includes(search)) &&
+          project.description.toLocaleLowerCase().includes(search) ||
+          project.id.toLocaleLowerCase().includes(search)) &&
         (project.status === projectStatus || projectStatus === "all"),
     );
     return (
-      projects.map((project, index) => ({
+      projects.reverse().map((project, index) => ({
         ...project,
         key: `project-${index}`,
         description: project.description.substring(0, 120) + "...",

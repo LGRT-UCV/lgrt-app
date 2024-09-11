@@ -40,7 +40,7 @@ export default function ProjectTasks() {
 
                 <Form.Item
                   label="Descripción"
-                  name="description"
+                  name={[name, "description"]}
                   className="px-2"
                   rules={[
                     {

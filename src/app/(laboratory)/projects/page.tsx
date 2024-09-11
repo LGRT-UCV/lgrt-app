@@ -41,6 +41,15 @@ export default function Projects() {
     handleUpdateProject,
   } = useProject();
 
+  const sorter = (a: AnyObject, b: AnyObject, column: string) => {
+    switch (column) {
+      case "id":
+        return Number(a.id) - Number(b.id);
+      case "name":
+        return a.name.localeCompare(b.name);
+    }
+  };
+
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columsList = fieldsProject.filter(
       (field) =>
@@ -55,12 +64,14 @@ export default function Projects() {
     const columnToShow: TableColumnsType<AnyObject> = columsList.map(
       (column) => ({
         title: column.label,
-        width: "description" === column.id ? 50 : 20,
+        width: "description" === column.id ? 50 : "id" === column.id ? 5 : 20,
         dataIndex: column.id,
-        sorter:
-          column.id === "name"
-            ? (a, b) => a.name.localeCompare(b.name)
-            : undefined,
+        sorter: ["id", "name"].includes(column.id)
+          ? {
+              compare: (a, b) => sorter(a, b, column.id),
+              multiple: column.id === "id" ? 1 : 2,
+            }
+          : undefined,
         key: column.id,
         fixed: column.id === "name" && !isMobile ? "left" : undefined,
         align: "center",

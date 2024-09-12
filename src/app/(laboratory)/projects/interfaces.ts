@@ -28,8 +28,7 @@ export type TProjectMaterial = {
   quantity: string | number;
 };
 
-export interface IProject {
-  id: string;
+export interface IProject extends IGenericId {
   name: string;
   description: string;
   comments: string;
@@ -39,6 +38,7 @@ export interface IProject {
   projectManager: string;
   file: string | null;
   projectMaterial: Array<TProjectMaterial>;
+  projectTasks: Array<TProjectTask>;
 }
 
 export interface IProjectForm {
@@ -46,17 +46,24 @@ export interface IProjectForm {
   projectData?: IProject;
 }
 
-enum ETaskStatus {
-  P,
-  E,
-  F,
-  C,
+export enum ETaskStatus {
+  P = "P",
+  E = "E",
+  C = "C",
+  D = "D",
 }
 
 export type TTaskStatus = keyof typeof ETaskStatus;
 
-export interface ITaskDetails extends IGenericId {
-  title: string;
+export interface ISaveProjectTask {
+  name: string;
   description: string;
+  idProject: string;
+  projectTasksMaterials: Array<TProjectMaterial>;
   status: TTaskStatus;
 }
+
+export interface IProjectTask extends IGenericId, ISaveProjectTask {}
+
+export type TSaveProjectTask = ISaveProjectTask;
+export type TProjectTask = IProjectTask;

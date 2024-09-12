@@ -9,31 +9,18 @@ import useNotification from "@/hooks/useNotification";
 import { useSession } from "next-auth/react";
 import Details from "../components/projectDetails";
 import { useRouter } from "next/navigation";
-import { Roles, Routes } from "@/lib/constants";
-import { Button, Modal } from "antd";
-import { useLabProvider } from "@/context/labProvider";
-import useTaskDetails from "./hooks/useTaskDetails";
+import { Routes } from "@/lib/constants";
 
 export default function ProjectDetails({
   params,
 }: {
   params: { projectId: string };
 }) {
-  const { role } = useLabProvider();
   const { data: sessionData } = useSession();
   const { openNotification, notificationElement } = useNotification();
   const { projectId } = params;
   const [form] = useForm();
   const router = useRouter();
-  const {
-    openModal,
-    currentTask,
-    setOpenModal,
-    handleSaveTask,
-    handleTaskDetails,
-  } = useTaskDetails({
-    projectId,
-  });
 
   const { data: currentProject, isLoading } = useQuery({
     queryKey: ["project"],
@@ -79,33 +66,9 @@ export default function ProjectDetails({
         }}
       />
 
-      <div className="h-[calc(100vh-250px)] overflow-y-auto p-4">
+      <div className="h-[calc(100vh-200px)] overflow-y-auto p-4">
         <Details project={currentProject} />
       </div>
-
-      <Modal
-        title="Tarea"
-        centered
-        open={openModal}
-        onCancel={() => setOpenModal(false)}
-        width={600}
-        okButtonProps={{
-          className: "bg-blue-500",
-        }}
-        footer={
-          Roles.External !== role
-            ? [
-                <Button
-                  key="save"
-                  className="border-none bg-blue-500 !text-white hover:!bg-blue-400"
-                  onClick={() => void handleSaveTask(currentTask)}
-                >
-                  Guardar
-                </Button>,
-              ]
-            : []
-        }
-      ></Modal>
     </>
   );
 }

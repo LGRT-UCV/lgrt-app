@@ -14,6 +14,7 @@ import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
 import { getMaterial } from "@/(laboratory)/inventory/utils";
 import { Roles } from "@/lib/constants";
 import { useLabProvider } from "@/context/labProvider";
+import TasksPreview from "../[projectId]/components/tasksPreview";
 
 type TagRender = SelectProps["tagRender"];
 
@@ -113,8 +114,6 @@ export default function ProjectDetails({
           display: "flex",
           flexDirection: "column",
           gap: 24,
-          maxHeight: "90vh",
-          overflow: "auto",
         }}
       >
         <Card title="Información del proyecto" style={{ width: "100%" }}>
@@ -148,10 +147,14 @@ export default function ProjectDetails({
             <Descriptions
               key={`material-${material.id}`}
               bordered
-              column={1}
+              column={2}
               labelStyle={{ width: "15%" }}
-              title={material.name}
+              contentStyle={{ width: "30%" }}
+              style={{ marginBottom: 16 }}
             >
+              <Descriptions.Item key="quantity" label="Material">
+                {material.name}
+              </Descriptions.Item>
               <Descriptions.Item key="quantity" label="Cantidad">
                 {material.quantity}
                 {material.measurement.name}
@@ -174,25 +177,7 @@ export default function ProjectDetails({
           </Card>
         )}
         {Roles.External !== role && (
-          <Card title="Tareas" style={{ width: "100%" }}>
-            <Descriptions bordered column={2}>
-              {[
-                {
-                  id: 1,
-                  title: "Tarea 1",
-                  description: "Descripcion de la tarea 1",
-                  status: "A",
-                },
-              ].map((task) => (
-                <Descriptions.Item key={task.id} label={task.title}>
-                  <div className="flex items-center justify-between gap-4">
-                    <p>{task.description}</p>
-                    <Button>Hecho</Button>
-                  </div>
-                </Descriptions.Item>
-              ))}
-            </Descriptions>
-          </Card>
+          <TasksPreview tasks={project.projectTasks} project={project} />
         )}
       </div>
     </>

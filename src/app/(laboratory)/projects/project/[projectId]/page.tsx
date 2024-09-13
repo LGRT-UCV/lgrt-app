@@ -22,7 +22,11 @@ export default function ProjectDetails({
   const [form] = useForm();
   const router = useRouter();
 
-  const { data: currentProject, isLoading } = useQuery({
+  const {
+    data: currentProject,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["project"],
     queryFn: async () => {
       try {
@@ -67,7 +71,7 @@ export default function ProjectDetails({
       />
 
       <div className="h-[calc(100vh-200px)] overflow-y-auto p-4">
-        <Details project={currentProject} />
+        <Details project={currentProject} refetch={refetch} />
       </div>
     </>
   );

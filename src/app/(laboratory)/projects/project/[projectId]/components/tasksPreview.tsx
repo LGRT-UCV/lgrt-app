@@ -9,9 +9,14 @@ import TaskDetails from "./taskDetails";
 type TTasksPreview = {
   project: IProject;
   tasks: Array<TProjectTask>;
+  refetch: () => void;
 };
 
-export default function TasksPreview({ project, tasks }: TTasksPreview) {
+export default function TasksPreview({
+  project,
+  tasks,
+  refetch,
+}: TTasksPreview) {
   const { role } = useLabProvider();
   const {
     form,
@@ -30,7 +35,7 @@ export default function TasksPreview({ project, tasks }: TTasksPreview) {
           return (
             <Descriptions key={task.id} labelStyle={{ width: "10%" }} bordered>
               <Descriptions.Item
-                label="Nombre"
+                labelStyle={{ width: "0px", padding: "0px" }}
                 contentStyle={{ width: "50%", fontWeight: "bold" }}
               >
                 <p
@@ -42,11 +47,9 @@ export default function TasksPreview({ project, tasks }: TTasksPreview) {
                 </p>
               </Descriptions.Item>
               <Descriptions.Item
-                label="Estado"
+                labelStyle={{ width: "0px", padding: "0px" }}
                 contentStyle={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  width: "15%",
                 }}
               >
                 <Tag color={taskStatus.statusColor}>{taskStatus.status}</Tag>
@@ -75,7 +78,7 @@ export default function TasksPreview({ project, tasks }: TTasksPreview) {
           form.resetFields();
           setOpenModal(false);
         }}
-        width={600}
+        width={800}
         okButtonProps={{
           className: "bg-blue-500",
         }}
@@ -97,6 +100,8 @@ export default function TasksPreview({ project, tasks }: TTasksPreview) {
           project={project}
           currentTask={currentTask}
           formInstance={form}
+          openModal={openModal}
+          refetch={refetch}
         />
       </Modal>
     </>

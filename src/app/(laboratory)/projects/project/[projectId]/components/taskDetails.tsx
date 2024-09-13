@@ -1,38 +1,50 @@
 import { useMemo } from "react";
 import { Form, FormInstance, Input, Select, Tag } from "antd";
 import {
-  ETaskStatus,
   type TTaskStatus,
   type TProjectTask,
   ISaveProjectTask,
   IProject,
 } from "@/(laboratory)/projects/interfaces";
 import useNotification from "@/hooks/useNotification";
-import { getTaskStatus, updateProjectTask } from "../utils";
+import { getAvailableStatus, getTaskStatus, updateProjectTask } from "../utils";
 import TextArea from "antd/es/input/TextArea";
 import { useSession } from "next-auth/react";
-import ProjectMaterials from "../../components/projectMaterials";
+import MaterialsTaskProjectForm from "./MaterialsTaskProjectForm";
 
 type TTaskDetails = {
   formInstance: FormInstance;
   project: IProject;
   currentTask?: TProjectTask;
+  openModal: boolean;
+  refetch: () => void;
 };
 
 export default function TaskDetails({
   formInstance,
   project,
   currentTask,
+  openModal,
+  refetch,
 }: TTaskDetails) {
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
-
-  console.log("project: ", project);
 
   const { status, statusColor } = useMemo(() => {
     if (!currentTask) return { status: "P", statusColor: "gray" };
     return getTaskStatus(currentTask.status);
   }, [currentTask?.status]);
+
+  const availableStatus = useMemo(() => {
+    const statusList = getAvailableStatus(currentTask?.status ?? "P");
+    return statusList.map((taskStatus) => {
+      const statusToList = getTaskStatus(taskStatus as TTaskStatus);
+      return {
+        label: statusToList.status,
+        value: taskStatus,
+      };
+    });
+  }, []);
 
   const onFinish = async (taskData: ISaveProjectTask) => {
     if (typeof currentTask === "undefined") return;
@@ -49,6 +61,7 @@ export default function TaskDetails({
         `La tarea ${taskData.name} ha sido guardada con exito.`,
         "topRight",
       );
+      refetch();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log("ERROR: ", error);
@@ -65,7 +78,7 @@ export default function TaskDetails({
   return (
     <>
       {notificationElement}
-      <div className="mx-auto max-h-[calc(100vh-200px)] overflow-auto p-4">
+      <div className="mx-auto mt-8 max-h-[calc(100vh-200px)] overflow-auto p-4">
         <div className="flex items-center justify-between border-b border-gray-200 p-4">
           <h2 className="text-xl font-bold">#{currentTask?.id}</h2>
           <Tag color={statusColor}>{status}</Tag>
@@ -78,23 +91,14 @@ export default function TaskDetails({
           size="large"
           scrollToFirstError
           className="p-4"
+          disabled={["D", "C"].includes(currentTask?.status ?? "D")}
         >
           <Form.Item
             name="status"
             rules={[{ required: true, message: "Por favor elija una opción" }]}
             className="mb-4 w-full px-2 md:w-1/3"
           >
-            <Select
-              placeholder="Estado"
-              onSelect={() => formInstance.submit()}
-              options={Object.keys(ETaskStatus).map((taskStatus) => {
-                const statusToList = getTaskStatus(taskStatus as TTaskStatus);
-                return {
-                  label: statusToList.status,
-                  value: taskStatus,
-                };
-              })}
-            />
+            <Select placeholder="Estado" options={availableStatus} />
           </Form.Item>
           <Form.Item
             name="name"
@@ -130,9 +134,12 @@ export default function TaskDetails({
             />
           </Form.Item>
 
-          {/* <ProjectMaterials
-
-          /> */}
+          <MaterialsTaskProjectForm
+            currentTask={currentTask?.id ?? ""}
+            materialsProject={project.projectMaterial}
+            tasks={project.projectTasks}
+            openModal={openModal}
+          />
         </Form>
       </div>
     </>

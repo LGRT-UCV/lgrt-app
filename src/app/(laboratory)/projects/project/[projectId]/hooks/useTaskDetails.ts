@@ -2,10 +2,6 @@ import { TProjectTask } from "@/(laboratory)/projects/interfaces";
 import { Form } from "antd";
 import { useState } from "react";
 
-// type TUseTaskDetails = {
-//   projectId: string;
-// };
-
 export default function useTaskDetails() {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -17,12 +13,14 @@ export default function useTaskDetails() {
       status: task.status,
       name: task.name,
       description: task.description,
+      projectTaskMaterials: task.projectTaskMaterials,
     });
     setOpenModal(true);
   };
 
   const handleSaveTask = () => {
     form.submit();
+    setOpenModal(false);
   };
 
   return {

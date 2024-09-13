@@ -49,3 +49,14 @@ export const getTaskStatus = (status: TTaskStatus) => {
       };
   }
 };
+
+export const getAvailableStatus = (status: TTaskStatus) => {
+  switch (status) {
+    case "P":
+      return ["E", "C", "D"];
+    case "E":
+      return ["P", "C", "D"];
+    default:
+      return ["P"];
+  }
+};

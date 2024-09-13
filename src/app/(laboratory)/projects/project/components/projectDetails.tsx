@@ -21,11 +21,13 @@ type TagRender = SelectProps["tagRender"];
 interface IProjectDetails {
   project?: IProject;
   closeModal?: () => void;
+  refetch: () => void;
 }
 
 export default function ProjectDetails({
   project,
   closeModal,
+  refetch,
 }: IProjectDetails) {
   const { role } = useLabProvider();
   const [statusSelected, setStatusSelected] = useState<string>();
@@ -93,6 +95,7 @@ export default function ProjectDetails({
         `El status ${getProjectStatus(statusSelected ?? "I").label.toLowerCase()} ha sido guardado con exito.`,
         "topRight",
       );
+      refetch();
       closeModal?.();
     } catch (error) {
       openNotification(
@@ -177,7 +180,11 @@ export default function ProjectDetails({
           </Card>
         )}
         {Roles.External !== role && (
-          <TasksPreview tasks={project.projectTasks} project={project} />
+          <TasksPreview
+            tasks={project.projectTasks}
+            project={project}
+            refetch={refetch}
+          />
         )}
       </div>
     </>

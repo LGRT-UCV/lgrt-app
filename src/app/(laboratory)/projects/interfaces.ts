@@ -55,11 +55,16 @@ export enum ETaskStatus {
 
 export type TTaskStatus = keyof typeof ETaskStatus;
 
+export type TProjectTaskMaterialSave = {
+  idMaterial: string;
+  usedQuantity: string | number;
+};
+
 export interface ISaveProjectTask {
   name: string;
   description: string;
   idProject: string;
-  projectTasksMaterials: Array<TProjectMaterial>;
+  projectTaskMaterials: Array<TProjectTaskMaterialSave>;
   status: TTaskStatus;
 }
 

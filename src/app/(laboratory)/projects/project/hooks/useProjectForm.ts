@@ -77,8 +77,6 @@ export default function useProjectForm(formIntance: FormInstance) {
         file: [],
       };
 
-      console.log("projectMaterial: ", project);
-
       await createProject(project, sessionToken);
 
       openNotification(

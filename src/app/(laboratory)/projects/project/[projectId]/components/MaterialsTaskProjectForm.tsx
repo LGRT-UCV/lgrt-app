@@ -1,0 +1,187 @@
+import { Button, Card, Form, InputNumber, Select } from "antd";
+import {
+  LoadingOutlined,
+  CloseOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import type {
+  IProjectTask,
+  TProjectMaterial,
+} from "@/(laboratory)/projects/interfaces";
+import useTaskForm from "../hooks/useTaskForm";
+
+type TMaterialsTaskProjectForm = {
+  currentTask: string;
+  tasks: Array<IProjectTask>;
+  materialsProject: Array<TProjectMaterial>;
+  openModal: boolean;
+};
+
+export default function MaterialsTaskProjectForm({
+  currentTask,
+  tasks,
+  materialsProject,
+  openModal,
+}: TMaterialsTaskProjectForm) {
+  const {
+    isLoading,
+    notificationElement,
+    materialsSelected,
+    quantitiesSelected,
+    currentTaskData,
+    materialList,
+    handleMaterialSelected,
+    handleQuantitySelected,
+    handleRemoveMaterial,
+  } = useTaskForm({
+    openModal,
+    currentTask,
+    tasks,
+    materialsProject,
+  });
+
+  if (isLoading) return <LoadingOutlined className="mx-auto" />;
+
+  return (
+    <div>
+      {notificationElement}
+      <Form.List name="projectTaskMaterials">
+        {(fields, { add, remove }) => (
+          <div className="space-y-4">
+            {fields.map(({ key, name, ...restField }) => {
+              const materialsToList = [...(materialList ?? [])];
+              const currentMaterial = materialList?.find(
+                (material) => material.id === materialsSelected[key],
+              );
+              const currentQuantity = quantitiesSelected[key] ?? 0;
+              const overflowQuantity =
+                currentTaskData?.projectTaskMaterials
+                  .filter(
+                    (material) => material.idMaterial === currentMaterial?.id,
+                  )
+                  .reduce(
+                    (accumulator, currentValue) =>
+                      accumulator + Number(currentValue.usedQuantity),
+                    0,
+                  ) ?? 0;
+              const isOverflowQuantity =
+                overflowQuantity + currentQuantity >
+                Number(currentMaterial?.projectQuantity);
+              const materials = materialsToList?.filter(
+                (material) =>
+                  !materialsSelected
+                    .filter((mat) => mat !== materialsSelected[key])
+                    .includes(material.id),
+              );
+
+              return (
+                <Card
+                  size="small"
+                  title={`Material a usar #${name + 1}`}
+                  key={key}
+                  extra={
+                    <CloseOutlined
+                      onClick={() => {
+                        handleRemoveMaterial(key);
+                        remove(name);
+                      }}
+                    />
+                  }
+                >
+                  <div className="flex w-full flex-wrap">
+                    <Form.Item
+                      {...restField}
+                      label="Material"
+                      name={[name, "idMaterial"]}
+                      className="mb-4 w-full"
+                      shouldUpdate
+                      rules={[
+                        {
+                          required: true,
+                          message: "Por favor elija un material",
+                        },
+                      ]}
+                    >
+                      <Select
+                        placeholder="Seleccione un material"
+                        onSelect={(value) => handleMaterialSelected(value, key)}
+                        disabled={currentMaterial?.disabled}
+                        options={materials?.map((material) => {
+                          return {
+                            label: `#${material.id} - ${material.name} (${material.materialType})`,
+                            value: material.id,
+                          };
+                        })}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      label="Cantiadad a usar"
+                      name={[name, "usedQuantity"]}
+                      className="mb-4 w-full"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Por favor verifique la cantidad",
+                        },
+                        {
+                          type: "number",
+                          min: 0,
+                          max: Number(currentMaterial?.quantity),
+                          message: `Cantidad disponible (${currentMaterial?.quantity} ${currentMaterial?.measurement.name})`,
+                        },
+                      ]}
+                    >
+                      <InputNumber
+                        className="w-full"
+                        placeholder="cantidad"
+                        onChange={(value) =>
+                          handleQuantitySelected(value ?? 0, key)
+                        }
+                        min={0}
+                        decimalSeparator=","
+                        suffix={currentMaterial?.measurement.name}
+                        disabled={currentMaterial?.disabled}
+                      />
+                    </Form.Item>
+                  </div>
+
+                  {currentMaterial && (
+                    <ul className="ml-4 list-disc">
+                      <li className="text-xs">
+                        Disponibles: {currentMaterial?.quantity}{" "}
+                        {currentMaterial?.measurement.name}
+                      </li>
+
+                      <li
+                        className={`text-xs ${isOverflowQuantity ? "text-orange-400" : ""}`}
+                      >
+                        Estimado para el proyecto:{" "}
+                        {currentMaterial?.projectQuantity}{" "}
+                        {currentMaterial?.measurement.name}
+                      </li>
+                    </ul>
+                  )}
+                </Card>
+              );
+            })}
+            <Form.Item className="mt-8">
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                block
+                icon={<PlusOutlined />}
+                disabled={
+                  materialsSelected.length === materialList?.length ||
+                  (currentTaskData && currentTaskData.status === "D")
+                }
+              >
+                Agregar material
+              </Button>
+            </Form.Item>
+          </div>
+        )}
+      </Form.List>
+    </div>
+  );
+}

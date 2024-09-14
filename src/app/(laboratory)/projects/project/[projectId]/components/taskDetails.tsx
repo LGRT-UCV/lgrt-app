@@ -55,6 +55,7 @@ export default function TaskDetails({
     try {
       const user = sessionData?.user;
 
+      console.log("taskData: ", taskData, currentTask);
       if (typeof user === "undefined") throw new Error("Sesión vencida");
 
       if (typeof currentTask !== "undefined") {
@@ -69,6 +70,12 @@ export default function TaskDetails({
           project.id,
           {
             ...taskData,
+            projectTaskMaterials: taskData.projectTaskMaterials.map(
+              (material) => ({
+                idMaterial: material.idMaterial,
+                usedQuantity: String(material.usedQuantity),
+              }),
+            ),
             idProject: project.id,
           },
           user.token,

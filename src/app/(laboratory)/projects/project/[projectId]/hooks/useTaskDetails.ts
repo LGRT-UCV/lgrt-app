@@ -25,8 +25,15 @@ export default function useTaskDetails() {
   };
 
   const handleSaveTask = () => {
-    form.submit();
-    setOpenModal(false);
+    form
+      .validateFields()
+      .then(() => {
+        form.submit();
+        setOpenModal(false);
+      })
+      .catch((error) => {
+        console.log("error: ", error);
+      });
   };
 
   return {

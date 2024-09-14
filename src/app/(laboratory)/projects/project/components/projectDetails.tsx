@@ -43,6 +43,28 @@ export default function ProjectDetails({
     return getProjectStatusStyle(project.status);
   }, [project.status]);
 
+  const quantityUsed = useMemo(() => {
+    const materialUsageMap: { [key: string]: number } = {};
+    project.projectTasks.forEach((task) => {
+      task.projectTaskMaterials.forEach((material) => {
+        if (materialUsageMap[material.idMaterial]) {
+          materialUsageMap[material.idMaterial] =
+            Number(materialUsageMap[material.idMaterial]) +
+            Number(material.usedQuantity);
+        } else {
+          materialUsageMap[material.idMaterial] = Number(material.usedQuantity);
+        }
+      });
+    });
+
+    return Object.entries(materialUsageMap).map(
+      ([idMaterial, quantityUsed]) => ({
+        idMaterial,
+        quantityUsed,
+      }),
+    );
+  }, []);
+
   useEffect(() => {
     const getMaterials = async () => {
       const materials: Array<TMaterial> = [];
@@ -146,24 +168,42 @@ export default function ProjectDetails({
           </Descriptions>
         </Card>
         <Card title="Materiales a usar" style={{ width: "100%" }}>
-          {currentMaterials.map((material) => (
-            <Descriptions
-              key={`material-${material.id}`}
-              bordered
-              column={2}
-              labelStyle={{ width: "15%" }}
-              contentStyle={{ width: "30%" }}
-              style={{ marginBottom: 16 }}
-            >
-              <Descriptions.Item key="quantity" label="Material">
-                {material.name}
-              </Descriptions.Item>
-              <Descriptions.Item key="quantity" label="Cantidad">
-                {material.quantity}
-                {material.measurement.name}
-              </Descriptions.Item>
-            </Descriptions>
-          ))}
+          {currentMaterials.map((material) => {
+            const materialUsed = quantityUsed.find(
+              (used) => material.id === used.idMaterial,
+            );
+            return (
+              <Descriptions
+                key={`material-${material.id}`}
+                bordered
+                column={2}
+                labelStyle={{ width: "15%" }}
+                contentStyle={{ width: "30%" }}
+                style={{ marginBottom: 16 }}
+              >
+                <Descriptions.Item key="quantity" label="Material">
+                  {material.name}
+                </Descriptions.Item>
+                <Descriptions.Item key="quantity" label="Cantidad">
+                  <span>
+                    {material.quantity}
+                    {`${material.measurement.name} `} estimado /{" "}
+                  </span>
+                  <span
+                    className={
+                      Number(materialUsed?.quantityUsed ?? 0) >
+                      Number(material.quantity)
+                        ? "text-orange-500"
+                        : ""
+                    }
+                  >
+                    {materialUsed?.quantityUsed ?? 0}
+                    {material.measurement.name} usado
+                  </span>
+                </Descriptions.Item>
+              </Descriptions>
+            );
+          })}
         </Card>
         {Roles.External !== role && (
           <Card title="Cambiar Estado" style={{ width: "100%" }}>

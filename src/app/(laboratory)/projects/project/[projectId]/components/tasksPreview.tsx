@@ -1,5 +1,6 @@
 import { IProject, TProjectTask } from "@/(laboratory)/projects/interfaces";
 import { Button, Card, Descriptions, Modal, Tag } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { getTaskStatus } from "../utils";
 import useTaskDetails from "../hooks/useTaskDetails";
 import { Roles } from "@/lib/constants";
@@ -24,6 +25,7 @@ export default function TasksPreview({
     currentTask,
     setOpenModal,
     handleSaveTask,
+    handleCreateTask,
     handleTaskDetails,
   } = useTaskDetails();
 
@@ -69,6 +71,18 @@ export default function TasksPreview({
             </Descriptions>
           );
         })}
+
+        <Button
+          type="dashed"
+          onClick={handleCreateTask}
+          block
+          size="large"
+          icon={<PlusOutlined />}
+          className="mt-4"
+          disabled={project.status === "C"}
+        >
+          Crear tarea
+        </Button>
       </Card>
 
       <Modal

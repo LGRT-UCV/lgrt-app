@@ -7,6 +7,23 @@ import type { TSaveProjectTask, TTaskStatus } from "../../interfaces";
 
 const TASKS_URI = `${process.env.NEXT_PUBLIC_API_URL}/v1/project/projects`;
 
+export const createProjectTask = async (
+  projectId: string,
+  data: TSaveProjectTask,
+  sessionToken: string,
+) => {
+  const headers = {
+    ...API_REQUEST_HEADERS,
+    Authorization: `Bearer ${sessionToken}`,
+  };
+  return newRequest(
+    `${TASKS_URI}/${projectId}/projectasks`,
+    RequestMethods.POST,
+    headers,
+    JSON.stringify(data),
+  );
+};
+
 export const updateProjectTask = async (
   id: string,
   projectId: string,
@@ -53,7 +70,7 @@ export const getTaskStatus = (status: TTaskStatus) => {
 export const getAvailableStatus = (status: TTaskStatus) => {
   switch (status) {
     case "P":
-      return ["E", "C", "D"];
+      return ["P", "E", "C", "D"];
     case "E":
       return ["P", "C", "D"];
     default:

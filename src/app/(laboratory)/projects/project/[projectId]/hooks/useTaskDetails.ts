@@ -18,6 +18,12 @@ export default function useTaskDetails() {
     setOpenModal(true);
   };
 
+  const handleCreateTask = () => {
+    setCurrentTask(undefined);
+    form.resetFields();
+    setOpenModal(true);
+  };
+
   const handleSaveTask = () => {
     form.submit();
     setOpenModal(false);
@@ -30,6 +36,7 @@ export default function useTaskDetails() {
     setCurrentTask,
     setOpenModal,
     handleTaskDetails,
+    handleCreateTask,
     handleSaveTask,
   };
 }

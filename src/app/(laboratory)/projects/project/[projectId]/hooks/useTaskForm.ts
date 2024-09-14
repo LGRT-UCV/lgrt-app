@@ -38,6 +38,13 @@ export default function useTaskForm({
     return tasks.find((task) => task.id === currentTask);
   }, [currentTask]);
 
+  const materialsUsed = useMemo(() => {
+    const materials = tasks.map((task) => {
+      return task.projectTaskMaterials;
+    });
+    return materials.flat();
+  }, [currentTaskData]);
+
   const { data: materialList, isLoading } = useQuery({
     queryKey: ["material"],
     queryFn: async () => {
@@ -59,7 +66,7 @@ export default function useTaskForm({
             quantity: material.quantity,
             measurement: material.measurement,
             projectQuantity: materialProject?.quantity ?? 0,
-            disabled: ["D", "C"].includes(currentTaskData?.status ?? "D"),
+            disabled: ["D", "C"].includes(currentTaskData?.status ?? "P"),
           });
         }
         return materialsToList;
@@ -117,6 +124,7 @@ export default function useTaskForm({
     materialsSelected,
     quantitiesSelected,
     materialList,
+    materialsUsed,
     isLoading,
     currentTaskData,
     handleMaterialSelected,

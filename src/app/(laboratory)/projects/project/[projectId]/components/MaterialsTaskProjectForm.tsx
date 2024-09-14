@@ -30,6 +30,7 @@ export default function MaterialsTaskProjectForm({
     quantitiesSelected,
     currentTaskData,
     materialList,
+    materialsUsed,
     handleMaterialSelected,
     handleQuantitySelected,
     handleRemoveMaterial,
@@ -51,11 +52,11 @@ export default function MaterialsTaskProjectForm({
             {fields.map(({ key, name, ...restField }) => {
               const materialsToList = [...(materialList ?? [])];
               const currentMaterial = materialList?.find(
-                (material) => material.id === materialsSelected[key],
+                (material) => material.id === materialsSelected[name],
               );
-              const currentQuantity = quantitiesSelected[key] ?? 0;
+              const currentQuantity = quantitiesSelected[name] ?? 0;
               const overflowQuantity =
-                currentTaskData?.projectTaskMaterials
+                materialsUsed
                   .filter(
                     (material) => material.idMaterial === currentMaterial?.id,
                   )
@@ -70,7 +71,7 @@ export default function MaterialsTaskProjectForm({
               const materials = materialsToList?.filter(
                 (material) =>
                   !materialsSelected
-                    .filter((mat) => mat !== materialsSelected[key])
+                    .filter((mat) => mat !== materialsSelected[name])
                     .includes(material.id),
               );
 
@@ -80,12 +81,14 @@ export default function MaterialsTaskProjectForm({
                   title={`Material a usar #${name + 1}`}
                   key={key}
                   extra={
-                    <CloseOutlined
-                      onClick={() => {
-                        handleRemoveMaterial(key);
-                        remove(name);
-                      }}
-                    />
+                    !currentMaterial?.disabled ? (
+                      <CloseOutlined
+                        onClick={() => {
+                          handleRemoveMaterial(name);
+                          remove(name);
+                        }}
+                      />
+                    ) : null
                   }
                 >
                   <div className="flex w-full flex-wrap">
@@ -104,7 +107,9 @@ export default function MaterialsTaskProjectForm({
                     >
                       <Select
                         placeholder="Seleccione un material"
-                        onSelect={(value) => handleMaterialSelected(value, key)}
+                        onSelect={(value) =>
+                          handleMaterialSelected(value, name)
+                        }
                         disabled={currentMaterial?.disabled}
                         options={materials?.map((material) => {
                           return {
@@ -136,7 +141,7 @@ export default function MaterialsTaskProjectForm({
                         className="w-full"
                         placeholder="cantidad"
                         onChange={(value) =>
-                          handleQuantitySelected(value ?? 0, key)
+                          handleQuantitySelected(value ?? 0, name)
                         }
                         min={0}
                         decimalSeparator=","

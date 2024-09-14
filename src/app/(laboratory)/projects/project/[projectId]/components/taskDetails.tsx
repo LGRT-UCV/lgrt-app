@@ -7,7 +7,12 @@ import {
   IProject,
 } from "@/(laboratory)/projects/interfaces";
 import useNotification from "@/hooks/useNotification";
-import { getAvailableStatus, getTaskStatus, updateProjectTask } from "../utils";
+import {
+  createProjectTask,
+  getAvailableStatus,
+  getTaskStatus,
+  updateProjectTask,
+} from "../utils";
 import TextArea from "antd/es/input/TextArea";
 import { useSession } from "next-auth/react";
 import MaterialsTaskProjectForm from "./MaterialsTaskProjectForm";
@@ -31,7 +36,7 @@ export default function TaskDetails({
   const { data: sessionData } = useSession();
 
   const { status, statusColor } = useMemo(() => {
-    if (!currentTask) return { status: "P", statusColor: "gray" };
+    if (!currentTask) return { status: "Por hacer", statusColor: "gray" };
     return getTaskStatus(currentTask.status);
   }, [currentTask?.status]);
 
@@ -47,13 +52,28 @@ export default function TaskDetails({
   }, []);
 
   const onFinish = async (taskData: ISaveProjectTask) => {
-    if (typeof currentTask === "undefined") return;
     try {
       const user = sessionData?.user;
 
       if (typeof user === "undefined") throw new Error("Sesión vencida");
 
-      await updateProjectTask(currentTask.id, project.id, taskData, user.token);
+      if (typeof currentTask !== "undefined") {
+        await updateProjectTask(
+          currentTask.id,
+          project.id,
+          taskData,
+          user.token,
+        );
+      } else {
+        await createProjectTask(
+          project.id,
+          {
+            ...taskData,
+            idProject: project.id,
+          },
+          user.token,
+        );
+      }
 
       openNotification(
         "success",
@@ -91,7 +111,7 @@ export default function TaskDetails({
           size="large"
           scrollToFirstError
           className="p-4"
-          disabled={["D", "C"].includes(currentTask?.status ?? "D")}
+          disabled={["D", "C"].includes(currentTask?.status ?? "P")}
         >
           <Form.Item
             name="status"

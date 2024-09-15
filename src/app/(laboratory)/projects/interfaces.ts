@@ -49,8 +49,8 @@ export interface IProjectForm {
 export enum ETaskStatus {
   P = "P",
   E = "E",
-  C = "C",
   D = "D",
+  C = "C",
 }
 
 export type TTaskStatus = keyof typeof ETaskStatus;

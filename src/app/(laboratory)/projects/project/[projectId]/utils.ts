@@ -54,7 +54,7 @@ export const getTaskStatus = (status: TTaskStatus) => {
         status: "En progreso",
         statusColor: "orange",
       };
-    case "C":
+    case "D":
       return {
         status: "Completado",
         statusColor: "green",

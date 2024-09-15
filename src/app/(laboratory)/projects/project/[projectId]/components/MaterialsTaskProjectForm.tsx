@@ -178,7 +178,7 @@ export default function MaterialsTaskProjectForm({
                 icon={<PlusOutlined />}
                 disabled={
                   materialsSelected.length === materialList?.length ||
-                  (currentTaskData && currentTaskData.status === "D")
+                  (currentTaskData && currentTaskData.status === "C")
                 }
               >
                 Agregar material

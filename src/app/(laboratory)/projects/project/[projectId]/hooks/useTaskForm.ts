@@ -34,6 +34,20 @@ export default function useTaskForm({
     setQuantitiesSelected([]);
   }, [openModal]);
 
+  useEffect(() => {
+    if (typeof currentTask === "undefined") return;
+    const taskMaterials = tasks.find(
+      (task) => task.id === currentTask,
+    )?.projectTaskMaterials;
+    if (!taskMaterials) return;
+    const materials = taskMaterials.map((material) => material.idMaterial);
+    setMaterialsSelected(materials);
+    const quantities = taskMaterials.map((material) =>
+      Number(material.usedQuantity),
+    );
+    setQuantitiesSelected(quantities);
+  }, [currentTask]);
+
   const currentTaskData = useMemo(() => {
     return tasks.find((task) => task.id === currentTask);
   }, [currentTask]);

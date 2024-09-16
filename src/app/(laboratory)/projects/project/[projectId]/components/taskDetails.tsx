@@ -7,15 +7,11 @@ import {
   IProject,
 } from "@/(laboratory)/projects/interfaces";
 import useNotification from "@/hooks/useNotification";
-import {
-  createProjectTask,
-  getAvailableStatus,
-  getTaskStatus,
-  updateProjectTask,
-} from "../utils";
+import { getAvailableStatus, getTaskStatus, updateProjectTask } from "../utils";
 import TextArea from "antd/es/input/TextArea";
 import { useSession } from "next-auth/react";
 import MaterialsTaskProjectForm from "./MaterialsTaskProjectForm";
+import { updateProject } from "@/(laboratory)/projects/utils";
 
 type TTaskDetails = {
   formInstance: FormInstance;
@@ -37,7 +33,7 @@ export default function TaskDetails({
 
   const { status, statusColor } = useMemo(() => {
     if (!currentTask) return { status: "Por hacer", statusColor: "gray" };
-    return getTaskStatus(currentTask.status);
+    return getTaskStatus(currentTask?.status ?? "P");
   }, [currentTask?.status]);
 
   const availableStatus = useMemo(() => {
@@ -55,7 +51,6 @@ export default function TaskDetails({
     try {
       const user = sessionData?.user;
 
-      console.log("taskData: ", taskData, currentTask);
       if (typeof user === "undefined") throw new Error("Sesión vencida");
 
       if (typeof currentTask !== "undefined") {
@@ -66,17 +61,11 @@ export default function TaskDetails({
           user.token,
         );
       } else {
-        await createProjectTask(
+        // Create task
+        await updateProject(
           project.id,
           {
-            ...taskData,
-            projectTaskMaterials: taskData.projectTaskMaterials.map(
-              (material) => ({
-                idMaterial: material.idMaterial,
-                usedQuantity: String(material.usedQuantity),
-              }),
-            ),
-            idProject: project.id,
+            projectTasks: [...project.projectTasks, taskData],
           },
           user.token,
         );
@@ -106,10 +95,12 @@ export default function TaskDetails({
     <>
       {notificationElement}
       <div className="mx-auto mt-8 max-h-[calc(100vh-200px)] overflow-auto p-4">
-        <div className="flex items-center justify-between border-b border-gray-200 p-4">
-          <h2 className="text-xl font-bold">#{currentTask?.id}</h2>
-          <Tag color={statusColor}>{status}</Tag>
-        </div>
+        {currentTask && (
+          <div className="flex items-center justify-between border-b border-gray-200 p-4">
+            <h2 className="text-xl font-bold">#{currentTask?.id}</h2>
+            <Tag color={statusColor}>{status}</Tag>
+          </div>
+        )}
         <Form
           name="taskForm"
           form={formInstance}
@@ -120,13 +111,17 @@ export default function TaskDetails({
           className="p-4"
           disabled={["D", "C"].includes(currentTask?.status ?? "P")}
         >
-          <Form.Item
-            name="status"
-            rules={[{ required: true, message: "Por favor elija una opción" }]}
-            className="mb-4 w-full px-2 md:w-1/3"
-          >
-            <Select placeholder="Estado" options={availableStatus} />
-          </Form.Item>
+          {currentTask && (
+            <Form.Item
+              name="status"
+              rules={[
+                { required: true, message: "Por favor elija una opción" },
+              ]}
+              className="mb-4 w-full px-2 md:w-1/3"
+            >
+              <Select placeholder="Estado" options={availableStatus} />
+            </Form.Item>
+          )}
           <Form.Item
             name="name"
             className="mb-4 w-full px-2"
@@ -161,12 +156,14 @@ export default function TaskDetails({
             />
           </Form.Item>
 
-          <MaterialsTaskProjectForm
-            currentTask={currentTask?.id ?? ""}
-            materialsProject={project.projectMaterial}
-            tasks={project.projectTasks}
-            openModal={openModal}
-          />
+          {currentTask && (
+            <MaterialsTaskProjectForm
+              currentTask={currentTask?.id ?? ""}
+              materialsProject={project.projectMaterial}
+              tasks={project.projectTasks}
+              openModal={openModal}
+            />
+          )}
         </Form>
       </div>
     </>

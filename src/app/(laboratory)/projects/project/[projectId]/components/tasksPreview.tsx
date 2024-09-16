@@ -33,7 +33,7 @@ export default function TasksPreview({
     <>
       <Card title="Tareas" style={{ width: "100%" }}>
         {tasks.map((task) => {
-          const taskStatus = getTaskStatus(task.status);
+          const taskStatus = getTaskStatus(task?.status ?? "P");
           return (
             <Descriptions key={task.id} labelStyle={{ width: "10%" }} bordered>
               <Descriptions.Item
@@ -42,7 +42,9 @@ export default function TasksPreview({
               >
                 <p
                   className={
-                    ["C", "D"].includes(task.status) ? "line-through" : ""
+                    ["C", "D"].includes(task?.status ?? "P")
+                      ? "line-through"
+                      : ""
                   }
                 >
                   #{task.id} - {task.name}
@@ -86,6 +88,7 @@ export default function TasksPreview({
       </Card>
 
       <Modal
+        title={typeof currentTask === "undefined" ? "Crear tarea" : undefined}
         centered
         open={openModal}
         onCancel={() => {

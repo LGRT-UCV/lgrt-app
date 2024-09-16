@@ -21,6 +21,7 @@ export type TSaveProject = {
 export type TUpdateProject = {
   status?: string;
   comments?: string;
+  projectTasks?: Array<ISaveProjectTask>;
 };
 
 export type TProjectMaterial = {
@@ -63,9 +64,9 @@ export type TProjectTaskMaterialSave = {
 export interface ISaveProjectTask {
   name: string;
   description: string;
-  idProject: string;
   projectTaskMaterials: Array<TProjectTaskMaterialSave>;
-  status: TTaskStatus;
+  idProject?: string;
+  status?: TTaskStatus;
 }
 
 export interface IProjectTask extends IGenericId, ISaveProjectTask {}

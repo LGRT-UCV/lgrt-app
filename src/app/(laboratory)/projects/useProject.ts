@@ -46,7 +46,7 @@ export default function useProject() {
     if (typeof project === "undefined") {
       openNotification(
         "error",
-        "No se ha seleccionado un projecto a eliminar",
+        "No se ha seleccionado un proyecto a eliminar",
         "",
         "topRight",
       );
@@ -67,7 +67,7 @@ export default function useProject() {
     } catch (error) {
       openNotification(
         "error",
-        "Ha ocurrido un error al eliminar el projecto",
+        "Ha ocurrido un error al eliminar el proyecto",
         "",
         "topRight",
       );
@@ -122,11 +122,12 @@ export default function useProject() {
     const projects = projectList.filter(
       (project) =>
         (project.name.toLocaleLowerCase().includes(search) ||
-          project.description.toLocaleLowerCase().includes(search)) &&
+          project.description.toLocaleLowerCase().includes(search) ||
+          project.id.toLocaleLowerCase().includes(search)) &&
         (project.status === projectStatus || projectStatus === "all"),
     );
     return (
-      projects.map((project, index) => ({
+      projects.reverse().map((project, index) => ({
         ...project,
         key: `project-${index}`,
         description: project.description.substring(0, 120) + "...",

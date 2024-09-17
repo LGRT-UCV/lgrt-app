@@ -64,7 +64,7 @@ export default function Inventory() {
     const columnToShow: TableColumnsType<AnyObject> = columsList.map(
       (column) => ({
         title: column.label,
-        width: column.id === "id" ? 25 : 100,
+        width: column.id === "id" ? 20 : 30,
         dataIndex: column.id,
         key: column.id,
         sorter: ["id", "name", "weight", "quantity"].includes(column.id)
@@ -80,7 +80,7 @@ export default function Inventory() {
       }),
     );
     columnToShow.push({
-      width: 20,
+      width: 10,
       fixed: "right",
       render: (record: TMaterial & { key: string }) => (
         <Popover

@@ -84,6 +84,10 @@ export const updateProject = async (
 
 export const fieldsProject = [
   {
+    id: "id",
+    label: "ID",
+  },
+  {
     id: "name",
     label: "Nombre",
   },

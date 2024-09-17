@@ -64,7 +64,7 @@ export default function useInventory() {
             .includes(searchValue.toLocaleLowerCase())),
     );
     return (
-      currentMaterials?.map((material, index) => ({
+      currentMaterials?.reverse().map((material, index) => ({
         ...material,
         key: `material-${index}`,
         materialType: currentMaterialType?.name,

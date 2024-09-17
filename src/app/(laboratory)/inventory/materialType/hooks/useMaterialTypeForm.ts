@@ -81,7 +81,6 @@ export default function useMaterialTypeForm(
         name: values.name,
         fields: predefinedFields.concat(customFields),
       };
-      console.log("values: ", valuesToSend);
       if (!!materialTypeData) {
         await updateMaterialType(materialTypeData.id, valuesToSend, user.token);
       } else {

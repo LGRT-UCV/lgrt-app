@@ -1,49 +1,24 @@
 "use client";
 
-import { useMemo } from "react";
-import { useSearchParams } from "next/navigation";
-import { SaveOutlined } from "@ant-design/icons";
-import { useForm } from "antd/lib/form/Form";
+import { SaveOutlined, LoadingOutlined } from "@ant-design/icons";
 import Header from "@/components/layout/header";
 import ProjectForm from "./components/projectForm";
+import useProject from "./hooks/useProject";
 
 export default function NewProject() {
-  const [form] = useForm();
-  const searchParams = useSearchParams();
+  const { form, projectId, currentProject, isLoading, notificationElement } =
+    useProject();
 
-  const projectId = useMemo(() => {
-    return searchParams.get("id");
-  }, [searchParams]);
-
-  // const { data: currentProject, isLoading } = useQuery({
-  //   queryKey: ["project"],
-  //   queryFn: async () => {
-  //     try {
-  //       if (!projectId) {
-  //         form.resetFields();
-  //         return;
-  //       }
-
-  //       return await getProject(
-  //         sessionData?.user.token ?? "",
-  //         projectId
-  //       );
-  //     } catch (error) {
-  //       openNotification("error", "Ha ocurrido un error al obtener el material", "", "topRight");
-  //       return;
-  //     }
-  //   },
-  //   enabled: !!sessionData?.user.token,
-  // });
-
-  // if (isLoading) return (
-  //   <div className="w-full text-center pt-4">
-  //     <LoadingOutlined className="text-3xl" />
-  //   </div>
-  // );
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <>
+      {notificationElement}
       <Header
         title={!!projectId ? "Editar proyecto" : "Nuevo proyecto"}
         btn={{
@@ -55,7 +30,7 @@ export default function NewProject() {
       />
 
       <div className="h-[calc(100vh-200px)] overflow-y-auto p-4">
-        <ProjectForm formIntance={form} />
+        <ProjectForm formIntance={form} isEdit={!!currentProject} />
       </div>
     </>
   );

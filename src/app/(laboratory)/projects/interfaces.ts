@@ -44,7 +44,7 @@ export interface IProject extends IGenericId {
 
 export interface IProjectForm {
   formIntance: FormInstance;
-  projectData?: IProject;
+  isEdit: boolean;
 }
 
 export enum ETaskStatus {

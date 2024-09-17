@@ -66,7 +66,7 @@ export default function ProjectDetails({
           icon: <SaveOutlined />,
           type: "primary",
           onClick: () =>
-            void router.push(`${Routes.SaveMaterial}?id=${currentProject?.id}`),
+            void router.push(`${Routes.SaveProject}?id=${currentProject?.id}`),
         }}
       />
 

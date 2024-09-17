@@ -7,7 +7,7 @@ import RequiredLegend from "@/components/feedback/requiredLegend";
 import ProjectMaterials from "./projectMaterials";
 import ProjectTasks from "./projectTasks";
 
-export default function ProjectForm({ formIntance }: IProjectForm) {
+export default function ProjectForm({ formIntance, isEdit }: IProjectForm) {
   const { isLoading, notificationElement, onFinish, ...projectMaterial } =
     useProjectForm(formIntance);
 
@@ -100,14 +100,16 @@ export default function ProjectForm({ formIntance }: IProjectForm) {
           />
         </Form.Item>
         <div className="flex gap-8">
-          <div className="w-full space-y-4 md:w-1/2">
+          <div className={`w-full space-y-4 ${!isEdit ? "md:w-1/2" : ""}`}>
             <h2 className="text-2xl">Materiales a usar</h2>
             <ProjectMaterials {...projectMaterial} />
           </div>
-          <div className="w-full space-y-4 md:w-1/2">
-            <h2 className="text-2xl">Lista de tareas</h2>
-            <ProjectTasks />
-          </div>
+          {!isEdit && (
+            <div className="w-full space-y-4 md:w-1/2">
+              <h2 className="text-2xl">Lista de tareas</h2>
+              <ProjectTasks />
+            </div>
+          )}
         </div>
       </Form>
       <RequiredLegend />

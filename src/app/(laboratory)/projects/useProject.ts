@@ -46,7 +46,7 @@ export default function useProject() {
     if (typeof project === "undefined") {
       openNotification(
         "error",
-        "No se ha seleccionado un projecto a eliminar",
+        "No se ha seleccionado un proyecto a eliminar",
         "",
         "topRight",
       );
@@ -67,7 +67,7 @@ export default function useProject() {
     } catch (error) {
       openNotification(
         "error",
-        "Ha ocurrido un error al eliminar el projecto",
+        "Ha ocurrido un error al eliminar el proyecto",
         "",
         "topRight",
       );

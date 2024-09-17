@@ -1,8 +1,9 @@
-import { Button, Card, Descriptions, Select, Tag } from "antd";
+import { Modal, Button, Card, Descriptions, Select, Tag } from "antd";
 import type { IProject, TUpdateProject } from "../../interfaces";
 import { useEffect, useMemo, useState } from "react";
 import { SelectProps } from "antd/lib";
 import {
+  deleteProject,
   getProjectStatus,
   getProjectStatusStyle,
   projectStatus,
@@ -12,9 +13,16 @@ import { useSession } from "next-auth/react";
 import useNotification from "@/hooks/useNotification";
 import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
 import { getMaterial } from "@/(laboratory)/inventory/utils";
-import { Roles } from "@/lib/constants";
+import { Roles, Routes } from "@/lib/constants";
 import { useLabProvider } from "@/context/labProvider";
 import TasksPreview from "../[projectId]/components/tasksPreview";
+import { useRouter } from "next/navigation";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 type TagRender = SelectProps["tagRender"];
 
@@ -36,6 +44,7 @@ export default function ProjectDetails({
   );
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
+  const router = useRouter();
 
   if (typeof project === "undefined") return <></>;
 
@@ -130,6 +139,53 @@ export default function ProjectDetails({
     }
   };
 
+  const handleDeleteProject = async () => {
+    if (typeof project === "undefined") {
+      openNotification(
+        "error",
+        "No se ha seleccionado un proyecto a eliminar",
+        "",
+        "topRight",
+      );
+      return;
+    }
+
+    try {
+      await deleteProject(sessionData?.user.token ?? "", project.id);
+      openNotification(
+        "success",
+        "Material eliminado",
+        `Se ha eliminado el proyecto ${project.name}`,
+        "topRight",
+      );
+      void router.push(Routes.Projects);
+    } catch (error) {
+      console.error("ERROR: ", error);
+      openNotification(
+        "error",
+        "Ha ocurrido un error al eliminar el proyecto",
+        "",
+        "topRight",
+      );
+    }
+  };
+
+  const showDeleteConfirm = () => {
+    confirm({
+      title: "¿Estás seguro que deseas eliminar este proyecto?",
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDeleteProject();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+  };
+
   return (
     <>
       {notificationElement}
@@ -206,17 +262,39 @@ export default function ProjectDetails({
           })}
         </Card>
         {Roles.External !== role && (
-          <Card title="Cambiar Estado" style={{ width: "100%" }}>
-            <div className="flex items-center justify-center gap-4">
-              <Select
-                tagRender={tagRender}
-                defaultValue={[project.status ?? "I"]}
-                onSelect={(value) => setStatusSelected(value)}
-                className="w-full md:w-1/3"
-                options={projectStatus}
-              />
-              <Button onClick={onChangeStatus}>Cambiar</Button>
-            </div>
+          <Card title="Acciones" style={{ width: "100%" }}>
+            <Descriptions bordered column={1} labelStyle={{ width: "30%" }}>
+              <Descriptions.Item key="status" label="Cambiar Estado">
+                <div className="flex items-center justify-center gap-4">
+                  <Select
+                    tagRender={tagRender}
+                    defaultValue={[project.status ?? "I"]}
+                    onSelect={(value) => setStatusSelected(value)}
+                    className="w-full md:w-1/3"
+                    options={projectStatus}
+                  />
+                  <Button onClick={onChangeStatus}>Cambiar</Button>
+                </div>
+              </Descriptions.Item>
+              <Descriptions.Item
+                key="delete"
+                label="Eliminar proyecto"
+                contentStyle={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  key="save"
+                  className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                  onClick={showDeleteConfirm}
+                  disabled={"D" === project.status}
+                >
+                  Eliminar proyecto
+                </Button>
+              </Descriptions.Item>
+            </Descriptions>
           </Card>
         )}
         {Roles.External !== role && (

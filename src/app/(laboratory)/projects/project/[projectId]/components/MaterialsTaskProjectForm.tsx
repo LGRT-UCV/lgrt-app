@@ -182,7 +182,7 @@ export default function MaterialsTaskProjectForm({
                 disabled={
                   materialsSelected.length === materialList?.length ||
                   (currentTaskData && currentTaskData.status === "C") ||
-                  ["I", "C"].includes(projectStatus)
+                  !["A"].includes(projectStatus)
                 }
               >
                 Agregar material

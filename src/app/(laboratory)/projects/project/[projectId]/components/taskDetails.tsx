@@ -111,7 +111,7 @@ export default function TaskDetails({
           className="p-4"
           disabled={
             ["D", "C"].includes(currentTask?.status ?? "P") ||
-            ["I", "C"].includes(project.status)
+            !["A"].includes(project.status)
           }
         >
           {currentTask && (

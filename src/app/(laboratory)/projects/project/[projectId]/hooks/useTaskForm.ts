@@ -84,7 +84,7 @@ export default function useTaskForm({
             projectQuantity: materialProject?.quantity ?? 0,
             disabled:
               ["D", "C"].includes(currentTaskData?.status ?? "P") ||
-              ["I", "C"].includes(projectStatus),
+              !["A"].includes(projectStatus),
           });
         }
         return materialsToList;

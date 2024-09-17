@@ -1,98 +1,31 @@
-import { Modal, Button, Card, Descriptions, Select, Tag } from "antd";
-import type { IProject, TUpdateProject } from "../../interfaces";
-import { useEffect, useMemo, useState } from "react";
+import { Button, Card, Descriptions, Select, Tag } from "antd";
+import type { IProject } from "../../interfaces";
 import { SelectProps } from "antd/lib";
-import {
-  deleteProject,
-  getProjectStatus,
-  getProjectStatusStyle,
-  projectStatus,
-  updateProject,
-} from "../../utils";
-import { useSession } from "next-auth/react";
-import useNotification from "@/hooks/useNotification";
-import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
-import { getMaterial } from "@/(laboratory)/inventory/utils";
-import { Roles, Routes } from "@/lib/constants";
+import { projectStatus } from "../../utils";
+import { Roles } from "@/lib/constants";
 import { useLabProvider } from "@/context/labProvider";
 import TasksPreview from "../[projectId]/components/tasksPreview";
-import { useRouter } from "next/navigation";
-
-const { confirm } = Modal;
-
-const destroyAll = () => {
-  Modal.destroyAll();
-};
+import useProjectDetails from "../hooks/useProjectDetails";
 
 type TagRender = SelectProps["tagRender"];
 
 interface IProjectDetails {
   project?: IProject;
-  closeModal?: () => void;
   refetch: () => void;
 }
 
-export default function ProjectDetails({
-  project,
-  closeModal,
-  refetch,
-}: IProjectDetails) {
+export default function ProjectDetails({ project, refetch }: IProjectDetails) {
   const { role } = useLabProvider();
-  const [statusSelected, setStatusSelected] = useState<string>();
-  const [currentMaterials, setCurrentMaterials] = useState<Array<TMaterial>>(
-    [],
-  );
-  const { openNotification, notificationElement } = useNotification();
-  const { data: sessionData } = useSession();
-  const router = useRouter();
-
-  if (typeof project === "undefined") return <></>;
-
-  const { status, statusColor } = useMemo(() => {
-    return getProjectStatusStyle(project.status);
-  }, [project.status]);
-
-  const quantityUsed = useMemo(() => {
-    const materialUsageMap: { [key: string]: number } = {};
-    project.projectTasks.forEach((task) => {
-      task.projectTaskMaterials.forEach((material) => {
-        if (materialUsageMap[material.idMaterial]) {
-          materialUsageMap[material.idMaterial] =
-            Number(materialUsageMap[material.idMaterial]) +
-            Number(material.usedQuantity);
-        } else {
-          materialUsageMap[material.idMaterial] = Number(material.usedQuantity);
-        }
-      });
-    });
-
-    return Object.entries(materialUsageMap).map(
-      ([idMaterial, quantityUsed]) => ({
-        idMaterial,
-        quantityUsed,
-      }),
-    );
-  }, []);
-
-  useEffect(() => {
-    const getMaterials = async () => {
-      const materials: Array<TMaterial> = [];
-      const sessionToken = sessionData?.user.token ?? "";
-      for (const material of project.projectMaterial) {
-        const materialData = await getMaterial(
-          sessionToken,
-          material.idMaterial,
-        );
-        materials.push({
-          ...materialData,
-          quantity: material.quantity.toString(),
-        });
-      }
-      setCurrentMaterials([...materials]);
-    };
-
-    void getMaterials();
-  }, []);
+  const {
+    notificationElement,
+    currentMaterials,
+    quantityUsed,
+    status,
+    statusColor,
+    setStatusSelected,
+    onChangeStatus,
+    showDeleteConfirm,
+  } = useProjectDetails({ project, refetch });
 
   const tagRender: TagRender = (props) => {
     // eslint-disable-next-line react/prop-types
@@ -113,78 +46,7 @@ export default function ProjectDetails({
     );
   };
 
-  const onChangeStatus = async () => {
-    try {
-      const sessionToken = sessionData?.user.token ?? "";
-      const data: TUpdateProject = {
-        status: statusSelected,
-      };
-      await updateProject(project.id, data, sessionToken);
-      openNotification(
-        "success",
-        "Proyecto actualizado con exito",
-        `El status ${getProjectStatus(statusSelected ?? "I").label.toLowerCase()} ha sido guardado con exito.`,
-        "topRight",
-      );
-      refetch();
-      closeModal?.();
-    } catch (error) {
-      openNotification(
-        "error",
-        "Error al guardar el proyecto",
-        "Ha ocurrido un error al cambiar el status del proyecto",
-        "topRight",
-      );
-      console.log("ERROR: ", error);
-    }
-  };
-
-  const handleDeleteProject = async () => {
-    if (typeof project === "undefined") {
-      openNotification(
-        "error",
-        "No se ha seleccionado un proyecto a eliminar",
-        "",
-        "topRight",
-      );
-      return;
-    }
-
-    try {
-      await deleteProject(sessionData?.user.token ?? "", project.id);
-      openNotification(
-        "success",
-        "Material eliminado",
-        `Se ha eliminado el proyecto ${project.name}`,
-        "topRight",
-      );
-      void router.push(Routes.Projects);
-    } catch (error) {
-      console.error("ERROR: ", error);
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar el proyecto",
-        "",
-        "topRight",
-      );
-    }
-  };
-
-  const showDeleteConfirm = () => {
-    confirm({
-      title: "¿Estás seguro que deseas eliminar este proyecto?",
-      content: "Esta acción no se puede deshacer",
-      okText: "Eliminar",
-      okType: "danger",
-      cancelText: "Cancelar",
-      onOk() {
-        handleDeleteProject();
-      },
-      onCancel() {
-        destroyAll();
-      },
-    });
-  };
+  if (typeof project === "undefined") return <></>;
 
   return (
     <>

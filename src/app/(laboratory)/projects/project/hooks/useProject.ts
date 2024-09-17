@@ -20,13 +20,11 @@ export default function useProject() {
     queryKey: ["project"],
     queryFn: async () => {
       try {
-        if (!projectId) {
-          form.resetFields();
-          return;
-        }
+        if (!projectId) return;
 
         return await getProject(sessionData?.user.token ?? "", projectId);
       } catch (error) {
+        console.error(error);
         openNotification(
           "error",
           "Ha ocurrido un error al obtener el material",
@@ -36,18 +34,20 @@ export default function useProject() {
         return;
       }
     },
-    enabled: !!sessionData?.user.token || !!projectId,
+    enabled: !!sessionData?.user.token && !!projectId,
   });
 
   useEffect(() => {
     if ([typeof projectId, typeof currentProject].includes("undefined")) return;
-    console.log("currentProject", currentProject);
     form.setFieldsValue({
       name: currentProject?.name,
       projectManager: currentProject?.projectManager,
       description: currentProject?.description,
       projectUri: currentProject?.projectUri,
-      projectMaterial: currentProject?.projectMaterial,
+      projectMaterial: currentProject?.projectMaterial.map((material) => ({
+        ...material,
+        quantity: Number(material.quantity),
+      })),
     });
   }, [currentProject]);
 

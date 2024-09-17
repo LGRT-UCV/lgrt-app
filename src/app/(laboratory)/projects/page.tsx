@@ -2,14 +2,7 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Modal,
-  Button,
-  Divider,
-  Popover,
-  Tag,
-  type TableColumnsType,
-} from "antd";
+import { Divider, Popover, Tag, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
@@ -20,7 +13,6 @@ import { Roles, Routes } from "@/lib/constants";
 import type { IProject } from "./interfaces";
 import useProject from "./useProject";
 import { fieldsProject, getProjectStatusStyle, projectStatus } from "./utils";
-import DetailsModal from "./project/components/projectDetails";
 import { isMobile } from "react-device-detect";
 import { useLabProvider } from "@/context/labProvider";
 
@@ -28,17 +20,12 @@ export default function Projects() {
   const { role } = useLabProvider();
   const router = useRouter();
   const {
-    openModal,
     tableData,
-    currentProject,
     notificationElement,
     isLoading,
-    handleProjectDetails,
     handleDeleteProject,
     setSearchValue,
     setProjectStatus,
-    setOpenModal,
-    handleUpdateProject,
   } = useProject();
 
   const sorter = (a: AnyObject, b: AnyObject, column: string) => {
@@ -124,6 +111,21 @@ export default function Projects() {
                 {Roles.External !== role &&
                   ["A", "I"].includes(record?.status ?? "") && (
                     <>
+                      {record.status === "A" && (
+                        <>
+                          <Divider className="m-2" />
+                          <span
+                            onClick={() =>
+                              void router.push(
+                                Routes.SaveProject + `?id=${record.id}`,
+                              )
+                            }
+                            className="h-full w-full cursor-pointer"
+                          >
+                            Editar
+                          </span>
+                        </>
+                      )}
                       <Divider className="m-2" />
                       <span
                         onClick={() => void handleDeleteProject(record)}
@@ -184,45 +186,6 @@ export default function Projects() {
         data={tableData.reverse()}
         isLoading={isLoading}
       />
-
-      <Modal
-        title="Detalles del project"
-        centered
-        open={openModal}
-        okText={"Editar"}
-        onOk={() => handleProjectDetails()}
-        onCancel={() => setOpenModal(false)}
-        okButtonProps={{
-          className: "bg-blue-500",
-        }}
-        footer={[
-          typeof currentProject === "undefined" ||
-          (currentProject.status === "I" && false) ? (
-            <Button
-              key="request"
-              className="border-none bg-blue-500 !text-white hover:!bg-blue-400"
-              onClick={() => void handleDeleteProject(currentProject)}
-            >
-              Solicitar materiales
-            </Button>
-          ) : undefined,
-          Roles.External !== role &&
-          ["A", "I"].includes(currentProject?.status ?? "") ? (
-            <Button
-              key="delete"
-              className="border-none bg-red-500 !text-white hover:!bg-red-400"
-              onClick={() => void handleDeleteProject(currentProject)}
-            >
-              Eliminar proyecto
-            </Button>
-          ) : undefined,
-        ]}
-      >
-        <DetailsModal
-          project={currentProject}
-          closeModal={handleUpdateProject}
-        />
-      </Modal>
     </>
   );
 }

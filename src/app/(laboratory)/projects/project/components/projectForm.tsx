@@ -7,9 +7,12 @@ import RequiredLegend from "@/components/feedback/requiredLegend";
 import ProjectMaterials from "./projectMaterials";
 import ProjectTasks from "./projectTasks";
 
-export default function ProjectForm({ formIntance, isEdit }: IProjectForm) {
+export default function ProjectForm({
+  formIntance,
+  projectData,
+}: IProjectForm) {
   const { isLoading, notificationElement, onFinish, ...projectMaterial } =
-    useProjectForm(formIntance);
+    useProjectForm(formIntance, projectData);
 
   if (isLoading)
     return (
@@ -100,11 +103,11 @@ export default function ProjectForm({ formIntance, isEdit }: IProjectForm) {
           />
         </Form.Item>
         <div className="flex gap-8">
-          <div className={`w-full space-y-4 ${!isEdit ? "md:w-1/2" : ""}`}>
+          <div className={`w-full space-y-4 ${!projectData ? "md:w-1/2" : ""}`}>
             <h2 className="text-2xl">Materiales a usar</h2>
-            <ProjectMaterials {...projectMaterial} />
+            <ProjectMaterials {...projectMaterial} projectData={projectData} />
           </div>
-          {!isEdit && (
+          {!projectData && (
             <div className="w-full space-y-4 md:w-1/2">
               <h2 className="text-2xl">Lista de tareas</h2>
               <ProjectTasks />

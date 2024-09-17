@@ -13,6 +13,7 @@ type TUseTaskForm = {
   currentTask: string;
   tasks: Array<IProjectTask>;
   materialsProject: Array<TProjectMaterial>;
+  projectStatus: string;
 };
 
 export default function useTaskForm({
@@ -20,6 +21,7 @@ export default function useTaskForm({
   tasks,
   currentTask,
   materialsProject,
+  projectStatus,
 }: TUseTaskForm) {
   const [materialsSelected, setMaterialsSelected] = useState<Array<string>>([]);
   const [quantitiesSelected, setQuantitiesSelected] = useState<Array<number>>(
@@ -80,7 +82,9 @@ export default function useTaskForm({
             quantity: material.quantity,
             measurement: material.measurement,
             projectQuantity: materialProject?.quantity ?? 0,
-            disabled: ["D", "C"].includes(currentTaskData?.status ?? "P"),
+            disabled:
+              ["D", "C"].includes(currentTaskData?.status ?? "P") ||
+              ["I", "C"].includes(projectStatus),
           });
         }
         return materialsToList;

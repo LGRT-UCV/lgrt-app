@@ -81,7 +81,7 @@ export default function TasksPreview({
           size="large"
           icon={<PlusOutlined />}
           className="mt-4"
-          disabled={project.status === "C"}
+          disabled={["C", "I"].includes(project.status)}
         >
           Crear tarea
         </Button>
@@ -106,6 +106,7 @@ export default function TasksPreview({
                   key="save"
                   className="border-none bg-blue-500 !text-white hover:!bg-blue-400"
                   onClick={handleSaveTask}
+                  disabled={["I", "D"].includes(project.status)}
                 >
                   Guardar
                 </Button>,

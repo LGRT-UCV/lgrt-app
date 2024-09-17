@@ -19,8 +19,13 @@ export type TSaveProject = {
 };
 
 export type TUpdateProject = {
+  name?: string;
+  description?: string;
+  projectUri?: string;
+  projectManager?: string;
   status?: string;
   comments?: string;
+  projectMaterial?: Array<TProjectMaterial>;
   projectTasks?: Array<ISaveProjectTask>;
 };
 
@@ -44,7 +49,7 @@ export interface IProject extends IGenericId {
 
 export interface IProjectForm {
   formIntance: FormInstance;
-  isEdit: boolean;
+  projectData?: IProject;
 }
 
 export enum ETaskStatus {

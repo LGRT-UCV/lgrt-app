@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormInstance } from "antd";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -6,12 +6,15 @@ import { useQuery } from "@tanstack/react-query";
 import useNotification from "@/hooks/useNotification";
 import { getAllMaterials } from "@/(laboratory)/inventory/utils";
 import useMaterialInit from "@/(laboratory)/inventory/material/hooks/useMaterialInit";
-import type { TSaveProject } from "../../interfaces";
-import { createProject } from "../../utils";
-import { Routes } from "@/lib/constants";
 import type { TMaterial } from "@/(laboratory)/inventory/interfaces";
+import type { IProject, TSaveProject } from "../../interfaces";
+import { createProject, updateProject } from "../../utils";
+import { Routes } from "@/lib/constants";
 
-export default function useProjectForm(formIntance: FormInstance) {
+export default function useProjectForm(
+  formIntance: FormInstance,
+  projectData?: IProject,
+) {
   const [measurements, setMeasurements] = useState<Array<string>>([]);
   const [materialsSelected, setMaterialsSelected] = useState<Array<TMaterial>>(
     [],
@@ -60,6 +63,24 @@ export default function useProjectForm(formIntance: FormInstance) {
     enabled: !!sessionData?.user.token && materialTypeList.length > 0,
   });
 
+  useEffect(() => {
+    if (
+      typeof projectData === "undefined" ||
+      typeof materialList === "undefined"
+    )
+      return;
+
+    projectData.projectMaterial?.forEach((material, index) => {
+      handleMeasurements(material.idMaterial, index);
+    });
+  }, [projectData, materialList]);
+
+  useEffect(() => {
+    if (typeof projectData === "undefined") {
+      formIntance.resetFields();
+    }
+  }, []);
+
   const onFinish = async (values: TSaveProject) => {
     try {
       const sessionToken = sessionData?.user.token;
@@ -77,7 +98,21 @@ export default function useProjectForm(formIntance: FormInstance) {
         file: [],
       };
 
-      await createProject(project, sessionToken);
+      if (projectData) {
+        await updateProject(
+          projectData.id,
+          {
+            name: project.name,
+            description: project.description,
+            projectManager: project.projectManager,
+            projectUri: project.projectUri,
+            projectMaterial: project.projectMaterial,
+          },
+          sessionToken,
+        );
+      } else {
+        await createProject(project, sessionToken);
+      }
 
       openNotification(
         "success",

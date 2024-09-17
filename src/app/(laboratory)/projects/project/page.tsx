@@ -30,7 +30,7 @@ export default function NewProject() {
       />
 
       <div className="h-[calc(100vh-200px)] overflow-y-auto p-4">
-        <ProjectForm formIntance={form} isEdit={!!currentProject} />
+        <ProjectForm formIntance={form} projectData={currentProject} />
       </div>
     </>
   );

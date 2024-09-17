@@ -14,6 +14,7 @@ type TMaterialsTaskProjectForm = {
   currentTask: string;
   tasks: Array<IProjectTask>;
   materialsProject: Array<TProjectMaterial>;
+  projectStatus: string;
   openModal: boolean;
 };
 
@@ -21,6 +22,7 @@ export default function MaterialsTaskProjectForm({
   currentTask,
   tasks,
   materialsProject,
+  projectStatus,
   openModal,
 }: TMaterialsTaskProjectForm) {
   const {
@@ -39,6 +41,7 @@ export default function MaterialsTaskProjectForm({
     currentTask,
     tasks,
     materialsProject,
+    projectStatus,
   });
 
   if (isLoading) return <LoadingOutlined className="mx-auto" />;
@@ -178,7 +181,8 @@ export default function MaterialsTaskProjectForm({
                 icon={<PlusOutlined />}
                 disabled={
                   materialsSelected.length === materialList?.length ||
-                  (currentTaskData && currentTaskData.status === "C")
+                  (currentTaskData && currentTaskData.status === "C") ||
+                  ["I", "C"].includes(projectStatus)
                 }
               >
                 Agregar material

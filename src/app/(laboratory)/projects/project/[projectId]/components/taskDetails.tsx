@@ -109,7 +109,10 @@ export default function TaskDetails({
           size="large"
           scrollToFirstError
           className="p-4"
-          disabled={["D", "C"].includes(currentTask?.status ?? "P")}
+          disabled={
+            ["D", "C"].includes(currentTask?.status ?? "P") ||
+            ["I", "C"].includes(project.status)
+          }
         >
           {currentTask && (
             <Form.Item
@@ -162,6 +165,7 @@ export default function TaskDetails({
               materialsProject={project.projectMaterial}
               tasks={project.projectTasks}
               openModal={openModal}
+              projectStatus={project.status}
             />
           )}
         </Form>

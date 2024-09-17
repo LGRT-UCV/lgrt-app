@@ -61,13 +61,19 @@ export default function ProjectDetails({
       {notificationElement}
       <Header
         title={currentProject?.name || `Proyecto #${projectId}`}
-        btn={{
-          label: "Editar",
-          icon: <SaveOutlined />,
-          type: "primary",
-          onClick: () =>
-            void router.push(`${Routes.SaveProject}?id=${currentProject?.id}`),
-        }}
+        btn={
+          currentProject?.status === "A"
+            ? {
+                label: "Editar",
+                icon: <SaveOutlined />,
+                type: "primary",
+                onClick: () =>
+                  void router.push(
+                    `${Routes.SaveProject}?id=${currentProject?.id}`,
+                  ),
+              }
+            : undefined
+        }
       />
 
       <div className="h-[calc(100vh-200px)] overflow-y-auto p-4">

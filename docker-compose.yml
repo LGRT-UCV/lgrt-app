@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  nextjs:
+    build:
+      context: .  # Route to Dockerfile
+    container_name: lgrt_app
+    network_mode: host # Use host network
+    environment:
+      NEXTAUTH_URL: "https://app.lgrt.space"  # URL base to NextAuth
+    restart: always

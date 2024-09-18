@@ -26,6 +26,13 @@ To install and set up the project, follow these steps:
 3. Configure any necessary environment variables.
 4. Start the application by running the command `yarn dev`.
 
+To install with Dorcker:
+1. Clone the repository to your local machine.
+2. Go to project folder `cd lgrt-app`.
+3. Configure any necessary environment variables.
+4. Run `docker compose up -d`.
+5. Access to `http://localhost:3000`.
+
 ## Usage
 To use the LGRT APP, follow these instructions:
 1. Open the application in your web browser.

@@ -92,7 +92,7 @@ export default function DetailsModal({
           </div>
           <div className="w-full">
             <strong>Lugar de Almacenamiento:</strong>{" "}
-            {material.storagePlace.description}
+            {String(material.storagePlace)}
           </div>
           {material.observations && (
             <div>

@@ -157,8 +157,8 @@ export default function useMaterialForm(
 
       openNotification(
         "success",
-        "Material guardado con exito",
-        `El material ${values.name} ha sido creado con exito.`,
+        "Material guardado con éxito",
+        `El material ${values.name} ha sido creado con éxito.`,
         "topRight",
       );
       void router.push(Routes.Inventory);

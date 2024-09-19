@@ -89,8 +89,8 @@ export default function useMaterialTypeForm(
 
       openNotification(
         "success",
-        "Laboratorio guardado con exito",
-        `El tipo de material ${values.name} ha sido guardado con exito.`,
+        "Tipo de material guardado con éxito",
+        `El tipo de material ${values.name} ha sido guardado con éxito.`,
         "topRight",
       );
       callback();

@@ -36,8 +36,8 @@ export default function useFileForm(callback: () => void, fileData?: IFile) {
 
             openNotification(
               "success",
-              "Archivo guardado con exito",
-              `El archivo ha sido guardado con exito.`,
+              "Archivo guardado con éxito",
+              `El archivo ha sido guardado con éxito.`,
               "topRight",
             );
             callback();
@@ -67,8 +67,8 @@ export default function useFileForm(callback: () => void, fileData?: IFile) {
         callback();
         openNotification(
           "success",
-          "Archivo guardado con exito",
-          `El archivo ha sido guardado con exito.`,
+          "Archivo guardado con éxito",
+          `El archivo ha sido guardado con éxito.`,
           "topRight",
         );
       }

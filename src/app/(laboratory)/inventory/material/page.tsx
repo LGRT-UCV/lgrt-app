@@ -31,19 +31,21 @@ export default function NewMaterial() {
     return searchParams.get("id");
   }, [searchParams]);
 
+  useEffect(() => {
+    if (!materialId) {
+      form.resetFields();
+    }
+  }, [materialId]);
+
   const { data: currentMaterial, isLoading } = useQuery({
     queryKey: ["material"],
     queryFn: async () => {
       try {
         if (!materialId) {
-          form.resetFields();
           return;
         }
 
-        return await await getMaterial(
-          sessionData?.user.token ?? "",
-          materialId,
-        );
+        return await getMaterial(sessionData?.user.token ?? "", materialId);
       } catch (error) {
         openNotification(
           "error",

@@ -104,8 +104,8 @@ export default function useProjectDetails({
       await updateProject(project.id, data, sessionToken);
       openNotification(
         "success",
-        "Proyecto actualizado con exito",
-        `El status ${getProjectStatus(statusSelected ?? "I").label.toLowerCase()} ha sido guardado con exito.`,
+        "Proyecto actualizado con éxito",
+        `El status ${getProjectStatus(statusSelected ?? "I").label.toLowerCase()} ha sido guardado con éxito.`,
         "topRight",
       );
       refetch();
@@ -135,7 +135,7 @@ export default function useProjectDetails({
       await deleteProject(sessionData?.user.token ?? "", project.id);
       openNotification(
         "success",
-        "Material eliminado",
+        "Proyecto eliminado",
         `Se ha eliminado el proyecto ${project.name}`,
         "topRight",
       );

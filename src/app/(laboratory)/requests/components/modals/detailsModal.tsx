@@ -150,7 +150,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
       setComments("");
       openNotification(
         "success",
-        "Solicitud actualizada con exito",
+        "Solicitud actualizada con éxito",
         isRequester
           ? "Su comentario ha sido enviado"
           : `El estado de la solicitud ha sido actualizada con éxito.`,

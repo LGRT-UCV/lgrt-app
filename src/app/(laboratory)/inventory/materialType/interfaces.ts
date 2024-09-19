@@ -32,6 +32,7 @@ export interface IMaterialType extends IGenericId {
   name: string;
   fields: string;
   customFields: Array<TFields>;
+  existentMaterials: string;
 }
 
 export type TMaterialType = IMaterialType;

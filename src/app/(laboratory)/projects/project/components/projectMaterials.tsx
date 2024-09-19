@@ -126,7 +126,7 @@ export default function ProjectMaterials({
               onClick={() => add()}
               block
               icon={<PlusOutlined />}
-              disabled={projectData?.status !== "A"}
+              disabled={projectData && projectData?.status !== "A"}
             >
               Agregar material
             </Button>

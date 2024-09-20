@@ -8,7 +8,14 @@ export default function useTaskDetails() {
   const [currentTask, setCurrentTask] = useState<TProjectTask>();
 
   const handleTaskDetails = (task: TProjectTask) => {
-    setCurrentTask(task);
+    const taskDetails = {
+      ...task,
+      projectTaskMaterials: task.projectTaskMaterials.map((material) => ({
+        ...material,
+        usedQuantity: Number(material.usedQuantity ?? 0),
+      })),
+    };
+    setCurrentTask(taskDetails);
     form.setFieldsValue({
       status: task.status,
       name: task.name,

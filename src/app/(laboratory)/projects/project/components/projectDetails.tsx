@@ -1,6 +1,7 @@
 import { Button, Card, Descriptions, Select, Tag } from "antd";
 import type { IProject } from "../../interfaces";
 import { SelectProps } from "antd/lib";
+import { ExportOutlined } from "@ant-design/icons";
 import { projectStatus } from "../../utils";
 import { Roles } from "@/lib/constants";
 import { useLabProvider } from "@/context/labProvider";
@@ -77,9 +78,10 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
               {project.projectManager}
             </Descriptions.Item>
             {project.projectUri && (
-              <Descriptions.Item key={"projectManager"} label="Responsable">
+              <Descriptions.Item key={"url"} label="URL">
                 <a href={project.projectUri} target="_blank" rel="noreferrer">
-                  <strong>Ver Archivo</strong>
+                  <strong>Abrir URL</strong>
+                  <ExportOutlined />
                 </a>
               </Descriptions.Item>
             )}

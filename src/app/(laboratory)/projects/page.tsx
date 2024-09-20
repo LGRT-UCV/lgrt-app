@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Divider, Popover, Tag, type TableColumnsType } from "antd";
-import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
+import { PlusOutlined, MoreOutlined, ExportOutlined } from "@ant-design/icons";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
@@ -85,7 +85,8 @@ export default function Projects() {
         render: (record: IProject & { key: string }) => (
           <div className="mx-auto text-center">
             <a href={record.projectUri} target="_blank" rel="noreferrer">
-              <strong>Ver Archivo</strong>
+              <strong>Abrir URL</strong>
+              <ExportOutlined />
             </a>
           </div>
         ),

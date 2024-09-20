@@ -20,7 +20,10 @@ export default function useTaskDetails() {
       status: task.status,
       name: task.name,
       description: task.description,
-      projectTaskMaterials: task.projectTaskMaterials,
+      projectTaskMaterials: task.projectTaskMaterials.map((material) => ({
+        idMaterial: material.idMaterial,
+        usedQuantity: Number(material.usedQuantity ?? 0),
+      })),
     });
     setOpenModal(true);
   };

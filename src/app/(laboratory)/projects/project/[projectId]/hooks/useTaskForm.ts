@@ -62,7 +62,7 @@ export default function useTaskForm({
   }, [currentTaskData]);
 
   const { data: materialList, isLoading } = useQuery({
-    queryKey: ["material"],
+    queryKey: ["materialTask"],
     queryFn: async () => {
       try {
         const materialsPromises = materialsProject.map((material) =>

@@ -49,7 +49,7 @@ export default function useRequest() {
         currentUser?.id === req?.idRequester.id;
       return req?.status === RequestStatus.Pending && isUserWithPermission;
     },
-    [sessionData?.user.user],
+    [sessionData?.user],
   );
 
   const handleUpdateRequest = () => {

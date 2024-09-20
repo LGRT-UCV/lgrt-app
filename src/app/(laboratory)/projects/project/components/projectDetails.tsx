@@ -153,7 +153,10 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
                   key="save"
                   className="border-none bg-red-500 !text-white hover:!bg-red-400"
                   onClick={showDeleteConfirm}
-                  disabled={"D" === project.status}
+                  disabled={
+                    "D" === project.status ||
+                    project.projectTasks.some((task) => task.status === "D")
+                  }
                 >
                   Eliminar proyecto
                 </Button>

@@ -69,6 +69,7 @@ export default function Projects() {
         title: "Status",
         align: "center",
         width: 20,
+        fixed: "right",
         render: (record: IProject & { key: string }) => {
           const statusStyle = getProjectStatusStyle(record.status);
           return (
@@ -127,13 +128,19 @@ export default function Projects() {
                           </span>
                         </>
                       )}
-                      <Divider className="m-2" />
-                      <span
-                        onClick={() => void handleDeleteProject(record)}
-                        className="h-full w-full cursor-pointer"
-                      >
-                        Eliminar
-                      </span>
+                      {record.projectTasks.every(
+                        (task) => task.status !== "D",
+                      ) && (
+                        <>
+                          <Divider className="m-2" />
+                          <span
+                            onClick={() => void handleDeleteProject(record)}
+                            className="h-full w-full cursor-pointer"
+                          >
+                            Eliminar
+                          </span>
+                        </>
+                      )}
                     </>
                   )}
               </div>

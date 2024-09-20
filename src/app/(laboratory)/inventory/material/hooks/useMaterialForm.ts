@@ -142,6 +142,7 @@ export default function useMaterialForm(
         name: fieldFinalValues.name,
         description: fieldFinalValues.description,
         quantity: fieldFinalValues.quantity,
+        minQuantity: fieldFinalValues.minQuantity,
         ...fieldFinalValues,
       };
       const sessionToken = sessionData?.user.token;
@@ -157,8 +158,8 @@ export default function useMaterialForm(
 
       openNotification(
         "success",
-        "Material guardado con exito",
-        `El material ${values.name} ha sido creado con exito.`,
+        "Material guardado con éxito",
+        `El material ${values.name} ha sido creado con éxito.`,
         "topRight",
       );
       void router.push(Routes.Inventory);

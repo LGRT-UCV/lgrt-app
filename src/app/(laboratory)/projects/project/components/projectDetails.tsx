@@ -1,6 +1,7 @@
 import { Button, Card, Descriptions, Select, Tag } from "antd";
 import type { IProject } from "../../interfaces";
 import { SelectProps } from "antd/lib";
+import { ExportOutlined } from "@ant-design/icons";
 import { projectStatus } from "../../utils";
 import { Roles } from "@/lib/constants";
 import { useLabProvider } from "@/context/labProvider";
@@ -77,9 +78,15 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
               {project.projectManager}
             </Descriptions.Item>
             {project.projectUri && (
-              <Descriptions.Item key={"projectManager"} label="Responsable">
-                <a href={project.projectUri} target="_blank" rel="noreferrer">
-                  <strong>Ver Archivo</strong>
+              <Descriptions.Item key={"url"} label="URL">
+                <a
+                  className="flex gap-2"
+                  href={project.projectUri}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <strong>Abrir URL</strong>
+                  <ExportOutlined />
                 </a>
               </Descriptions.Item>
             )}
@@ -103,10 +110,6 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
                   {material.name}
                 </Descriptions.Item>
                 <Descriptions.Item key="quantity" label="Cantidad">
-                  <span>
-                    {material.quantity}
-                    {`${material.measurement.name} `} estimado /{" "}
-                  </span>
                   <span
                     className={
                       Number(materialUsed?.quantityUsed ?? 0) >
@@ -116,7 +119,15 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
                     }
                   >
                     {materialUsed?.quantityUsed ?? 0}
-                    {material.measurement.name} usado
+                    {Number(material.materialType.id) !== 2
+                      ? material.measurement.name
+                      : ""}
+                    {" usado / "}
+                  </span>
+                  <span>
+                    {material.quantity}
+                    {`${Number(material.materialType.id) !== 2 ? material.measurement.name : ""} `}
+                    {" estimado"}
                   </span>
                 </Descriptions.Item>
               </Descriptions>
@@ -151,7 +162,10 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
                   key="save"
                   className="border-none bg-red-500 !text-white hover:!bg-red-400"
                   onClick={showDeleteConfirm}
-                  disabled={"D" === project.status}
+                  disabled={
+                    ["D", "R"].includes(project.status) ||
+                    project.projectTasks.some((task) => task.status === "D")
+                  }
                 >
                   Eliminar proyecto
                 </Button>

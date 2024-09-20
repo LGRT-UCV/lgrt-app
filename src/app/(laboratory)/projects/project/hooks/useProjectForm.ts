@@ -116,8 +116,8 @@ export default function useProjectForm(
 
       openNotification(
         "success",
-        "Proyecto guardado con exito",
-        `El proyecto ${values.name} ha sido creado con exito.`,
+        "Proyecto guardado con éxito",
+        `El proyecto ${values.name} ha sido creado con éxito.`,
         "topRight",
       );
       formIntance.resetFields();

@@ -68,12 +68,14 @@ export default function useInventory() {
         ...material,
         key: `material-${index}`,
         materialType: currentMaterialType?.name,
-        weight: `${material.weight} ${material.measurement.name}`,
+        weight: material.weight
+          ? `${material.weight} ${material.measurement.name}`
+          : undefined,
         capacity: !!material.capacity
           ? `${material.capacity} ${material.measurement.name}`
           : "",
         quantity: !!material.quantity
-          ? `${material.quantity} ${material.measurement.name}`
+          ? `${material.quantity} ${Number(material.materialType.id) !== 2 ? material.measurement.name : ""}`
           : "",
         presentation: !!material.presentation
           ? `${material.presentation} ${material.measurement.name}`

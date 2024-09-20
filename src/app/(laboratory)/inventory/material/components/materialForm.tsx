@@ -146,7 +146,34 @@ export default function MaterialForm({
                   className="w-full"
                   placeholder="Cantidad existente"
                   decimalSeparator=","
-                  suffix={currentMeasurement}
+                  suffix={
+                    Number(currentMaterialType.id) !== 2
+                      ? currentMeasurement
+                      : undefined
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Cantidad mínima"
+                name="minQuantity"
+                className="mb-4 w-full md:w-1/3"
+                rules={[
+                  {
+                    required: true,
+                    message: "Por favor verifique la cantidad",
+                  },
+                ]}
+              >
+                <InputNumber
+                  className="w-full"
+                  placeholder="Cantidad mínima"
+                  decimalSeparator=","
+                  suffix={
+                    Number(currentMaterialType.id) !== 2
+                      ? currentMeasurement
+                      : undefined
+                  }
                 />
               </Form.Item>
             </div>

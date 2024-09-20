@@ -6,6 +6,7 @@ export type TMaterialForm = {
   name: string;
   description: string;
   quantity: string;
+  minQuantity: string;
   superUse: boolean;
   sensibleMaterial: boolean;
   materialType: string;
@@ -33,6 +34,7 @@ export interface IMaterial {
   name: string;
   description: string;
   quantity: string;
+  minQuantity: string;
   superUse: boolean;
   sensibleMaterial: boolean;
   nfpaClassif: {

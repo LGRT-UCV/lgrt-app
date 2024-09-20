@@ -73,8 +73,8 @@ export default function TaskDetails({
 
       openNotification(
         "success",
-        "Tarea guardada con exito",
-        `La tarea ${taskData.name} ha sido guardada con exito.`,
+        "Tarea guardada con éxito",
+        `La tarea ${taskData.name} ha sido guardada con éxito.`,
         "topRight",
       );
       refetch();

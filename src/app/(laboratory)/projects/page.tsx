@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Divider, Popover, Tag, type TableColumnsType } from "antd";
-import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
+import { PlusOutlined, MoreOutlined, ExportOutlined } from "@ant-design/icons";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
@@ -68,7 +68,8 @@ export default function Projects() {
       {
         title: "Status",
         align: "center",
-        width: 20,
+        width: 10,
+        fixed: "right",
         render: (record: IProject & { key: string }) => {
           const statusStyle = getProjectStatusStyle(record.status);
           return (
@@ -79,13 +80,19 @@ export default function Projects() {
         },
       },
       {
-        title: "Archivo",
+        title: "URL",
         align: "center",
         width: 20,
         render: (record: IProject & { key: string }) => (
           <div className="mx-auto text-center">
-            <a href={record.projectUri} target="_blank" rel="noreferrer">
-              <strong>Ver Archivo</strong>
+            <a
+              className="flex justify-center gap-2"
+              href={record.projectUri}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <strong>Abrir URL</strong>
+              <ExportOutlined />
             </a>
           </div>
         ),
@@ -126,13 +133,19 @@ export default function Projects() {
                           </span>
                         </>
                       )}
-                      <Divider className="m-2" />
-                      <span
-                        onClick={() => void handleDeleteProject(record)}
-                        className="h-full w-full cursor-pointer"
-                      >
-                        Eliminar
-                      </span>
+                      {record.projectTasks.every(
+                        (task) => task.status !== "D",
+                      ) && (
+                        <>
+                          <Divider className="m-2" />
+                          <span
+                            onClick={() => void handleDeleteProject(record)}
+                            className="h-full w-full cursor-pointer"
+                          >
+                            Eliminar
+                          </span>
+                        </>
+                      )}
                     </>
                   )}
               </div>

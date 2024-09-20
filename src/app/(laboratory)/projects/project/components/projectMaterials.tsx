@@ -37,13 +37,14 @@ export default function ProjectMaterials({
           {fields.map(({ key, name, ...restField }) => {
             const currentMaterial = materialsSelected[name];
             const isDisabled =
-              projectData?.status !== "A" ||
-              projectData?.projectTasks.some(
-                (task) =>
-                  task.projectTaskMaterials.some(
-                    (material) => material.idMaterial === currentMaterial?.id,
-                  ) && task.status === "D",
-              );
+              projectData &&
+              (projectData?.status !== "A" ||
+                projectData?.projectTasks.some(
+                  (task) =>
+                    task.projectTaskMaterials.some(
+                      (material) => material.idMaterial === currentMaterial?.id,
+                    ) && task.status === "D",
+                ));
             return (
               <div key={key} className="mb-4 flex flex-col items-end px-2">
                 <div className="flex w-full gap-8">
@@ -90,8 +91,10 @@ export default function ProjectMaterials({
                       {
                         type: "number",
                         min: 0,
-                        max: Number(currentMaterial?.quantity),
-                        message: `Cantidad disponible (${currentMaterial?.quantity} ${measurements[name]})`,
+                        max: !isDisabled
+                          ? Number(currentMaterial?.quantity)
+                          : undefined,
+                        message: `Cantidad disponible (${currentMaterial?.quantity} ${Number(currentMaterial?.materialType.id) !== 2 ? measurements[name] : ""})`,
                       },
                     ]}
                   >
@@ -100,7 +103,11 @@ export default function ProjectMaterials({
                       placeholder="cantidad"
                       min={0}
                       decimalSeparator=","
-                      suffix={measurements[name]}
+                      suffix={
+                        Number(currentMaterial?.materialType.id) !== 2
+                          ? measurements[name]
+                          : undefined
+                      }
                       disabled={isDisabled}
                     />
                   </Form.Item>
@@ -114,9 +121,14 @@ export default function ProjectMaterials({
                   )}
                 </div>
 
-                <p className={`text-xs ${fields.length > 1 ? "mr-12" : ""}`}>
-                  Disponibles: {currentMaterial?.quantity} {measurements[name]}
-                </p>
+                {!isDisabled && (
+                  <p className={`text-xs ${fields.length > 1 ? "mr-12" : ""}`}>
+                    Disponibles: {currentMaterial?.quantity}{" "}
+                    {Number(materialsSelected[name]?.materialType.id) !== 2
+                      ? measurements[name]
+                      : ""}
+                  </p>
+                )}
               </div>
             );
           })}
@@ -126,7 +138,7 @@ export default function ProjectMaterials({
               onClick={() => add()}
               block
               icon={<PlusOutlined />}
-              disabled={projectData?.status !== "A"}
+              disabled={projectData && projectData?.status !== "A"}
             >
               Agregar material
             </Button>

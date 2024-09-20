@@ -56,8 +56,8 @@ export default function useUserForm(
 
       openNotification(
         "success",
-        "Usuario guardado con exito",
-        `El usuario ${values.name} ha sido creado con exito.`,
+        "Usuario guardado con éxito",
+        `El usuario ${values.name} ha sido creado con éxito.`,
         "topRight",
       );
       callback();

@@ -98,6 +98,7 @@ export default function ProjectForm({
         >
           <Input
             placeholder="Link del proyecto"
+            type="url"
             minLength={6}
             maxLength={300}
           />

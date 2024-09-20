@@ -16,6 +16,12 @@ export default function useProject() {
     return searchParams.get("id");
   }, [searchParams]);
 
+  useEffect(() => {
+    if (!projectId) {
+      form.resetFields();
+    }
+  }, [projectId]);
+
   const { data: currentProject, isLoading } = useQuery({
     queryKey: ["project"],
     queryFn: async () => {

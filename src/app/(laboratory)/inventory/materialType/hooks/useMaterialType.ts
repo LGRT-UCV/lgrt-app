@@ -53,12 +53,14 @@ export default function useMaterialType() {
     }
 
     try {
+      if (Number(materialType.existentMaterials) <= 1)
+        throw new Error("MaterialType place is in use");
       await deleteMaterialType(sessionData?.user.token ?? "", materialType.id);
       void refetch();
       setCurrentMaterialType(undefined);
       openNotification(
         "success",
-        "Almacenamiento eliminado",
+        "Tipo de material eliminado",
         `Se ha eliminado el tipo de material ${materialType.name}`,
         "topRight",
       );

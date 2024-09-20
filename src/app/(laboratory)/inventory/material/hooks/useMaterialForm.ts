@@ -142,6 +142,7 @@ export default function useMaterialForm(
         name: fieldFinalValues.name,
         description: fieldFinalValues.description,
         quantity: fieldFinalValues.quantity,
+        minQuantity: fieldFinalValues.minQuantity,
         ...fieldFinalValues,
       };
       const sessionToken = sessionData?.user.token;

@@ -79,7 +79,12 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
             </Descriptions.Item>
             {project.projectUri && (
               <Descriptions.Item key={"url"} label="URL">
-                <a href={project.projectUri} target="_blank" rel="noreferrer">
+                <a
+                  className="flex gap-2"
+                  href={project.projectUri}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <strong>Abrir URL</strong>
                   <ExportOutlined />
                 </a>
@@ -154,7 +159,7 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
                   className="border-none bg-red-500 !text-white hover:!bg-red-400"
                   onClick={showDeleteConfirm}
                   disabled={
-                    "D" === project.status ||
+                    ["D", "R"].includes(project.status) ||
                     project.projectTasks.some((task) => task.status === "D")
                   }
                 >

@@ -63,7 +63,7 @@ export default function useFile() {
       setOpenDetailsModal(false);
       openNotification(
         "success",
-        "Material eliminado",
+        "Archivo eliminado",
         `Se ha eliminado el archivo ${file.id}`,
         "topRight",
       );

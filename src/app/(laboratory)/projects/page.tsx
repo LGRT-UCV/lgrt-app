@@ -68,7 +68,7 @@ export default function Projects() {
       {
         title: "Status",
         align: "center",
-        width: 20,
+        width: 10,
         fixed: "right",
         render: (record: IProject & { key: string }) => {
           const statusStyle = getProjectStatusStyle(record.status);
@@ -80,12 +80,17 @@ export default function Projects() {
         },
       },
       {
-        title: "Archivo",
+        title: "URL",
         align: "center",
         width: 20,
         render: (record: IProject & { key: string }) => (
           <div className="mx-auto text-center">
-            <a href={record.projectUri} target="_blank" rel="noreferrer">
+            <a
+              className="flex justify-center gap-2"
+              href={record.projectUri}
+              target="_blank"
+              rel="noreferrer"
+            >
               <strong>Abrir URL</strong>
               <ExportOutlined />
             </a>

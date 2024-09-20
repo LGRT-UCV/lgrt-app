@@ -149,6 +149,25 @@ export default function MaterialForm({
                   suffix={currentMeasurement}
                 />
               </Form.Item>
+
+              <Form.Item
+                label="Cantidad mínima"
+                name="minQuantity"
+                className="mb-4 w-full md:w-1/3"
+                rules={[
+                  {
+                    required: true,
+                    message: "Por favor verifique la cantidad",
+                  },
+                ]}
+              >
+                <InputNumber
+                  className="w-full"
+                  placeholder="Cantidad mínima"
+                  decimalSeparator=","
+                  suffix={currentMeasurement}
+                />
+              </Form.Item>
             </div>
             {hasField("brand") && (
               <Form.Item

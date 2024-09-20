@@ -105,7 +105,7 @@ export const fieldsProject = [
   },
   {
     id: "projectUri",
-    label: "Link del archivo",
+    label: "URL",
   },
   {
     id: "file",

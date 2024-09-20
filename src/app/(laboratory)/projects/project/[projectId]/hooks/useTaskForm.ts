@@ -78,7 +78,7 @@ export default function useTaskForm({
           materialsToList.push({
             id: material.id,
             name: material.name,
-            materialType: material.materialType.name,
+            materialType: material.materialType,
             quantity: material.quantity,
             measurement: material.measurement,
             projectQuantity: materialProject?.quantity ?? 0,

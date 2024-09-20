@@ -110,10 +110,6 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
                   {material.name}
                 </Descriptions.Item>
                 <Descriptions.Item key="quantity" label="Cantidad">
-                  <span>
-                    {material.quantity}
-                    {`${material.measurement.name} `} estimado /{" "}
-                  </span>
                   <span
                     className={
                       Number(materialUsed?.quantityUsed ?? 0) >
@@ -123,7 +119,15 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
                     }
                   >
                     {materialUsed?.quantityUsed ?? 0}
-                    {material.measurement.name} usado
+                    {Number(material.materialType.id) !== 2
+                      ? material.measurement.name
+                      : ""}
+                    {" usado / "}
+                  </span>
+                  <span>
+                    {material.quantity}
+                    {`${Number(material.materialType.id) !== 2 ? material.measurement.name : ""} `}
+                    {" estimado"}
                   </span>
                 </Descriptions.Item>
               </Descriptions>

@@ -75,7 +75,7 @@ export default function useInventory() {
           ? `${material.capacity} ${material.measurement.name}`
           : "",
         quantity: !!material.quantity
-          ? `${material.quantity} ${material.measurement.name}`
+          ? `${material.quantity} ${Number(material.materialType.id) !== 2 ? material.measurement.name : ""}`
           : "",
         presentation: !!material.presentation
           ? `${material.presentation} ${material.measurement.name}`

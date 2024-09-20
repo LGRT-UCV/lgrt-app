@@ -81,7 +81,7 @@ export default function CreateRequestModal({
                           )
                         }
                         onSelect={(_, option) =>
-                          handleMeasurements(option.value, key)
+                          handleMeasurements(option.value, name)
                         }
                       />
                     </Form.Item>
@@ -98,8 +98,8 @@ export default function CreateRequestModal({
                         {
                           type: "number",
                           min: 0,
-                          max: Number(materialsSelected[key]?.quantity),
-                          message: `Cantidad disponible (${materialsSelected[key]?.quantity} ${measurements[key]})`,
+                          max: Number(materialsSelected[name]?.quantity),
+                          message: `Cantidad disponible (${materialsSelected[name]?.quantity} ${Number(materialsSelected[name]?.materialType.id) !== 2 ? measurements[name] : ""})`,
                         },
                       ]}
                     >
@@ -108,13 +108,17 @@ export default function CreateRequestModal({
                         placeholder="cantidad"
                         min={0}
                         decimalSeparator=","
-                        suffix={measurements[key]}
+                        suffix={
+                          Number(materialsSelected[name]?.materialType.id) !== 2
+                            ? measurements[name]
+                            : undefined
+                        }
                       />
                     </Form.Item>
                     {fields.length > 1 && (
                       <MinusCircleOutlined
                         onClick={() => {
-                          handleRemoveMaterial(key);
+                          handleRemoveMaterial(name);
                           remove(name);
                         }}
                       />
@@ -122,8 +126,10 @@ export default function CreateRequestModal({
                   </div>
 
                   <p className={`text-xs ${fields.length > 1 ? "mr-12" : ""}`}>
-                    Disponibles: {materialsSelected[key]?.quantity}{" "}
-                    {measurements[key]}
+                    Disponibles: {materialsSelected[name]?.quantity}{" "}
+                    {Number(materialsSelected[name]?.materialType.id) !== 2
+                      ? measurements[name]
+                      : ""}
                   </p>
                 </div>
               ))}

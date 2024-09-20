@@ -225,7 +225,9 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                 <p>{material.name}</p>
                 <p>
                   {material.quantity}
-                  {material.measurement.name}
+                  {Number(material.materialType.id) !== 2
+                    ? material.measurement.name
+                    : ""}
                 </p>
               </div>
             ))}

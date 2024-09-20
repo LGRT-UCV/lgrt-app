@@ -116,7 +116,7 @@ export default function MaterialsTaskProjectForm({
                         disabled={currentMaterial?.disabled}
                         options={materials?.map((material) => {
                           return {
-                            label: `#${material.id} - ${material.name} (${material.materialType})`,
+                            label: `#${material.id} - ${material.name} (${material.materialType.name})`,
                             value: material.id,
                           };
                         })}
@@ -136,7 +136,7 @@ export default function MaterialsTaskProjectForm({
                           type: "number",
                           min: 0,
                           max: Number(currentMaterial?.quantity),
-                          message: `Cantidad disponible (${currentMaterial?.quantity} ${currentMaterial?.measurement.name})`,
+                          message: `Cantidad disponible (${currentMaterial?.quantity} ${Number(currentMaterial?.materialType.id) !== 2 ? currentMaterial?.measurement.name : ""})`,
                         },
                       ]}
                     >
@@ -148,7 +148,11 @@ export default function MaterialsTaskProjectForm({
                         }
                         min={0}
                         decimalSeparator=","
-                        suffix={currentMaterial?.measurement.name}
+                        suffix={
+                          Number(currentMaterial?.materialType.id) !== 2
+                            ? currentMaterial?.measurement.name
+                            : undefined
+                        }
                         disabled={currentMaterial?.disabled}
                       />
                     </Form.Item>
@@ -158,7 +162,9 @@ export default function MaterialsTaskProjectForm({
                     <ul className="ml-4 list-disc">
                       <li className="text-xs">
                         Disponibles: {currentMaterial?.quantity}{" "}
-                        {currentMaterial?.measurement.name}
+                        {Number(currentMaterial.materialType.id) !== 2
+                          ? currentMaterial?.measurement.name
+                          : ""}
                       </li>
 
                       <li
@@ -166,7 +172,9 @@ export default function MaterialsTaskProjectForm({
                       >
                         Estimado para el proyecto:{" "}
                         {currentMaterial?.projectQuantity}{" "}
-                        {currentMaterial?.measurement.name}
+                        {Number(currentMaterial.materialType.id) !== 2
+                          ? currentMaterial?.measurement.name
+                          : ""}
                       </li>
                     </ul>
                   )}

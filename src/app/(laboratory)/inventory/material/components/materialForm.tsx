@@ -146,7 +146,11 @@ export default function MaterialForm({
                   className="w-full"
                   placeholder="Cantidad existente"
                   decimalSeparator=","
-                  suffix={currentMeasurement}
+                  suffix={
+                    Number(currentMaterialType.id) !== 2
+                      ? currentMeasurement
+                      : undefined
+                  }
                 />
               </Form.Item>
 
@@ -165,7 +169,11 @@ export default function MaterialForm({
                   className="w-full"
                   placeholder="Cantidad mínima"
                   decimalSeparator=","
-                  suffix={currentMeasurement}
+                  suffix={
+                    Number(currentMaterialType.id) !== 2
+                      ? currentMeasurement
+                      : undefined
+                  }
                 />
               </Form.Item>
             </div>

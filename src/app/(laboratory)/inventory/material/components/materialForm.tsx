@@ -98,7 +98,7 @@ export default function MaterialForm({
                   className="mb-4 w-full md:w-1/3"
                   rules={[
                     {
-                      required: true,
+                      required: Number(currentMaterialType.id) !== 2,
                       message: "Por favor verifique la capacidad",
                     },
                   ]}
@@ -118,7 +118,7 @@ export default function MaterialForm({
                   className="mb-4 w-full md:w-1/3"
                   rules={[
                     {
-                      required: true,
+                      required: Number(currentMaterialType.id) !== 1,
                       message: "Por favor verifique el peso",
                     },
                   ]}
@@ -137,7 +137,7 @@ export default function MaterialForm({
                 className="mb-4 w-full md:w-1/3"
                 rules={[
                   {
-                    required: true,
+                    required: Number(currentMaterialType.id) !== 2,
                     message: "Por favor verifique la cantidad",
                   },
                 ]}
@@ -160,7 +160,7 @@ export default function MaterialForm({
                 className="mb-4 w-full md:w-1/3"
                 rules={[
                   {
-                    required: true,
+                    required: Number(currentMaterialType.id) !== 2,
                     message: "Por favor verifique la cantidad",
                   },
                 ]}
@@ -318,6 +318,7 @@ export default function MaterialForm({
               </Form.Item>
             </div>
             <Form.Item
+              label={`${hasField("additionalInfo") ? "Información adicional" : "Observaciones"}`}
               name={
                 hasField("additionalInfo") ? "additionalInfo" : "observations"
               }

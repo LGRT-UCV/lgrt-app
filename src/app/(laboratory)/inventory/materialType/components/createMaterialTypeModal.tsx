@@ -50,7 +50,7 @@ export default function CreateMaterialTypeModal({
     );
 
   return (
-    <div>
+    <div className="overflow-x-auto md:overflow-x-visible">
       {notificationElement}
       <Form
         name="materialTypeForm"

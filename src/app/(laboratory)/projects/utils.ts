@@ -101,7 +101,7 @@ export const fieldsProject = [
   },
   {
     id: "status",
-    label: "Status",
+    label: "Estado",
   },
   {
     id: "projectUri",

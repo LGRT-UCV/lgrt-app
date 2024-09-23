@@ -85,9 +85,15 @@ export default function useMenuItems({
           undefined,
           () => handleMenuClick(Routes.Projects),
         ),
-        getMenuItem("Añadir nuevo", "proj-2", <PlusOutlined />, undefined, () =>
-          handleMenuClick(Routes.SaveProject),
-        ),
+        [Roles.Admin, Roles.Personal, Roles.PersonalExtra].includes(role)
+          ? getMenuItem(
+              "Añadir nuevo",
+              "proj-2",
+              <PlusOutlined />,
+              undefined,
+              () => handleMenuClick(Routes.SaveProject),
+            )
+          : undefined,
       ]),
       getMenuItem("Solicitudes", "3", <FileSearchOutlined />, undefined, () =>
         handleMenuClick(Routes.Requests),
@@ -114,7 +120,7 @@ export default function useMenuItems({
         handleMenuClick(Routes.Files),
       ),
       { type: "divider" },
-      getMenuItem("Profile", "6", <UserOutlined />, undefined, () =>
+      getMenuItem("Perfil", "6", <UserOutlined />, undefined, () =>
         handleMenuClick(Routes.Profile),
       ),
       getMenuItem("Créditos", "7", <CrownOutlined />, undefined, () =>

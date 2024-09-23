@@ -1,3 +1,6 @@
+import { Routes } from "@/lib/constants";
+import { signOut } from "next-auth/react";
+
 export enum RequestMethods {
   DELETE = "DELETE",
   GET = "GET",
@@ -19,8 +22,13 @@ export const newRequest = async (
     headers,
   });
 
-  if (!response.ok)
-    throw new Error(`Error: ${JSON.stringify(await response.json())}`);
+  if (!response.ok) {
+    if (response.status === 401) {
+      await signOut({ redirect: true, callbackUrl: Routes.Login });
+    } else {
+      throw new Error(`Error: ${JSON.stringify(await response.json())}`);
+    }
+  }
 
   return await response.json();
 };

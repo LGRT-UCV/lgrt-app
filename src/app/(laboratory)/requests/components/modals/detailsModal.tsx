@@ -353,7 +353,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
             nextStatus?.value !== RequestStatus.Pending && (
               <div className="mt-8 flex w-full flex-col gap-1">
                 <p className="mb-4 text-center text-xl font-bold">
-                  {isRequester ? "Deja tu comentario" : "Cambiar status"}:
+                  {isRequester ? "Deja tu comentario" : "Cambiar estado"}:
                 </p>
                 {isRequester && (
                   <p className="text-xs">{messageForRequester}</p>

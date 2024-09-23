@@ -68,7 +68,7 @@ export default function useLaboratory() {
       openNotification(
         "error",
         "Ha ocurrido un error al eliminar el laboratorio",
-        "",
+        "Es posible que existan usuarios ya registrados en este laboratorio",
         "topRight",
       );
     }

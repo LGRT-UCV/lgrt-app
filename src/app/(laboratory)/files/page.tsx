@@ -38,6 +38,7 @@ export default function Files() {
     handleDeleteFile,
     getFileUri,
     setOpenCreateModal,
+    setCurrentFile,
     setSearchValue,
   } = useFile();
 
@@ -134,7 +135,11 @@ export default function Files() {
             ? {
                 label: "Añadir nuevo",
                 icon: <PlusOutlined />,
-                onClick: () => setOpenCreateModal(true),
+                onClick: () => {
+                  setCurrentFile(undefined);
+                  form.resetFields();
+                  setOpenCreateModal(true);
+                },
               }
             : undefined
         }
@@ -144,7 +149,7 @@ export default function Files() {
 
       <Table
         columns={columns}
-        data={tableData.reverse()}
+        data={tableData}
         isLoading={isLoading}
         scrollX={1000}
       />
@@ -155,6 +160,7 @@ export default function Files() {
         open={openCreateModal}
         okText={"Editar"}
         onCancel={() => {
+          setCurrentFile(undefined);
           setOpenCreateModal(false);
           form.resetFields();
         }}

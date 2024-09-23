@@ -119,10 +119,12 @@ export default function useFile() {
       );
     });
     return (
-      files.map((file, index) => ({
-        ...file,
-        key: `file-${index}`,
-      })) ?? []
+      files
+        .map((file, index) => ({
+          ...file,
+          key: `file-${index}`,
+        }))
+        .reverse() ?? []
     );
   }, [fileList, searchValue]);
 
@@ -142,6 +144,7 @@ export default function useFile() {
     setOpenDetailsModal,
     setOpenCreateModal,
     setSearchValue,
+    setCurrentFile,
     handleUpdateFile,
   };
 }

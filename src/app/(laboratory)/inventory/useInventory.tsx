@@ -64,29 +64,32 @@ export default function useInventory() {
             .includes(searchValue.toLocaleLowerCase())),
     );
     return (
-      currentMaterials?.reverse().map((material, index) => ({
-        ...material,
-        key: `material-${index}`,
-        materialType: currentMaterialType?.name,
-        weight: material.weight
-          ? `${material.weight} ${material.measurement.name}`
-          : undefined,
-        capacity: !!material.capacity
-          ? `${material.capacity} ${material.measurement.name}`
-          : "",
-        quantity: !!material.quantity
-          ? `${material.quantity} ${Number(material.materialType.id) !== 2 ? material.measurement.name : ""}`
-          : "",
-        presentation: !!material.presentation
-          ? `${material.presentation} ${material.measurement.name}`
-          : "",
-        sensibleMaterial: material.sensibleMaterial ? "Si" : "No",
-        superUse: material.superUse ? "Si" : "No",
-        storagePlace: material.storagePlace.name,
-        expirationDate: material.expirationDate
-          ? new Date(material.expirationDate).toLocaleDateString("es-VE")
-          : "",
-      })) ?? []
+      currentMaterials
+        ?.reverse()
+        .map((material, index) => ({
+          ...material,
+          key: `material-${index}`,
+          materialType: currentMaterialType?.name,
+          weight: material.weight
+            ? `${material.weight} ${material.measurement.name}`
+            : undefined,
+          capacity: !!material.capacity
+            ? `${material.capacity} ${material.measurement.name}`
+            : "",
+          quantity: !!material.quantity
+            ? `${material.quantity} ${Number(material.materialType.id) !== 2 ? material.measurement.name : ""}`
+            : "",
+          presentation: !!material.presentation
+            ? `${material.presentation} ${material.measurement.name}`
+            : "",
+          sensibleMaterial: material.sensibleMaterial ? "Si" : "No",
+          superUse: material.superUse ? "Si" : "No",
+          storagePlace: material.storagePlace.name,
+          expirationDate: material.expirationDate
+            ? new Date(material.expirationDate).toLocaleDateString("es-VE")
+            : "",
+        }))
+        .reverse() ?? []
     );
   }, [currentMaterialType, materialList, searchValue]);
 

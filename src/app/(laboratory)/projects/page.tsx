@@ -66,7 +66,7 @@ export default function Projects() {
     );
     const renderColumns = columnToShow.concat([
       {
-        title: "Status",
+        title: "Estado",
         align: "center",
         width: 10,
         fixed: "right",
@@ -185,11 +185,15 @@ export default function Projects() {
       {notificationElement}
       <Header
         title="Proyectos"
-        btn={{
-          label: "Añadir nuevo",
-          icon: <PlusOutlined />,
-          onClick: () => void router.push(Routes.SaveProject),
-        }}
+        btn={
+          Roles.External !== role
+            ? {
+                label: "Añadir nuevo",
+                icon: <PlusOutlined />,
+                onClick: () => void router.push(Routes.SaveProject),
+              }
+            : undefined
+        }
       />
 
       <TableFilter filters={filters} />

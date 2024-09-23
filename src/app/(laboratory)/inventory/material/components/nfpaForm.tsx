@@ -9,7 +9,9 @@ interface INFPAForm {
 export default function NFPAForm({ readOnly = false }: INFPAForm) {
   return (
     <div className="w-full md:w-1/2">
-      <h5>Clasificación NFPA</h5>
+      <h5>
+        Clasificación NFPA <span className="text-red-500">*</span>
+      </h5>
 
       <div className="relative mt-8 h-48 w-full">
         {/* diamond red */}

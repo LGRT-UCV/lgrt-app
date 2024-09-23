@@ -140,7 +140,11 @@ export default function Storage() {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => setOpenCreateModal(true),
+          onClick: () => {
+            form.resetFields();
+            setCurrentStorage(undefined);
+            setOpenCreateModal(true);
+          },
         }}
       />
 
@@ -148,7 +152,7 @@ export default function Storage() {
 
       <Table
         columns={columns}
-        data={tableData.reverse()}
+        data={tableData}
         isLoading={isLoading}
         scrollX={1000}
       />

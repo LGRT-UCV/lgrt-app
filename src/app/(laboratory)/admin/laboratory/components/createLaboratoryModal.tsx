@@ -79,6 +79,7 @@ export default function CreateLaboratoryModal({
           </Form.Item>
         </div>
         <Form.Item
+          label="Descripción"
           name="description"
           className="mt-4"
           rules={[

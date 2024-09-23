@@ -61,6 +61,7 @@ export default function CreateStorageModal({
             <InputNumber
               className="w-full"
               placeholder="Número de identificador"
+              disabled={!!data}
               max={9999}
             />
           </Form.Item>
@@ -81,8 +82,9 @@ export default function CreateStorageModal({
           </Form.Item>
         </div>
         <Form.Item
+          label="Descripción"
           name="description"
-          className="mt-4"
+          className="mt-2"
           rules={[
             {
               type: "string",

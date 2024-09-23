@@ -72,7 +72,7 @@ export default function CreateRequestModal({
                       <TreeSelect
                         showSearch
                         dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
-                        placeholder="Please select"
+                        placeholder="Selecciona o busca un material"
                         allowClear
                         treeData={materialList}
                         filterTreeNode={(input, option) =>

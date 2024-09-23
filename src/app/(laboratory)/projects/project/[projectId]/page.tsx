@@ -9,13 +9,15 @@ import useNotification from "@/hooks/useNotification";
 import { useSession } from "next-auth/react";
 import Details from "../components/projectDetails";
 import { useRouter } from "next/navigation";
-import { Routes } from "@/lib/constants";
+import { Roles, Routes } from "@/lib/constants";
+import { useLabProvider } from "@/context/labProvider";
 
 export default function ProjectDetails({
   params,
 }: {
   params: { projectId: string };
 }) {
+  const { role } = useLabProvider();
   const { data: sessionData } = useSession();
   const { openNotification, notificationElement } = useNotification();
   const { projectId } = params;
@@ -62,7 +64,7 @@ export default function ProjectDetails({
       <Header
         title={currentProject?.name || `Proyecto #${projectId}`}
         btn={
-          currentProject?.status === "A"
+          currentProject?.status === "A" && Roles.External !== role
             ? {
                 label: "Editar",
                 icon: <SaveOutlined />,

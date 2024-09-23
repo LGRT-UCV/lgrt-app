@@ -103,7 +103,7 @@ export default function ProjectForm({
             maxLength={300}
           />
         </Form.Item>
-        <div className="flex gap-8">
+        <div className="space-y-4 md:flex md:gap-8">
           <div className={`w-full space-y-4 ${!projectData ? "md:w-1/2" : ""}`}>
             <h2 className="text-2xl">Materiales a usar</h2>
             <ProjectMaterials {...projectMaterial} projectData={projectData} />

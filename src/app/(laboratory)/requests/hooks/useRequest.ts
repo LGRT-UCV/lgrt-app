@@ -6,7 +6,7 @@ import useNotification from "@/hooks/useNotification";
 import { deleteRequest, getAllRequests } from "../utils";
 import { RequestStatus, type IRequest } from "../interfaces";
 import { Roles } from "@/lib/constants";
-import { getUserRole } from "@/(laboratory)/admin/users/utils";
+import { useLabProvider } from "@/context/labProvider";
 
 export default function useRequest() {
   const [searchValue, setSearchValue] = useState("");
@@ -14,6 +14,7 @@ export default function useRequest() {
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
+  const { role } = useLabProvider();
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
@@ -43,13 +44,12 @@ export default function useRequest() {
     (request?: IRequest) => {
       const req = request ?? currentRequest;
       const currentUser = sessionData?.user.user;
-      const userRole = getUserRole(Number(currentUser?.idRoleId)).roleName;
       const isUserWithPermission =
-        [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(userRole) ||
+        [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(role) ||
         currentUser?.id === req?.idRequester.id;
       return req?.status === RequestStatus.Pending && isUserWithPermission;
     },
-    [sessionData?.user],
+    [sessionData?.user, role],
   );
 
   const handleUpdateRequest = () => {

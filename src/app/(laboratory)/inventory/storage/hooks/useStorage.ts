@@ -104,10 +104,12 @@ export default function useStorage() {
       );
     });
     return (
-      laboratories.map((storage, index) => ({
-        ...storage,
-        key: `storage-${index}`,
-      })) ?? []
+      laboratories
+        .map((storage, index) => ({
+          ...storage,
+          key: `storage-${index}`,
+        }))
+        .reverse() ?? []
     );
   }, [storageList, searchValue]);
 

@@ -77,7 +77,7 @@ export default function Requests() {
     );
     const renderColumns = columnToShow.concat([
       {
-        title: "Status",
+        title: "Estado",
         align: "center",
         width: 20,
         render: (record: IRequest & { key: string }) => (
@@ -103,14 +103,14 @@ export default function Requests() {
                   Ver solicitud
                 </span>
                 <Divider className="m-2" />
-                {ableToDelete(record) ? (
+                {ableToDelete(record) && (
                   <span
                     onClick={() => void handleDeleteRequest(record)}
                     className="h-full w-full cursor-pointer"
                   >
                     Eliminar
                   </span>
-                ) : null}
+                )}
               </div>
             }
             title="Opciones"

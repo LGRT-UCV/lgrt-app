@@ -169,11 +169,7 @@ export default function Inventory() {
 
       <TableFilter filters={filters} />
 
-      <Table
-        columns={columns}
-        data={tableData.reverse()}
-        isLoading={isLoading}
-      />
+      <Table columns={columns} data={tableData} isLoading={isLoading} />
 
       <Modal
         title="Detalles del material"

@@ -55,7 +55,7 @@ export default function Users() {
     );
     const renderColumns = columnToShow.concat([
       {
-        title: "Status",
+        title: "Estado",
         align: "center",
         width: 20,
         render: (record: IUser & { key: string }) => (

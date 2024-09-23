@@ -127,7 +127,7 @@ export const userFields = [
   },
   {
     id: "id",
-    label: "Email",
+    label: "Correo",
   },
   {
     id: "role",

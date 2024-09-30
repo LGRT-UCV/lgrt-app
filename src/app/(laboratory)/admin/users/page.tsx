@@ -97,7 +97,7 @@ export default function Users() {
                 <span
                   onClick={() =>
                     handleUserStatus(
-                      record.id ?? "",
+                      record ?? {},
                       record.status === "A" ? "I" : "A",
                     )
                   }
@@ -160,7 +160,11 @@ export default function Users() {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => setOpenCreateModal(true),
+          onClick: () => {
+            setCurrentUser(undefined);
+            form.resetFields();
+            setOpenCreateModal(true);
+          },
         }}
       />
 
@@ -183,7 +187,7 @@ export default function Users() {
         footer={[
           <Button
             key="success"
-            className="bg-blue-500 text-white"
+            className="!bg-blue-500 !text-white"
             onClick={form.submit}
           >
             Guardar Usuario
@@ -206,10 +210,10 @@ export default function Users() {
         footer={[
           <Button
             key="status"
-            className={`${currentUser?.status === "A" ? "bg-red-500" : "bg-green-500"} text-white`}
+            className={`${currentUser?.status === "A" ? "!bg-red-500" : "!bg-blue-500"} !text-white`}
             onClick={() =>
               handleUserStatus(
-                currentUser?.id ?? "",
+                currentUser ?? ({} as IUser),
                 currentUser?.status === "A" ? "I" : "A",
               )
             }

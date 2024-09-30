@@ -6,6 +6,13 @@ import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
 import { deleteFile, getAllFiles, getFileURI } from "../utils";
 import type { IFile, TFileData } from "../interfaces";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useFile() {
   const [form] = useForm();
@@ -56,25 +63,41 @@ export default function useFile() {
       return;
     }
 
-    try {
-      await deleteFile(sessionData?.user.token ?? "", file.id);
-      void refetch();
-      setCurrentFile(undefined);
-      setOpenDetailsModal(false);
-      openNotification(
-        "success",
-        "Archivo eliminado",
-        `Se ha eliminado el archivo ${file.id}`,
-        "topRight",
-      );
-    } catch (error) {
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar el archivo",
-        "",
-        "topRight",
-      );
-    }
+    confirm({
+      title: `Desea eliminar el archivo ${file.name}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        await deleteFile(sessionData?.user.token ?? "", file.id);
+        void refetch();
+        setCurrentFile(undefined);
+        setOpenDetailsModal(false);
+        openNotification(
+          "success",
+          "Archivo eliminado",
+          `Se ha eliminado el archivo ${file.id}`,
+          "topRight",
+        );
+      } catch (error) {
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar el archivo",
+          "",
+          "topRight",
+        );
+      }
+    };
   };
 
   const handleEditFile = (file: IFile, show = true) => {

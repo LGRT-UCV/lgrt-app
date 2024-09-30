@@ -7,6 +7,13 @@ import { deleteRequest, getAllRequests } from "../utils";
 import { RequestStatus, type IRequest } from "../interfaces";
 import { Roles } from "@/lib/constants";
 import { useLabProvider } from "@/context/labProvider";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useRequest() {
   const [searchValue, setSearchValue] = useState("");
@@ -69,25 +76,41 @@ export default function useRequest() {
       return;
     }
 
-    try {
-      await deleteRequest(sessionData?.user.token ?? "", request.id);
-      void refetch();
-      setCurrentRequest(undefined);
-      setOpenDetailsModal(false);
-      openNotification(
-        "success",
-        "Solicitud eliminada",
-        `Se ha eliminado la solicitud ${request.id}`,
-        "topRight",
-      );
-    } catch (error) {
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar la solicitud",
-        "",
-        "topRight",
-      );
-    }
+    confirm({
+      title: `Desea eliminar la solicitud #${request.id}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        await deleteRequest(sessionData?.user.token ?? "", request.id);
+        void refetch();
+        setCurrentRequest(undefined);
+        setOpenDetailsModal(false);
+        openNotification(
+          "success",
+          "Solicitud eliminada",
+          `Se ha eliminado la solicitud ${request.id}`,
+          "topRight",
+        );
+      } catch (error) {
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar la solicitud",
+          "",
+          "topRight",
+        );
+      }
+    };
   };
 
   const handleRequestDetails = (request?: IRequest, show = true) => {

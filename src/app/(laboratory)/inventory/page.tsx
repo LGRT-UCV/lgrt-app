@@ -180,14 +180,14 @@ export default function Inventory() {
         onCancel={() => setOpenModal(false)}
         width={600}
         okButtonProps={{
-          className: "bg-blue-500",
+          className: "!bg-blue-500",
         }}
         footer={
           Roles.External !== role
             ? [
                 <Button
                   key="delete"
-                  className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                  className="border-none !bg-red-500 !text-white hover:!bg-red-400"
                   onClick={() => void handleDeleteMaterial(currentMaterial)}
                 >
                   Eliminar material

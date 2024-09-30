@@ -5,6 +5,13 @@ import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
 import { deleteMaterialType, getAllMaterialTypes } from "../utils";
 import type { IMaterialType } from "../interfaces";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useMaterialType() {
   const [searchValue, setSearchValue] = useState("");
@@ -52,37 +59,56 @@ export default function useMaterialType() {
       return;
     }
 
-    try {
-      if (Number(materialType.existentMaterials) <= 1)
-        throw new Error("MaterialType place is in use");
-      await deleteMaterialType(sessionData?.user.token ?? "", materialType.id);
-      void refetch();
-      setCurrentMaterialType(undefined);
-      openNotification(
-        "success",
-        "Tipo de material eliminado",
-        `Se ha eliminado el tipo de material ${materialType.name}`,
-        "topRight",
-      );
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Error", error);
-      if ((error as Error).message.includes("MaterialType place is in use")) {
+    confirm({
+      title: `Desea eliminar el tipo de material ${materialType.name}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        if (Number(materialType.existentMaterials) <= 1)
+          throw new Error("MaterialType place is in use");
+        await deleteMaterialType(
+          sessionData?.user.token ?? "",
+          materialType.id,
+        );
+        void refetch();
+        setCurrentMaterialType(undefined);
         openNotification(
-          "error",
-          "Error al eliminar el tipo de material",
-          "El tipo de material se encuentra en uso",
+          "success",
+          "Tipo de material eliminado",
+          `Se ha eliminado el tipo de material ${materialType.name}`,
           "topRight",
         );
-      } else {
-        openNotification(
-          "error",
-          "Ha ocurrido un error al eliminar el tipo de material",
-          "",
-          "topRight",
-        );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        console.error("Error", error);
+        if ((error as Error).message.includes("MaterialType place is in use")) {
+          openNotification(
+            "error",
+            "Error al eliminar el tipo de material",
+            "El tipo de material se encuentra en uso",
+            "topRight",
+          );
+        } else {
+          openNotification(
+            "error",
+            "Ha ocurrido un error al eliminar el tipo de material",
+            "",
+            "topRight",
+          );
+        }
       }
-    }
+    };
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {

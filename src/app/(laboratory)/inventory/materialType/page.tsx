@@ -116,7 +116,11 @@ export default function MaterialType() {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => setOpenCreateModal(true),
+          onClick: () => {
+            setCurrentMaterialType(undefined);
+            form.resetFields();
+            setOpenCreateModal(true);
+          },
         }}
       />
 
@@ -142,7 +146,7 @@ export default function MaterialType() {
         footer={[
           <Button
             key="success"
-            className="bg-blue-500 text-white"
+            className="!bg-blue-500 !text-white"
             onClick={form.submit}
           >
             Guardar

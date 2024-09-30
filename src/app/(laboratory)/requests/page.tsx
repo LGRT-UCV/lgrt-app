@@ -151,7 +151,10 @@ export default function Requests() {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => setOpenCreateModal(true),
+          onClick: () => {
+            form.resetFields();
+            setOpenCreateModal(true);
+          },
         }}
       />
 
@@ -178,7 +181,7 @@ export default function Requests() {
         footer={[
           <Button
             key="create"
-            className="bg-blue-500 text-white"
+            className="!bg-blue-500 !text-white"
             onClick={form.submit}
           >
             Crear solicitud
@@ -199,14 +202,14 @@ export default function Requests() {
         }}
         width={600}
         okButtonProps={{
-          className: "bg-blue-500",
+          className: "!bg-blue-500",
         }}
         footer={
           ableToDelete()
             ? [
                 <Button
                   key="delete"
-                  className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                  className="border-none !bg-red-500 !text-white hover:!bg-red-400"
                   onClick={() => void handleDeleteRequest(currentRequest)}
                 >
                   Eliminar solcitud

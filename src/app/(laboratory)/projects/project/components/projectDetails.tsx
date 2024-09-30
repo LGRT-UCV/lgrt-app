@@ -161,7 +161,7 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
               >
                 <Button
                   key="save"
-                  className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                  className="border-none !bg-red-500 !text-white hover:!bg-red-400"
                   onClick={showDeleteConfirm}
                   disabled={
                     ["D", "R"].includes(project.status) ||

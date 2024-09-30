@@ -6,7 +6,7 @@ import {
   type TRequestStatus,
   type TUpdateRequestStatus,
 } from "../../interfaces";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   requestStatus,
   getStatus,

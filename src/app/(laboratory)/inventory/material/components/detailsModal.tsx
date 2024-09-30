@@ -1,3 +1,4 @@
+import React from "react";
 import { TMaterial, TMaterialType } from "../../interfaces";
 import { isoDateRegex } from "../utils";
 import NFPADiamond from "./nfpaDiamond";

@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Text from "antd/es/typography";
 import Title from "antd/es/typography/Title";

@@ -51,6 +51,9 @@
   background-color: #3b82f6;
 }
 
-.ant-input-disabled, .ant-input-number-disabled, .ant-select-disabled, .ant-select-disabled .ant-select-selection-item{
+.ant-input-disabled,
+.ant-input-number-disabled,
+.ant-select-disabled,
+.ant-select-disabled .ant-select-selection-item {
   color: #2b2f29 !important;
 }

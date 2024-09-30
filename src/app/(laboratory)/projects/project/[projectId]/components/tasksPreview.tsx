@@ -1,3 +1,4 @@
+import React from "react";
 import { IProject, TProjectTask } from "@/(laboratory)/projects/interfaces";
 import { Button, Card, Descriptions, Modal, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";

@@ -1,3 +1,4 @@
+import React from "react";
 import { IProject, TProjectTask } from "@/(laboratory)/projects/interfaces";
 import { Button, Card, Descriptions, Modal, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -104,7 +105,7 @@ export default function TasksPreview({
             ? [
                 <Button
                   key="save"
-                  className="border-none bg-blue-500 !text-white hover:!bg-blue-400"
+                  className="border-none !bg-blue-500 !text-white hover:!bg-blue-400"
                   onClick={handleSaveTask}
                   disabled={!["A"].includes(project.status)}
                 >

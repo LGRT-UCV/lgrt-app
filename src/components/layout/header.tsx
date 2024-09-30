@@ -48,7 +48,7 @@ export default function Header({ title, btn, fixed }: IHeader) {
             type={btn.type ?? "default"}
             icon={btn.icon}
             onClick={btn.onClick}
-            className={btn.type === "primary" ? "bg-blue-500 text-white" : ""}
+            className={btn.type === "primary" ? "!bg-blue-500 !text-white" : ""}
           >
             {btn.label}
           </Button>

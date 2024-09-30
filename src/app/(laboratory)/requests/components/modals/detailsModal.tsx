@@ -6,7 +6,7 @@ import {
   type TRequestStatus,
   type TUpdateRequestStatus,
 } from "../../interfaces";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   requestStatus,
   getStatus,
@@ -420,7 +420,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                     className={`flex w-full gap-4 ${request.status !== RequestStatus.Pending ? "justify-end" : "justify-center"}`}
                   >
                     <Button
-                      className="border-none bg-green-500 !text-white hover:!bg-green-400"
+                      className="border-none !bg-green-500 !text-white hover:!bg-green-400"
                       onClick={() => onChangeStatus()}
                     >
                       {isRequester
@@ -432,7 +432,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                     {request.status === RequestStatus.Pending &&
                       currentUser?.id !== request.idRequester.id && (
                         <Button
-                          className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                          className="border-none !bg-red-500 !text-white hover:!bg-red-400"
                           onClick={() => onChangeStatus(requestStatus[1])}
                         >
                           Rechazar

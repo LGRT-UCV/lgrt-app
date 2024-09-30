@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   Modal,
   Button,
@@ -168,7 +168,7 @@ export default function Files() {
         footer={[
           <Button
             key="success"
-            className="bg-blue-500 text-white"
+            className="!bg-blue-500 !text-white"
             onClick={form.submit}
           >
             {!!currentFile ? "Actualizar" : "Subir archivo"}

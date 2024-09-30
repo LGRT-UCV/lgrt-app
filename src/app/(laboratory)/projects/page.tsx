@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Divider, Popover, Tag, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined, ExportOutlined } from "@ant-design/icons";

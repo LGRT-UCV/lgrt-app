@@ -6,6 +6,13 @@ import useNotification from "@/hooks/useNotification";
 import { deleteProject, getAllProjects } from "./utils";
 import type { IProject } from "./interfaces";
 import { createRequest } from "../requests/utils";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useProject() {
   const [searchValue, setSearchValue] = useState("");
@@ -53,25 +60,41 @@ export default function useProject() {
       return;
     }
 
-    try {
-      await deleteProject(sessionData?.user.token ?? "", project.id);
-      void refetch();
-      setCurrentProject(undefined);
-      setOpenModal(false);
-      openNotification(
-        "success",
-        "Material eliminado",
-        `Se ha eliminado el proyecto ${project.name}`,
-        "topRight",
-      );
-    } catch (error) {
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar el proyecto",
-        "",
-        "topRight",
-      );
-    }
+    confirm({
+      title: `Desea eliminar el proyecto #${project.id} - ${project.name}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        await deleteProject(sessionData?.user.token ?? "", project.id);
+        void refetch();
+        setCurrentProject(undefined);
+        setOpenModal(false);
+        openNotification(
+          "success",
+          "Material eliminado",
+          `Se ha eliminado el proyecto ${project.name}`,
+          "topRight",
+        );
+      } catch (error) {
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar el proyecto",
+          "",
+          "topRight",
+        );
+      }
+    };
   };
 
   const handleProjectDetails = (project?: IProject, show = true) => {

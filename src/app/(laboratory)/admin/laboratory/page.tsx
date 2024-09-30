@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
@@ -163,7 +163,7 @@ export default function Laboratory() {
         footer={[
           <Button
             key="success"
-            className="bg-blue-500 text-white"
+            className="!bg-blue-500 !text-white"
             onClick={form.submit}
           >
             Guardar
@@ -189,7 +189,7 @@ export default function Laboratory() {
         footer={[
           <Button
             key="delete"
-            className="bg-red-500 text-white"
+            className="!bg-red-500 !text-white"
             onClick={() => handleDeleteLaboratory(currentLaboratory)}
           >
             Eliminar

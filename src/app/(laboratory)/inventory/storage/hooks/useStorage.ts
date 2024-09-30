@@ -5,6 +5,13 @@ import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
 import { deleteStorage, getAllStorages } from "../utils";
 import type { IStorage } from "../interfaces";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useStorage() {
   const [searchValue, setSearchValue] = useState("");
@@ -52,36 +59,52 @@ export default function useStorage() {
       return;
     }
 
-    try {
-      await deleteStorage(sessionData?.user.token ?? "", storage.id);
-      void refetch();
-      setCurrentStorage(undefined);
-      setOpenDetailsModal(false);
-      openNotification(
-        "success",
-        "Almacenamiento eliminado",
-        `Se ha eliminado el almacenamiento ${storage.name}`,
-        "topRight",
-      );
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Error", error);
-      if ((error as Error).message.includes("Storage place is in use")) {
+    confirm({
+      title: `Desea eliminar el almacenamiento #${storage.id} - ${storage.name}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        await deleteStorage(sessionData?.user.token ?? "", storage.id);
+        void refetch();
+        setCurrentStorage(undefined);
+        setOpenDetailsModal(false);
         openNotification(
-          "error",
-          "Error al eliminar el almacenamiento",
-          "El almacenamiento se encuentra en uso",
+          "success",
+          "Almacenamiento eliminado",
+          `Se ha eliminado el almacenamiento ${storage.name}`,
           "topRight",
         );
-      } else {
-        openNotification(
-          "error",
-          "Ha ocurrido un error al eliminar el almacenamiento",
-          "",
-          "topRight",
-        );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        console.error("Error", error);
+        if ((error as Error).message.includes("Storage place is in use")) {
+          openNotification(
+            "error",
+            "Error al eliminar el almacenamiento",
+            "El almacenamiento se encuentra en uso",
+            "topRight",
+          );
+        } else {
+          openNotification(
+            "error",
+            "Ha ocurrido un error al eliminar el almacenamiento",
+            "",
+            "topRight",
+          );
+        }
       }
-    }
+    };
   };
 
   const handleStorageDetails = (storage?: IStorage, show = true) => {

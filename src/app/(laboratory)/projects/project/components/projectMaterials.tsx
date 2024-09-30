@@ -1,3 +1,4 @@
+import React from "react";
 import { Form, Button, InputNumber, TreeSelect } from "antd";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { TMaterial } from "@/(laboratory)/inventory/interfaces";

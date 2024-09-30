@@ -1,3 +1,4 @@
+import React from "react";
 import { IStorage } from "../interfaces";
 
 interface IDetailsModal {

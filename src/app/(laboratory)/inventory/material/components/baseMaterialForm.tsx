@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import React, { type Dispatch, type SetStateAction } from "react";
 import { Form, Input, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import type { TMaterialType } from "../../interfaces";

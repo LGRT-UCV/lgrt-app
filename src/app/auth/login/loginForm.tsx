@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -17,10 +18,13 @@ type TLoginFormData = {
 };
 
 export default function LoginForm() {
+  const [isLoading, setLoading] = useState(false);
   const { openNotification, notificationElement } = useNotification();
   const router = useRouter();
 
   const onFinish = async (values: TLoginFormData) => {
+    setLoading(true);
+
     const responseNextAuth = await signIn("credentials", {
       email: values.email,
       password: values.password,
@@ -37,9 +41,9 @@ export default function LoginForm() {
         openNotification("error", msg, "", "topRight");
         console.log("ERROR: ", error);
       });
+      setLoading(false);
       return;
     }
-
     router.push(Routes.Inventory);
   };
 
@@ -100,12 +104,8 @@ export default function LoginForm() {
             className="bg-brand-primary text-brand-dark-light"
             htmlType="submit"
           >
-            Iniciar sesión
+            {isLoading ? "Cargando..." : "Iniciar sesión"}
           </Button>
-          {/* <div className="mt-16 text-center w-full">
-            <Text className="text-brand-secondary">¿No tienes una cuenta?</Text>{" "}
-            <Link href="">Sign up now</Link>
-          </div> */}
         </Form.Item>
       </Form>
     </>

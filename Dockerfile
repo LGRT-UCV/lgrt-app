@@ -14,7 +14,7 @@ RUN yarn
 COPY . .
 
 # Corre ESLint y Prettier
-RUN yarn fix:prettier
+RUN yarn prettier:fix
 
 # Construir la aplicación Next.js
 RUN yarn build

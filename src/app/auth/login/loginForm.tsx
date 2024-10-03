@@ -53,7 +53,7 @@ export default function LoginForm() {
       <div className="my-8 text-center">
         <Title className="py-2">Iniciar Sesión</Title>
         <Text className="mx-auto w-3/4 py-4">
-          {`Bienvenido al ${LAB_DETAILS.longName}. Por favor ingrese los datos abajo para iniciar sesión`}
+          {`Bienvenido a ${LAB_DETAILS.appName}. Por favor ingrese los datos abajo para iniciar sesión`}
         </Text>
       </div>
       <Form

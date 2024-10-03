@@ -57,7 +57,7 @@ export default function ProjectMaterials({
                     shouldUpdate
                     rules={[
                       {
-                        required: true,
+                        required: false,
                         message: "Por favor elija un material",
                       },
                     ]}
@@ -81,12 +81,12 @@ export default function ProjectMaterials({
                   </Form.Item>
                   <Form.Item
                     {...restField}
-                    label="Cantiadad a usar"
+                    label="Cantidad estimada a usar"
                     name={[name, "quantity"]}
                     className="mb-4 w-full"
                     rules={[
                       {
-                        required: true,
+                        required: false,
                         message: "Por favor verifique la cantidad",
                       },
                       {

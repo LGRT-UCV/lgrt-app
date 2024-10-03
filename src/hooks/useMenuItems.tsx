@@ -14,12 +14,14 @@ import {
   UserOutlined,
   CrownOutlined,
   SlidersOutlined,
+  QuestionOutlined,
 } from "@ant-design/icons";
 import { Roles, Routes } from "@/lib/constants";
 import { getMenuItem } from "@/utils/layout";
 import type { TMenuItem } from "@/types/app";
 import { useLabProvider } from "@/context/labProvider";
 import { useMemo } from "react";
+import { MANUAL_APP_URI } from "@/utils";
 
 export default function useMenuItems({
   closeMenu,
@@ -65,7 +67,7 @@ export default function useMenuItems({
                 () => handleMenuClick(Routes.MaterialType),
               ),
               getMenuItem(
-                "Almacen",
+                "Almacén",
                 "inv-4",
                 <DatabaseOutlined />,
                 undefined,
@@ -123,12 +125,19 @@ export default function useMenuItems({
       getMenuItem("Perfil", "6", <UserOutlined />, undefined, () =>
         handleMenuClick(Routes.Profile),
       ),
-      getMenuItem("Créditos", "7", <CrownOutlined />, undefined, () =>
+      getMenuItem(
+        "Manual de usuario",
+        "7",
+        <QuestionOutlined />,
+        undefined,
+        () => window.open(MANUAL_APP_URI, "_blank"),
+      ),
+      getMenuItem("Créditos", "8", <CrownOutlined />, undefined, () =>
         handleMenuClick(Routes.Credits),
       ),
       getMenuItem(
         "Cerrar Sesión",
-        "8",
+        "9",
         <LogoutOutlined />,
         undefined,
         () => void signOut(),

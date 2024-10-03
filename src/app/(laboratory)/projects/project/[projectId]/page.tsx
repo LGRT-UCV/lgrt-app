@@ -79,7 +79,7 @@ export default function ProjectDetails({
         }
       />
 
-      <div className="h-[calc(100vh-200px)] overflow-y-auto p-4">
+      <div className="h-[calc(100vh-200px)] overflow-y-auto md:p-4">
         <Details project={currentProject} refetch={refetch} />
       </div>
     </>

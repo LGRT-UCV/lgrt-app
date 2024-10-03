@@ -69,7 +69,7 @@ export default function Projects() {
         title: "Estado",
         align: "center",
         width: 10,
-        fixed: "right",
+        fixed: !isMobile ? "right" : undefined,
         render: (record: IProject & { key: string }) => {
           const statusStyle = getProjectStatusStyle(record.status);
           return (

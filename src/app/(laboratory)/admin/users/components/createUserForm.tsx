@@ -8,10 +8,12 @@ import { getAllLaboratories } from "../../laboratory/utils";
 import type { FormInstance } from "antd/lib";
 import type { NotificationPlacement } from "antd/es/notification/interface";
 import RequiredLegend from "@/components/feedback/requiredLegend";
+import { IUser } from "../interfaces";
 
 type TCreateUserForm = {
   form: FormInstance;
   isLoading?: boolean;
+  data?: IUser;
   openNotification: (
     type: TNotificationType,
     message: string,
@@ -24,6 +26,7 @@ type TCreateUserForm = {
 
 export default function CreateUserForm({
   form,
+  data,
   isLoading,
   openNotification,
   onFinish,
@@ -114,7 +117,12 @@ export default function CreateUserForm({
             },
           ]}
         >
-          <Input type="email" placeholder="Correo" maxLength={120} />
+          <Input
+            type="email"
+            placeholder="Correo"
+            maxLength={120}
+            disabled={!!data}
+          />
         </Form.Item>
         <Form.Item
           label="Cédula"

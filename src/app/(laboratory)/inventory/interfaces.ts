@@ -5,8 +5,9 @@ import type { TFields } from "./materialType/interfaces";
 export type TMaterialForm = {
   name: string;
   description: string;
+  imageUrl?: string;
   quantity: string;
-  minQuantity: string;
+  minQuantity?: string;
   superUse: boolean;
   sensibleMaterial: boolean;
   materialType: string;
@@ -33,6 +34,7 @@ export type TMaterialForm = {
 export interface IMaterial {
   name: string;
   description: string;
+  imageUrl: string;
   quantity: string;
   minQuantity: string;
   superUse: boolean;

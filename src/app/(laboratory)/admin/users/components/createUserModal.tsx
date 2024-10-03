@@ -25,6 +25,7 @@ export function CreateUserModal({ form, data, closeModal }: TCreateUserModal) {
       {notificationElement}
       <CreateUserForm
         form={form}
+        data={data}
         isLoading={isLoading}
         openNotification={openNotification}
         onFinish={onFinish}

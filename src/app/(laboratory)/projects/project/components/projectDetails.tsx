@@ -8,6 +8,7 @@ import { Roles } from "@/lib/constants";
 import { useLabProvider } from "@/context/labProvider";
 import TasksPreview from "../[projectId]/components/tasksPreview";
 import useProjectDetails from "../hooks/useProjectDetails";
+import { isDesktop } from "react-device-detect";
 
 type TagRender = SelectProps["tagRender"];
 
@@ -53,14 +54,7 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
   return (
     <>
       {notificationElement}
-      <div
-        style={{
-          padding: "16px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 24,
-        }}
-      >
+      <div className="flex flex-col gap-6">
         <Card title="Información del proyecto" style={{ width: "100%" }}>
           <Descriptions bordered column={1} labelStyle={{ width: "15%" }}>
             <Descriptions.Item key={"id"} label="ID">
@@ -103,8 +97,8 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
                 key={`material-${material.id}`}
                 bordered
                 column={2}
-                labelStyle={{ width: "15%" }}
-                contentStyle={{ width: "30%" }}
+                labelStyle={{ width: isDesktop ? "15%" : "100%" }}
+                contentStyle={{ width: isDesktop ? "30%" : "100%" }}
                 style={{ marginBottom: 16 }}
               >
                 <Descriptions.Item key="quantity" label="Material">

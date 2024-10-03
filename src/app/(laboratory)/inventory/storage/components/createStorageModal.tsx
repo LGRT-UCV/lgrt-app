@@ -1,4 +1,4 @@
-import { Form, Input, InputNumber } from "antd";
+import { Form, Input } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import type { FormInstance } from "antd/lib";
 import useStorageForm from "../hooks/useStorageForm";
@@ -58,11 +58,11 @@ export default function CreateStorageModal({
               },
             ]}
           >
-            <InputNumber
+            <Input
               className="w-full"
-              placeholder="Número de identificador"
+              placeholder="Identificador"
               disabled={!!data}
-              max={9999}
+              maxLength={6}
             />
           </Form.Item>
           <Form.Item

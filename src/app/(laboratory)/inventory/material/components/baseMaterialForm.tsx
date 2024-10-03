@@ -71,6 +71,26 @@ export default function BaseMaterialForm({
           maxLength={500}
         />
       </Form.Item>
+      <Form.Item
+        label="Imagen de referencia (opcional)"
+        name="imageUrl"
+        className="w-full px-2"
+        rules={[
+          {
+            type: "url",
+            max: 500,
+            min: 6,
+            message: "Por favor verifique la imagen de referencia",
+          },
+        ]}
+      >
+        <Input
+          placeholder="Subir a drive y pegar el link aquí"
+          type="url"
+          minLength={6}
+          maxLength={500}
+        />
+      </Form.Item>
     </>
   );
 }

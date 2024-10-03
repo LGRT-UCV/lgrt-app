@@ -16,6 +16,8 @@ export default function useProject() {
     return searchParams.get("id");
   }, [searchParams]);
 
+  console.log(projectId);
+
   useEffect(() => {
     if (!projectId) {
       form.resetFields();
@@ -23,7 +25,7 @@ export default function useProject() {
   }, [projectId]);
 
   const { data: currentProject, isLoading } = useQuery({
-    queryKey: ["project"],
+    queryKey: ["projectId", "project"],
     queryFn: async () => {
       try {
         if (!projectId) return;
@@ -40,10 +42,15 @@ export default function useProject() {
         return;
       }
     },
-    enabled: !!sessionData?.user.token && !!projectId,
+    enabled: !!sessionData?.user.token,
   });
 
   useEffect(() => {
+    if (!projectId) {
+      form.resetFields();
+      return;
+    }
+
     if ([typeof projectId, typeof currentProject].includes("undefined")) return;
     form.setFieldsValue({
       name: currentProject?.name,
@@ -55,7 +62,7 @@ export default function useProject() {
         quantity: Number(material.quantity),
       })),
     });
-  }, [currentProject]);
+  }, [currentProject, projectId]);
 
   return {
     form,

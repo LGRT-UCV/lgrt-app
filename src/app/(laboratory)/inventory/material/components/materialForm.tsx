@@ -156,12 +156,12 @@ export default function MaterialForm({
               </Form.Item>
 
               <Form.Item
-                label="Cantidad mínima"
+                label="Cantidad mínima (opcional)"
                 name="minQuantity"
                 className="mb-4 w-full md:w-1/3"
                 rules={[
                   {
-                    required: Number(currentMaterialType.id) !== 2,
+                    required: false,
                     message: "Por favor verifique la cantidad",
                   },
                 ]}
@@ -288,7 +288,7 @@ export default function MaterialForm({
                 >
                   <Select
                     showSearch
-                    placeholder="Lugar de almacenamiento"
+                    placeholder="Puede crear más lugares de almacenamiento en la sección de Almacén"
                     optionFilterProp="children"
                     filterOption={(input, option) =>
                       (option?.label.toLowerCase() ?? "").includes(

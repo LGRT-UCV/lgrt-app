@@ -1,8 +1,9 @@
 import React from "react";
 import { TMaterial, TMaterialType } from "../../interfaces";
-import { isoDateRegex } from "../utils";
+import { isoDateRegex, nfpaClassifDescription } from "../utils";
 import NFPADiamond from "./nfpaDiamond";
 import SGAClassification from "./sgaClassification";
+import { Button } from "antd";
 
 interface IDetailsModal {
   material?: TMaterial;
@@ -41,6 +42,14 @@ export default function DetailsModal({
             <br />
             {material.description}
           </div>
+          {material.imageUrl && (
+            <div className="space-x-2">
+              <strong>Imagen de referencia:</strong>
+              <Button type="primary" href={material.imageUrl} target="_blank">
+                Ver imagen
+              </Button>
+            </div>
+          )}
           <div className="grid w-full grid-cols-2 space-y-4">
             <div className="mt-4">
               <strong>Cantidad:</strong> {material.quantity}
@@ -129,12 +138,44 @@ export default function DetailsModal({
                 </div>
               );
             })}
-          {material.nfpaClassif.nfpaWhite && (
+          {material.nfpaClassif && (
             <div>
-              <strong>Clasificación NFPA:</strong>
-              <NFPADiamond nfpaData={material.nfpaClassif} />
+              <div className="pb-12">
+                <strong>Clasificación NFPA:</strong>
+                <NFPADiamond nfpaData={material.nfpaClassif} />
+              </div>
+              <div className="space-y-2">
+                <div>
+                  <strong>{nfpaClassifDescription.blue.label}: </strong>
+                  {nfpaClassifDescription.blue[material.nfpaClassif.nfpaBlue]}
+                </div>
+                <div>
+                  <strong>{nfpaClassifDescription.red.label}: </strong>
+                  {nfpaClassifDescription.red[material.nfpaClassif.nfpaRed]}
+                </div>
+                <div>
+                  <strong>{nfpaClassifDescription.yellow.label}: </strong>
+                  {
+                    nfpaClassifDescription.yellow[
+                      material.nfpaClassif.nfpaYellow
+                    ]
+                  }
+                </div>
+                {material.nfpaClassif.nfpaWhite && (
+                  <div>
+                    <strong>{nfpaClassifDescription.white.label}: </strong>
+                    {
+                      nfpaClassifDescription.white[
+                        material.nfpaClassif.nfpaWhite.toUpperCase()
+                      ]
+                    }
+                  </div>
+                )}
+              </div>
+              <hr className="my-8" />
             </div>
           )}
+
           {material.sgaClassif && material.sgaClassif.length > 0 && (
             <SGAClassification sgaClassif={material.sgaClassif} />
           )}

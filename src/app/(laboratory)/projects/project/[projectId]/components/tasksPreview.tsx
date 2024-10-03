@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { IProject, TProjectTask } from "@/(laboratory)/projects/interfaces";
-import { Button, Card, Descriptions, Modal, Tag } from "antd";
+import { Button, Card, Descriptions, Modal, Progress, Tag } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { getTaskStatus } from "../utils";
 import useTaskDetails from "../hooks/useTaskDetails";
 import { Roles } from "@/lib/constants";
 import { useLabProvider } from "@/context/labProvider";
 import TaskDetails from "./taskDetails";
+import { isDesktop } from "react-device-detect";
 
 type TTasksPreview = {
   project: IProject;
@@ -30,15 +31,45 @@ export default function TasksPreview({
     handleTaskDetails,
   } = useTaskDetails();
 
+  const { completedPercentage, successPercentage } = useMemo(() => {
+    if (tasks.length === 0)
+      return {
+        completedPercentage: 0,
+        successPercentage: 0,
+      };
+
+    const totalTasks = tasks.length;
+    const tasksCompleted = tasks.filter((task) =>
+      ["C", "D"].includes(task.status ?? "P"),
+    ).length;
+    const tasksProgress = tasks.filter((task) => "E" === task.status).length;
+
+    return {
+      completedPercentage:
+        parseFloat(Number(tasksCompleted / totalTasks).toFixed(2)) * 100,
+      successPercentage:
+        parseFloat(
+          Number((tasksProgress + tasksCompleted) / totalTasks).toFixed(2),
+        ) * 100,
+    };
+  }, [tasks]);
+
   return (
     <>
       <Card title="Tareas" style={{ width: "100%" }}>
+        <Progress
+          percent={successPercentage}
+          strokeColor="orange"
+          success={{ percent: completedPercentage }}
+          size={["100%", 20]}
+          className="mb-4"
+        />
         {tasks.map((task) => {
           const taskStatus = getTaskStatus(task?.status ?? "P");
           return (
             <Descriptions key={task.id} labelStyle={{ width: "10%" }} bordered>
               <Descriptions.Item
-                labelStyle={{ width: "0px", padding: "0px" }}
+                labelStyle={{ width: "0px", padding: "0px", display: "none" }}
                 contentStyle={{ width: "50%", fontWeight: "bold" }}
               >
                 <p
@@ -51,16 +82,30 @@ export default function TasksPreview({
                   #{task.id} - {task.name}
                 </p>
               </Descriptions.Item>
+              {!isDesktop && (
+                <Descriptions.Item
+                  labelStyle={{ width: "0px", padding: "0px", display: "none" }}
+                  contentStyle={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Tag color={taskStatus.statusColor}>{taskStatus.status}</Tag>
+                </Descriptions.Item>
+              )}
+              {isDesktop && (
+                <Descriptions.Item
+                  labelStyle={{ width: "0px", padding: "0px" }}
+                  contentStyle={{
+                    width: "15%",
+                  }}
+                >
+                  <Tag color={taskStatus.statusColor}>{taskStatus.status}</Tag>
+                </Descriptions.Item>
+              )}
               <Descriptions.Item
-                labelStyle={{ width: "0px", padding: "0px" }}
-                contentStyle={{
-                  width: "15%",
-                }}
-              >
-                <Tag color={taskStatus.statusColor}>{taskStatus.status}</Tag>
-              </Descriptions.Item>
-              <Descriptions.Item
-                labelStyle={{ width: "0px", padding: "0px" }}
+                labelStyle={{ width: "0px", padding: "0px", display: "none" }}
                 contentStyle={{
                   display: "flex",
                   justifyContent: "center",

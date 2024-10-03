@@ -43,9 +43,11 @@ export default function useUserForm(
           user.token,
         );
       } else {
+        const id = values.id.toLowerCase();
         await createUser(
           {
             ...values,
+            id,
             laboratory: {
               id: values.laboratory,
             },

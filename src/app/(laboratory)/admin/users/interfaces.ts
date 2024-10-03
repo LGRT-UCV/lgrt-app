@@ -3,6 +3,7 @@ import type { FormInstance } from "antd/lib";
 import type { TLaboratory } from "../laboratory/interfaces";
 
 export type TSaveUser = {
+  id?: string;
   name?: string;
   lastName?: string;
   identificationNumber?: string;

@@ -105,6 +105,8 @@ export default function TableFilter({ filters }: ITableFilter) {
   }, [filters]);
 
   return (
-    <div className="flex w-full gap-4 md:justify-between">{components}</div>
+    <div className="flex w-full flex-wrap justify-center gap-4 md:justify-between">
+      {components}
+    </div>
   );
 }

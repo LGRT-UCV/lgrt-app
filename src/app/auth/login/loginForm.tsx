@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Text from "antd/es/typography";
 import Title from "antd/es/typography/Title";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Image, Input } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { LAB_DETAILS, Routes } from "@/lib/constants";
 import useNotification from "@/hooks/useNotification";
@@ -50,7 +50,15 @@ export default function LoginForm() {
   return (
     <>
       {notificationElement}
-      <div className="my-8 text-center">
+      <div className="my-auto text-center">
+        <Image
+          src="/icons/logo.png"
+          height={50}
+          width={50}
+          alt="Logo"
+          preview={false}
+          className="mx-auto"
+        />
         <Title className="py-2">Iniciar Sesión</Title>
         <Text className="mx-auto w-3/4 py-4">
           {`Bienvenido a ${LAB_DETAILS.appName}. Por favor ingrese los datos abajo para iniciar sesión`}

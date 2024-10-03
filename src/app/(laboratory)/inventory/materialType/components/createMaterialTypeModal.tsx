@@ -77,13 +77,15 @@ export default function CreateMaterialTypeModal({
         >
           <Input placeholder="Nombre del tipo de material" maxLength={120} />
         </Form.Item>
-        <Form.Item
-          label="Campos predefinidos"
-          name="predefinedFields"
-          className="w-full"
-        >
-          <TransferCustomFields form={form} initialFields={data?.fields} />
-        </Form.Item>
+        <div className="mb-4 overflow-x-auto md:w-full">
+          <Form.Item
+            label="Campos predefinidos"
+            name="predefinedFields"
+            className="w-full"
+          >
+            <TransferCustomFields form={form} initialFields={data?.fields} />
+          </Form.Item>
+        </div>
         <Form.List name="customFields">
           {(fields, { add, remove }) => (
             <>

@@ -61,7 +61,7 @@ export default function TransferCustomFields({
   return (
     <Transfer
       dataSource={mockData}
-      className="transfer-custom-fields flex w-full justify-center"
+      className="transfer-custom-fields w-full md:flex md:justify-center"
       listStyle={{
         width: 300,
         height: 250,

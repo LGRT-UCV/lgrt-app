@@ -96,9 +96,9 @@ export default function ProjectDetails({ project, refetch }: IProjectDetails) {
               <Descriptions
                 key={`material-${material.id}`}
                 bordered
-                column={2}
-                labelStyle={{ width: isDesktop ? "15%" : "100%" }}
-                contentStyle={{ width: isDesktop ? "30%" : "100%" }}
+                column={isDesktop ? 2 : 1}
+                labelStyle={{ width: "15%" }}
+                contentStyle={{ width: "30%" }}
                 style={{ marginBottom: 16 }}
               >
                 <Descriptions.Item key="quantity" label="Material">

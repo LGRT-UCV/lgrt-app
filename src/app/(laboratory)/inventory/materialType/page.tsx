@@ -130,7 +130,7 @@ export default function MaterialType() {
         columns={columns}
         data={tableData.reverse()}
         isLoading={isLoading}
-        scrollX={1000}
+        scrollX={isMobile ? 600 : 1000}
       />
 
       <Modal

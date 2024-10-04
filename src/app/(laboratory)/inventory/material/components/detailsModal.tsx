@@ -138,7 +138,7 @@ export default function DetailsModal({
                 </div>
               );
             })}
-          {material.nfpaClassif && (
+          {material.nfpaClassif.nfpaBlue !== null && (
             <div>
               <div className="pb-12">
                 <strong>Clasificación NFPA:</strong>

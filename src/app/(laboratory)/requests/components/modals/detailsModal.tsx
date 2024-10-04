@@ -1,4 +1,5 @@
 import { Button, Input, InputNumber, Tag } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
   RequestStatus,
   TRequestReturnedMaterials,
@@ -29,6 +30,7 @@ interface IDetailsModal {
 
 export default function DetailsModal({ request, closeModal }: IDetailsModal) {
   const { role } = useLabProvider();
+  const [isLoading, setIsLoading] = useState(false);
   const [comments, setComments] = useState<string>("");
   const [requesterReturn, setRequesterReturn] = useState<string>("");
   const [returnedMaterials, setReturnedMaterials] = useState<
@@ -95,7 +97,19 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
   }, [request.status]);
 
   useEffect(() => {
+    if (typeof request === "undefined") {
+      openNotification(
+        "error",
+        "Ha ocurrido un error al obtener la solicitud",
+        "No se está obteniendo correctamente la solicitud",
+        "topRight",
+      );
+      closeModal();
+      return;
+    }
+
     const getMaterials = async () => {
+      setIsLoading(true);
       try {
         const materials: Array<TMaterial> = [];
         const sessionToken = sessionData?.user.token ?? "";
@@ -124,11 +138,13 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
           );
           closeModal();
         }
+      } finally {
+        setIsLoading(false);
       }
     };
 
     void getMaterials();
-  }, []);
+  }, [request.materialRequestMaterial, sessionData?.user.token]);
 
   const onChangeStatus = async (newStatus?: TRequestStatus) => {
     try {
@@ -194,7 +210,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
           "Ha ocurrido un error al cambiar el status del proyecto",
           "topRight",
         );
-        console.log("ERROR: ", error);
+        console.error("ERROR: ", error);
       }
     }
   };
@@ -222,6 +238,13 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
       return newMaterials;
     });
   };
+
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <>

@@ -35,7 +35,7 @@ export default function Table({
   data,
   isLoading,
   scrollX = 1800,
-  scrollY = 800,
+  scrollY = 500,
 }: ITable) {
   return (
     <TableComponent

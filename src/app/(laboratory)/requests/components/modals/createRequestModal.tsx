@@ -88,7 +88,7 @@ export default function CreateRequestModal({
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      label="Cantiadad a usar"
+                      label="Cantidad a usar"
                       name={[name, "quantity"]}
                       className="mb-0"
                       rules={[

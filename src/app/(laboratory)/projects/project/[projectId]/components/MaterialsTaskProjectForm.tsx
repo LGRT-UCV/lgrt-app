@@ -124,7 +124,7 @@ export default function MaterialsTaskProjectForm({
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      label="Cantiadad a usar"
+                      label="Cantidad a usar"
                       name={[name, "usedQuantity"]}
                       className="mb-4 w-full"
                       rules={[

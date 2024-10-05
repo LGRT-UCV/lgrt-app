@@ -1,6 +1,6 @@
 export enum Routes {
   Files = "/files",
-  Home = "/",
+  Home = "/home",
   Credits = "/credits",
   Inventory = "/inventory",
   Login = "/auth/login",

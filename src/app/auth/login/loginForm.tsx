@@ -44,11 +44,11 @@ export default function LoginForm() {
       setLoading(false);
       return;
     }
-    router.push(Routes.Inventory);
+    router.push(Routes.Home);
   };
 
   return (
-    <>
+    <div>
       {notificationElement}
       <div className="my-auto text-center">
         <Image
@@ -116,6 +116,6 @@ export default function LoginForm() {
           </Button>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 }

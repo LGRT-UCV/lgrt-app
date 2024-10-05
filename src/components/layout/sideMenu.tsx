@@ -17,7 +17,7 @@ import useMenuItems from "@/hooks/useMenuItems";
 export default function SideMenu() {
   const { data: sessionData } = useSession();
   const { menuCollapsed, handleMenuCollapsed } = useLabProvider();
-  const items = useMenuItems();
+  const { items, activeItem } = useMenuItems();
 
   if (isMobile) return <></>;
 
@@ -26,15 +26,7 @@ export default function SideMenu() {
       collapsible
       collapsed={menuCollapsed}
       onCollapse={(value) => handleMenuCollapsed(value)}
-      style={{
-        overflow: "auto",
-        height: "100vh",
-        position: isMobile ? "fixed" : "relative",
-        left: 0,
-        top: 0,
-        bottom: 0,
-        zIndex: 50,
-      }}
+      width={250}
     >
       <Avatar
         src="/icons/logo.png"
@@ -43,12 +35,7 @@ export default function SideMenu() {
         }
         hideLabel={menuCollapsed}
       />
-      <Menu
-        theme="dark"
-        defaultSelectedKeys={["1"]}
-        mode="inline"
-        items={items}
-      />
+      <Menu theme="dark" mode="inline" items={items} activeKey={activeItem} />
     </Sider>
   );
 }

@@ -2,6 +2,7 @@ export { default } from "next-auth/middleware";
 
 export const config = {
   matcher: [
+    "/home/:path*",
     "/inventory/:path*",
     "/projects/:path*",
     "/requests/:path*",

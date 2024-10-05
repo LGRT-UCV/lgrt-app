@@ -149,7 +149,8 @@ export default function CreateMaterialTypeModal({
                       />
                     </Form.Item>
                     {fieldType[name] &&
-                      JSON.parse(fieldType[name]).fieldType === "list" && (
+                      JSON.parse(fieldType[name] ?? "{ fieldType: 'text'}")
+                        .fieldType === "list" && (
                         <Form.Item
                           {...restField}
                           label="Valores de la lista"

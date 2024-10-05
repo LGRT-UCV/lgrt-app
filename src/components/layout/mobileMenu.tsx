@@ -5,7 +5,7 @@ import useMenuItems from "@/hooks/useMenuItems";
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
-  const items = useMenuItems({
+  const { items, activeItem } = useMenuItems({
     closeMenu: () => setOpen(false),
   });
 
@@ -27,7 +27,12 @@ export default function MobileMenu() {
         onClose={onClose}
         open={open}
       >
-        <Menu mode="inline" items={items} style={{ minWidth: 0 }} />
+        <Menu
+          mode="inline"
+          items={items}
+          activeKey={activeItem}
+          style={{ minWidth: 0 }}
+        />
       </Drawer>
     </div>
   );

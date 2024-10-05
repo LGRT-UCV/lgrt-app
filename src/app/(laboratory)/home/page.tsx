@@ -59,7 +59,7 @@ export default function Home() {
         {data.map((item, index) => (
           <Card
             key={index}
-            className="w-1/4 pb-8 text-center"
+            className="w-full pb-8 text-center md:w-1/4"
             title={item.title}
             cover={
               <div className="mt-4 flex justify-center">

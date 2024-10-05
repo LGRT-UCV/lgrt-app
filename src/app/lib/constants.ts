@@ -2,6 +2,7 @@ export enum Routes {
   Files = "/files",
   Home = "/home",
   Credits = "/credits",
+  MainCredits = "/auth/maincredits",
   Inventory = "/inventory",
   Login = "/auth/login",
   Laboratory = "/admin/laboratory",

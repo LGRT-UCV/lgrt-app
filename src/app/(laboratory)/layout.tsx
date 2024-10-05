@@ -20,7 +20,8 @@ export default function LabLayout({
             {children}
           </Content>
           <Footer className="text-center">
-            LGRT App ©{new Date().getFullYear()}
+            ©{new Date().getFullYear()} Instituto de Ciencia y Tecnología de
+            Alimentos, Todos los derechos reservados.
           </Footer>
         </Layout>
       </Layout>

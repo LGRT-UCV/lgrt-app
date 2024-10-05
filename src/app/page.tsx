@@ -13,7 +13,7 @@ export default function Init() {
 
   useEffect(() => {
     if (status === "authenticated" && isConnected) {
-      void router.push(Routes.Inventory);
+      void router.push(Routes.Home);
     } else {
       void router.push(Routes.Login);
     }

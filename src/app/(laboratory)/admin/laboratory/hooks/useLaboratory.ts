@@ -5,6 +5,13 @@ import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
 import { deleteLaboratory, getAllLaboratories } from "../utils";
 import type { ILaboratory } from "../interfaces";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useLaboratory() {
   const [searchValue, setSearchValue] = useState("");
@@ -52,26 +59,42 @@ export default function useLaboratory() {
       return;
     }
 
-    try {
-      await deleteLaboratory(sessionData?.user.token ?? "", laboratory.id);
-      void refetch();
-      setCurrentLaboratory(undefined);
-      setOpenDetailsModal(false);
-      openNotification(
-        "success",
-        "Laboratorio eliminado",
-        `Se ha eliminado el laboratorio ${laboratory.name}`,
-        "topRight",
-      );
-    } catch (error) {
-      console.error("Error", error);
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar el laboratorio",
-        "",
-        "topRight",
-      );
-    }
+    confirm({
+      title: `Desea eliminar el laboratorio ${laboratory.name}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        await deleteLaboratory(sessionData?.user.token ?? "", laboratory.id);
+        void refetch();
+        setCurrentLaboratory(undefined);
+        setOpenDetailsModal(false);
+        openNotification(
+          "success",
+          "Laboratorio eliminado",
+          `Se ha eliminado el laboratorio ${laboratory.name}`,
+          "topRight",
+        );
+      } catch (error) {
+        console.error("Error", error);
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar el laboratorio",
+          "Es posible que existan usuarios ya registrados en este laboratorio",
+          "topRight",
+        );
+      }
+    };
   };
 
   const handleLaboratoryDetails = (laboratory?: ILaboratory, show = true) => {

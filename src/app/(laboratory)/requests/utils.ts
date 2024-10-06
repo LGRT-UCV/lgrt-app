@@ -158,7 +158,7 @@ export const requestFields = [
   },
   {
     id: "status",
-    label: "Status",
+    label: "Estado",
   },
   {
     id: "dateupd",

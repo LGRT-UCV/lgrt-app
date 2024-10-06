@@ -1,3 +1,4 @@
+import React from "react";
 import { ILaboratory } from "../interfaces";
 
 interface IDetailsModal {

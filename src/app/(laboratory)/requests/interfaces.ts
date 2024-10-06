@@ -19,6 +19,7 @@ export type TRequestStatus = {
 
 export type TUpdateRequestStatus = {
   status?: TStatus;
+  requesterReturn?: string;
   materialRequestMaterial?: Array<TRequestReturnedMaterials>;
   commentsRequester?: string | null;
   commentsResponsible?: string | null;
@@ -36,7 +37,7 @@ export type TSaveRequest = {
   returnDate?: string;
   idRequester?: IGenericId;
   idResponsibleDrop?: IGenericId;
-  requesterReturn?: IGenericId;
+  requesterReturn?: string;
   idResponsibleReturn?: IGenericId;
   materialRequestMaterial?: Array<TRequestMaterial>;
 } & TUpdateRequestStatus;
@@ -54,7 +55,7 @@ export interface IRequest {
   commentsResponsibleReturn: string;
   idRequester: TUser;
   idResponsibleDrop: TUser | null;
-  requesterReturn: TUser | null;
+  requesterReturn: string | null;
   idResponsibleReturn: TUser | null;
   status: TStatus;
   materialRequestMaterial: Array<TRequestMaterial>;

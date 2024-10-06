@@ -4,11 +4,19 @@ import { useForm } from "antd/es/form/Form";
 import { useQuery } from "@tanstack/react-query";
 import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
-import { deleteFile, getAllFiles } from "../utils";
-import type { IFile } from "../interfaces";
+import { deleteFile, getAllFiles, getFileURI } from "../utils";
+import type { IFile, TFileData } from "../interfaces";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useFile() {
   const [form] = useForm();
+  const [isDownloading, setIsDownloading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -55,25 +63,41 @@ export default function useFile() {
       return;
     }
 
-    try {
-      await deleteFile(sessionData?.user.token ?? "", file.id);
-      void refetch();
-      setCurrentFile(undefined);
-      setOpenDetailsModal(false);
-      openNotification(
-        "success",
-        "Material eliminado",
-        `Se ha eliminado el archivo ${file.id}`,
-        "topRight",
-      );
-    } catch (error) {
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar el archivo",
-        "",
-        "topRight",
-      );
-    }
+    confirm({
+      title: `Desea eliminar el archivo ${file.name}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        await deleteFile(sessionData?.user.token ?? "", file.id);
+        void refetch();
+        setCurrentFile(undefined);
+        setOpenDetailsModal(false);
+        openNotification(
+          "success",
+          "Archivo eliminado",
+          `Se ha eliminado el archivo ${file.id}`,
+          "topRight",
+        );
+      } catch (error) {
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar el archivo",
+          "",
+          "topRight",
+        );
+      }
+    };
   };
 
   const handleEditFile = (file: IFile, show = true) => {
@@ -83,6 +107,29 @@ export default function useFile() {
       description: file.description,
     });
     setOpenCreateModal(show);
+  };
+
+  const getFileUri = async (id: string) => {
+    try {
+      setIsDownloading(true);
+      const file: TFileData = await getFileURI(
+        id,
+        sessionData?.user.token ?? "",
+      );
+      const link = document.createElement("a");
+      link.href = `data:application/octet-stream;base64,${file.file}`;
+      link.download = file.name + file.fileType;
+      link.click();
+    } catch (error) {
+      openNotification(
+        "error",
+        "Ha ocurrido un error al descargar el archivo",
+        "",
+        "topRight",
+      );
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const tableData: Array<AnyObject> = useMemo(() => {
@@ -95,10 +142,12 @@ export default function useFile() {
       );
     });
     return (
-      files.map((file, index) => ({
-        ...file,
-        key: `file-${index}`,
-      })) ?? []
+      files
+        .map((file, index) => ({
+          ...file,
+          key: `file-${index}`,
+        }))
+        .reverse() ?? []
     );
   }, [fileList, searchValue]);
 
@@ -110,12 +159,15 @@ export default function useFile() {
     currentFile,
     fileList,
     isLoading,
+    isDownloading,
     notificationElement,
+    getFileUri,
     handleDeleteFile,
     handleEditFile,
     setOpenDetailsModal,
     setOpenCreateModal,
     setSearchValue,
+    setCurrentFile,
     handleUpdateFile,
   };
 }

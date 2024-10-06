@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   Modal,
   Button,
@@ -17,11 +17,12 @@ import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
 import useRequest from "./hooks/useRequest";
-import { getStatus, requestFields } from "./utils";
+import { getStatus, requestFields, requestStatus } from "./utils";
 import { IRequest } from "./interfaces";
 import DetailsModal from "./components/modals/detailsModal";
 import CreateRequestModal from "./components/modals/createRequestModal";
 import { isMobile } from "react-device-detect";
+import { dateToTimestamp } from "@/utils";
 
 export default function Requests() {
   const [form] = useForm();
@@ -36,10 +37,25 @@ export default function Requests() {
     handleRequestDetails,
     handleDeleteRequest,
     setSearchValue,
+    setRequestStatus,
     setOpenDetailsModal,
     setOpenCreateModal,
     handleUpdateRequest,
   } = useRequest();
+
+  const sorter = (a: AnyObject, b: AnyObject, column: string) => {
+    switch (column) {
+      case "id":
+        return Number(a.id) - Number(b.id);
+      case "requester":
+        return a.requester.localeCompare(b.requester);
+      case "dateupd":
+        return (
+          dateToTimestamp(String(a.dateupd)) -
+          dateToTimestamp(String(b.dateupd))
+        );
+    }
+  };
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columsList = requestFields.filter((fields) => "status" !== fields.id);
@@ -48,6 +64,9 @@ export default function Requests() {
         title: column.label,
         width: "idRequester" === column.id ? 50 : "id" === column.id ? 7 : 20,
         dataIndex: column.id,
+        sorter: ["id", "requester", "dateupd"].includes(column.id)
+          ? (a, b) => sorter(a, b, column.id)
+          : undefined,
         key: column.id,
         fixed:
           ["id", "idRequester"].includes(column.id) && !isMobile
@@ -58,7 +77,7 @@ export default function Requests() {
     );
     const renderColumns = columnToShow.concat([
       {
-        title: "Status",
+        title: "Estado",
         align: "center",
         width: 20,
         render: (record: IRequest & { key: string }) => (
@@ -84,14 +103,14 @@ export default function Requests() {
                   Ver solicitud
                 </span>
                 <Divider className="m-2" />
-                {ableToDelete(record) ? (
+                {ableToDelete(record) && (
                   <span
                     onClick={() => void handleDeleteRequest(record)}
                     className="h-full w-full cursor-pointer"
                   >
                     Eliminar
                   </span>
-                ) : null}
+                )}
               </div>
             }
             title="Opciones"
@@ -113,6 +132,15 @@ export default function Requests() {
         setSearchValue(String(value));
       },
     },
+    {
+      label: "Filtrar por estado",
+      placeholder: "Selecciona el estado",
+      type: FilterType.SELECT,
+      values: [{ label: "Todos los estados", value: "all" }, ...requestStatus],
+      onChange(value) {
+        setRequestStatus(String(value));
+      },
+    },
   ];
 
   return (
@@ -123,7 +151,10 @@ export default function Requests() {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => setOpenCreateModal(true),
+          onClick: () => {
+            form.resetFields();
+            setOpenCreateModal(true);
+          },
         }}
       />
 
@@ -141,12 +172,16 @@ export default function Requests() {
         centered
         open={openCreateModal}
         okText={"Editar"}
-        onCancel={() => setOpenCreateModal(false)}
+        onCancel={() => {
+          setOpenCreateModal(false);
+          handleUpdateRequest();
+          form.resetFields();
+        }}
         width={800}
         footer={[
           <Button
             key="create"
-            className="bg-blue-500 text-white"
+            className="!bg-blue-500 !text-white"
             onClick={form.submit}
           >
             Crear solicitud
@@ -167,14 +202,14 @@ export default function Requests() {
         }}
         width={600}
         okButtonProps={{
-          className: "bg-blue-500",
+          className: "!bg-blue-500",
         }}
         footer={
           ableToDelete()
             ? [
                 <Button
                   key="delete"
-                  className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                  className="border-none !bg-red-500 !text-white hover:!bg-red-400"
                   onClick={() => void handleDeleteRequest(currentRequest)}
                 >
                   Eliminar solcitud

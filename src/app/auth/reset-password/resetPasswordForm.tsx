@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Text from "antd/es/typography";
 import Title from "antd/es/typography/Title";
@@ -63,7 +64,7 @@ export default function ResetPassword() {
       <div className="my-8 text-center">
         <Title className="py-2">Recuperar contraseña</Title>
         <Text className="mx-auto w-3/4 py-4">
-          {`Bienvenido al ${LAB_DETAILS.longName}. Por favor ingrese su email para recuperar su contraseña`}
+          {`Bienvenido al ${LAB_DETAILS.appName}. Por favor ingrese su email para recuperar su contraseña`}
         </Text>
       </div>
       <Form
@@ -73,7 +74,6 @@ export default function ResetPassword() {
         }}
         onFinish={onFinish}
         layout="vertical"
-        
         size="large"
         className="mx-auto w-3/4"
       >

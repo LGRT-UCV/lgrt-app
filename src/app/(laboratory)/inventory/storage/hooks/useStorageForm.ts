@@ -35,8 +35,8 @@ export default function useStorageForm(
 
       openNotification(
         "success",
-        "Laboratorio guardado con exito",
-        `El almacenamiento ${values.name} ha sido creado con exito.`,
+        "Laboratorio guardado con éxito",
+        `El almacenamiento ${values.name} ha sido creado con éxito.`,
         "topRight",
       );
       callback();

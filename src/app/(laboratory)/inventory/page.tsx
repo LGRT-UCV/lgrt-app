@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
@@ -16,6 +16,7 @@ import useInventory from "./useInventory";
 import type { TMaterial } from "./interfaces";
 import { isMobile } from "react-device-detect";
 import { useLabProvider } from "@/context/labProvider";
+import { extractNumber } from "@/utils";
 
 export default function Inventory() {
   const { role } = useLabProvider();
@@ -35,6 +36,23 @@ export default function Inventory() {
     setOpenModal,
   } = useInventory();
 
+  const sorter = (a: AnyObject, b: AnyObject, column: string) => {
+    switch (column) {
+      case "id":
+        return Number(a.id) - Number(b.id);
+      case "name":
+        return a.name.localeCompare(b.name);
+      case "weight":
+        return (
+          extractNumber(String(a.weight)) - extractNumber(String(b.weight))
+        );
+      case "quantity":
+        return (
+          extractNumber(String(a.quantity)) - extractNumber(String(b.quantity))
+        );
+    }
+  };
+
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     if (typeof currentMaterialType === "undefined") return [];
 
@@ -46,9 +64,12 @@ export default function Inventory() {
     const columnToShow: TableColumnsType<AnyObject> = columsList.map(
       (column) => ({
         title: column.label,
-        width: column.id === "id" ? 25 : 100,
+        width: column.id === "id" ? 20 : 30,
         dataIndex: column.id,
         key: column.id,
+        sorter: ["id", "name", "weight", "quantity"].includes(column.id)
+          ? (a, b) => sorter(a, b, column.id)
+          : undefined,
         fixed:
           ["id", "name"].includes(column.id) &&
           !isMobile &&
@@ -59,7 +80,7 @@ export default function Inventory() {
       }),
     );
     columnToShow.push({
-      width: 20,
+      width: 10,
       fixed: "right",
       render: (record: TMaterial & { key: string }) => (
         <Popover
@@ -148,11 +169,7 @@ export default function Inventory() {
 
       <TableFilter filters={filters} />
 
-      <Table
-        columns={columns}
-        data={tableData.reverse()}
-        isLoading={isLoading}
-      />
+      <Table columns={columns} data={tableData} isLoading={isLoading} />
 
       <Modal
         title="Detalles del material"
@@ -163,14 +180,14 @@ export default function Inventory() {
         onCancel={() => setOpenModal(false)}
         width={600}
         okButtonProps={{
-          className: "bg-blue-500",
+          className: "!bg-blue-500",
         }}
         footer={
           Roles.External !== role
             ? [
                 <Button
                   key="delete"
-                  className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                  className="border-none !bg-red-500 !text-white hover:!bg-red-400"
                   onClick={() => void handleDeleteMaterial(currentMaterial)}
                 >
                   Eliminar material
@@ -179,7 +196,10 @@ export default function Inventory() {
             : []
         }
       >
-        <DetailsModal material={currentMaterial} />
+        <DetailsModal
+          material={currentMaterial}
+          materialType={currentMaterialType}
+        />
       </Modal>
     </>
   );

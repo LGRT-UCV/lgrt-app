@@ -84,6 +84,10 @@ export const updateProject = async (
 
 export const fieldsProject = [
   {
+    id: "id",
+    label: "ID",
+  },
+  {
     id: "name",
     label: "Nombre",
   },
@@ -97,11 +101,11 @@ export const fieldsProject = [
   },
   {
     id: "status",
-    label: "Status",
+    label: "Estado",
   },
   {
     id: "projectUri",
-    label: "Link del archivo",
+    label: "URL",
   },
   {
     id: "file",

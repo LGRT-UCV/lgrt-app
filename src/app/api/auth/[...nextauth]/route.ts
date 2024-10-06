@@ -57,6 +57,9 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       return { ...token, ...user };
     },
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
     async session({ session, token }) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       session.user = token as any;

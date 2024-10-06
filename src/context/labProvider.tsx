@@ -93,7 +93,7 @@ export const LabProvider = ({
       getUserRole(Number(sessionData.user.user.idRoleId)).roleName ??
       Roles.External
     );
-  }, [sessionData]);
+  }, [sessionData?.user]);
 
   return (
     <LabContext.Provider

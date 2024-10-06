@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import React, { type Dispatch, type SetStateAction } from "react";
 import { Form, Input, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import type { TMaterialType } from "../../interfaces";
@@ -39,12 +39,14 @@ export default function BaseMaterialForm({
           <Select
             placeholder="Tipo de material"
             onSelect={(value: string) =>
-              setCurrentMaterialType(JSON.parse(value))
+              setCurrentMaterialType(
+                materialTypeList.find((type) => type.id === value),
+              )
             }
             options={materialTypeList.map((materialType) => {
               return {
                 label: materialType.name,
-                value: JSON.stringify(materialType),
+                value: materialType.id,
               };
             })}
           />
@@ -52,6 +54,7 @@ export default function BaseMaterialForm({
       </div>
       <Form.Item
         name="description"
+        label="Descripción"
         className="px-2"
         rules={[
           {
@@ -65,6 +68,26 @@ export default function BaseMaterialForm({
         <TextArea
           placeholder="Descripción del material..."
           rows={4}
+          maxLength={500}
+        />
+      </Form.Item>
+      <Form.Item
+        label="Imagen de referencia (opcional)"
+        name="imageUrl"
+        className="w-full px-2"
+        rules={[
+          {
+            type: "url",
+            max: 500,
+            min: 6,
+            message: "Por favor verifique la imagen de referencia",
+          },
+        ]}
+      >
+        <Input
+          placeholder="Subir a drive y pegar el link aquí"
+          type="url"
+          minLength={6}
           maxLength={500}
         />
       </Form.Item>

@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-        <main className="min-h-screen">
+        <main className="min-h-dvh">
           <SessionAuthProvider>
             <QueryClientProvider>
               <LabProvider>{children}</LabProvider>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
@@ -34,6 +34,15 @@ export default function Storage() {
     setCurrentStorage,
   } = useStorage();
 
+  const sorter = (a: AnyObject, b: AnyObject, column: string) => {
+    switch (column) {
+      case "id":
+        return Number(a.id) - Number(b.id);
+      case "name":
+        return a.name.localeCompare(b.name);
+    }
+  };
+
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columnToShow: TableColumnsType<AnyObject> = storageFields
       .filter((field) => field.id !== "description")
@@ -41,6 +50,9 @@ export default function Storage() {
         title: column.label,
         width: "name" === column.id ? 30 : "id" === column.id ? 10 : 60,
         dataIndex: column.id,
+        sorter: ["id", "name"].includes(column.id)
+          ? (a, b) => sorter(a, b, column.id)
+          : undefined,
         key: column.id,
         fixed:
           ["id", "name"].includes(column.id) &&
@@ -128,7 +140,11 @@ export default function Storage() {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => setOpenCreateModal(true),
+          onClick: () => {
+            form.resetFields();
+            setCurrentStorage(undefined);
+            setOpenCreateModal(true);
+          },
         }}
       />
 
@@ -136,7 +152,7 @@ export default function Storage() {
 
       <Table
         columns={columns}
-        data={tableData.reverse()}
+        data={tableData}
         isLoading={isLoading}
         scrollX={1000}
       />
@@ -154,7 +170,7 @@ export default function Storage() {
         footer={[
           <Button
             key="success"
-            className="bg-blue-500 text-white"
+            className="!bg-blue-500 !text-white"
             onClick={form.submit}
           >
             Guardar

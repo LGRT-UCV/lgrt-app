@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   Modal,
   Button,
@@ -15,7 +15,7 @@ import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
 import Table from "@/components/dataDisplay/table";
 import Header from "@/components/layout/header";
-import { getStatus, userFields } from "./utils";
+import { getStatus, userFields, userRoles, userStatus } from "./utils";
 import type { IUser } from "./interfaces";
 import useUser from "./hooks/useUsers";
 import { CreateUserModal } from "./components/createUserModal";
@@ -37,6 +37,8 @@ export default function Users() {
     setOpenCreateModal,
     setOpenDetailsModal,
     setCurrentUser,
+    setUserRole,
+    setUserStatus,
     setSearchValue,
   } = useUser();
 
@@ -53,7 +55,7 @@ export default function Users() {
     );
     const renderColumns = columnToShow.concat([
       {
-        title: "Status",
+        title: "Estado",
         align: "center",
         width: 20,
         render: (record: IUser & { key: string }) => (
@@ -95,7 +97,7 @@ export default function Users() {
                 <span
                   onClick={() =>
                     handleUserStatus(
-                      record.id ?? "",
+                      record ?? {},
                       record.status === "A" ? "I" : "A",
                     )
                   }
@@ -124,6 +126,30 @@ export default function Users() {
         setSearchValue(String(value));
       },
     },
+    {
+      label: "Roles de usuario",
+      placeholder: "Roles de usuario",
+      type: FilterType.SELECT,
+      values: [
+        { label: "Todos los roles", value: "all" },
+        ...userRoles.map((role) => ({
+          label: role.roleName,
+          value: role.id,
+        })),
+      ],
+      onChange(value) {
+        setUserRole(String(value));
+      },
+    },
+    {
+      label: "Filtrar por estado",
+      placeholder: "Selecciona el estado",
+      type: FilterType.SELECT,
+      values: [{ label: "Todos los estados", value: "all" }, ...userStatus],
+      onChange(value) {
+        setUserStatus(String(value));
+      },
+    },
   ];
 
   return (
@@ -134,7 +160,11 @@ export default function Users() {
         btn={{
           label: "Añadir nuevo",
           icon: <PlusOutlined />,
-          onClick: () => setOpenCreateModal(true),
+          onClick: () => {
+            setCurrentUser(undefined);
+            form.resetFields();
+            setOpenCreateModal(true);
+          },
         }}
       />
 
@@ -157,7 +187,7 @@ export default function Users() {
         footer={[
           <Button
             key="success"
-            className="bg-blue-500 text-white"
+            className="!bg-blue-500 !text-white"
             onClick={form.submit}
           >
             Guardar Usuario
@@ -180,10 +210,10 @@ export default function Users() {
         footer={[
           <Button
             key="status"
-            className={`${currentUser?.status === "A" ? "bg-red-500" : "bg-green-500"} text-white`}
+            className={`${currentUser?.status === "A" ? "!bg-red-500" : "!bg-blue-500"} !text-white`}
             onClick={() =>
               handleUserStatus(
-                currentUser?.id ?? "",
+                currentUser ?? ({} as IUser),
                 currentUser?.status === "A" ? "I" : "A",
               )
             }

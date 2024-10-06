@@ -1,9 +1,10 @@
-import { Form, Input, InputNumber } from "antd";
+import { Form, Input } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import type { FormInstance } from "antd/lib";
 import useStorageForm from "../hooks/useStorageForm";
 import TextArea from "antd/es/input/TextArea";
 import { IStorage } from "../interfaces";
+import RequiredLegend from "@/components/feedback/requiredLegend";
 
 type TCreateStorageModal = {
   form: FormInstance;
@@ -41,7 +42,6 @@ export default function CreateStorageModal({
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        
         size="large"
         scrollToFirstError
         className="p-4"
@@ -58,10 +58,11 @@ export default function CreateStorageModal({
               },
             ]}
           >
-            <InputNumber
+            <Input
               className="w-full"
-              placeholder="Número de identificador"
-              max={9999}
+              placeholder="Identificador"
+              disabled={!!data}
+              maxLength={6}
             />
           </Form.Item>
           <Form.Item
@@ -81,8 +82,9 @@ export default function CreateStorageModal({
           </Form.Item>
         </div>
         <Form.Item
+          label="Descripción"
           name="description"
-          className="mt-4"
+          className="mt-2"
           rules={[
             {
               type: "string",
@@ -99,6 +101,7 @@ export default function CreateStorageModal({
           />
         </Form.Item>
       </Form>
+      <RequiredLegend />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Modal, Button, Divider, Popover, type TableColumnsType } from "antd";
 import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
@@ -34,6 +34,17 @@ export default function Laboratory() {
     setCurrentLaboratory,
   } = useLaboratory();
 
+  const sorter = (a: AnyObject, b: AnyObject, column: string) => {
+    switch (column) {
+      case "id":
+        return Number(a.id) - Number(b.id);
+      case "name":
+        return a.name.localeCompare(b.name);
+      case "area":
+        return a.area.localeCompare(b.area);
+    }
+  };
+
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columnToShow: TableColumnsType<AnyObject> = laboratoryFields
       .filter((field) => field.id !== "description")
@@ -41,6 +52,9 @@ export default function Laboratory() {
         title: column.label,
         width: "name" === column.id ? 60 : "id" === column.id ? 15 : 30,
         dataIndex: column.id,
+        sorter: ["id", "name", "area"].includes(column.id)
+          ? (a, b) => sorter(a, b, column.id)
+          : undefined,
         key: column.id,
         fixed: "name" === column.id && !isMobile ? "left" : undefined,
         align: "center",
@@ -85,13 +99,13 @@ export default function Laboratory() {
                 >
                   Editar
                 </span>
-                {/* <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => void handleDeleteLaboratory(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Eliminar
-                </span> */}
+                </span>
               </div>
             }
             title="Opciones"
@@ -149,7 +163,7 @@ export default function Laboratory() {
         footer={[
           <Button
             key="success"
-            className="bg-blue-500 text-white"
+            className="!bg-blue-500 !text-white"
             onClick={form.submit}
           >
             Guardar
@@ -175,7 +189,7 @@ export default function Laboratory() {
         footer={[
           <Button
             key="delete"
-            className="bg-red-500 text-white"
+            className="!bg-red-500 !text-white"
             onClick={() => handleDeleteLaboratory(currentLaboratory)}
           >
             Eliminar

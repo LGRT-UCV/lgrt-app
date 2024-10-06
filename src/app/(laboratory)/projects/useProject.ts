@@ -6,9 +6,17 @@ import useNotification from "@/hooks/useNotification";
 import { deleteProject, getAllProjects } from "./utils";
 import type { IProject } from "./interfaces";
 import { createRequest } from "../requests/utils";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useProject() {
   const [searchValue, setSearchValue] = useState("");
+  const [projectStatus, setProjectStatus] = useState<string>("all");
   const [openModal, setOpenModal] = useState(false);
   const [currentProject, setCurrentProject] = useState<IProject>();
   const { openNotification, notificationElement } = useNotification();
@@ -45,32 +53,48 @@ export default function useProject() {
     if (typeof project === "undefined") {
       openNotification(
         "error",
-        "No se ha seleccionado un projecto a eliminar",
+        "No se ha seleccionado un proyecto a eliminar",
         "",
         "topRight",
       );
       return;
     }
 
-    try {
-      await deleteProject(sessionData?.user.token ?? "", project.id);
-      void refetch();
-      setCurrentProject(undefined);
-      setOpenModal(false);
-      openNotification(
-        "success",
-        "Material eliminado",
-        `Se ha eliminado el proyecto ${project.name}`,
-        "topRight",
-      );
-    } catch (error) {
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar el projecto",
-        "",
-        "topRight",
-      );
-    }
+    confirm({
+      title: `Desea eliminar el proyecto #${project.id} - ${project.name}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        await deleteProject(sessionData?.user.token ?? "", project.id);
+        void refetch();
+        setCurrentProject(undefined);
+        setOpenModal(false);
+        openNotification(
+          "success",
+          "Material eliminado",
+          `Se ha eliminado el proyecto ${project.name}`,
+          "topRight",
+        );
+      } catch (error) {
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar el proyecto",
+          "",
+          "topRight",
+        );
+      }
+    };
   };
 
   const handleProjectDetails = (project?: IProject, show = true) => {
@@ -120,17 +144,19 @@ export default function useProject() {
     const search = searchValue.toLocaleLowerCase();
     const projects = projectList.filter(
       (project) =>
-        project.name.toLocaleLowerCase().includes(search) ||
-        project.description.toLocaleLowerCase().includes(search),
+        (project.name.toLocaleLowerCase().includes(search) ||
+          project.description.toLocaleLowerCase().includes(search) ||
+          project.id.toLocaleLowerCase().includes(search)) &&
+        (project.status === projectStatus || projectStatus === "all"),
     );
     return (
-      projects.map((project, index) => ({
+      projects.reverse().map((project, index) => ({
         ...project,
         key: `project-${index}`,
         description: project.description.substring(0, 120) + "...",
       })) ?? []
     );
-  }, [projectList, searchValue]);
+  }, [projectList, searchValue, projectStatus]);
 
   return {
     openModal,
@@ -143,6 +169,7 @@ export default function useProject() {
     handleProjectDetails,
     setOpenModal,
     setSearchValue,
+    setProjectStatus,
     handleUpdateProject,
     handleRequestMaterials,
   };

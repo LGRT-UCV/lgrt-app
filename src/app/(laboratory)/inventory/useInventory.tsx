@@ -6,6 +6,13 @@ import useNotification from "@/hooks/useNotification";
 import useMaterialInit from "./material/hooks/useMaterialInit";
 import { deleteMaterial, getAllMaterials } from "./utils";
 import type { TMaterial, TMaterialType } from "./interfaces";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useInventory() {
   const [openModal, setOpenModal] = useState(false);
@@ -64,27 +71,32 @@ export default function useInventory() {
             .includes(searchValue.toLocaleLowerCase())),
     );
     return (
-      currentMaterials?.map((material, index) => ({
-        ...material,
-        key: `material-${index}`,
-        materialType: currentMaterialType?.name,
-        weight: `${material.weight} ${material.measurement.name}`,
-        capacity: !!material.capacity
-          ? `${material.capacity} ${material.measurement.name}`
-          : "",
-        quantity: !!material.quantity
-          ? `${material.quantity} ${material.measurement.name}`
-          : "",
-        presentation: !!material.presentation
-          ? `${material.presentation} ${material.measurement.name}`
-          : "",
-        sensibleMaterial: material.sensibleMaterial ? "Si" : "No",
-        superUse: material.superUse ? "Si" : "No",
-        storagePlace: material.storagePlace.name,
-        expirationDate: material.expirationDate
-          ? new Date(material.expirationDate).toLocaleDateString("es-VE")
-          : "",
-      })) ?? []
+      currentMaterials
+        ?.reverse()
+        .map((material, index) => ({
+          ...material,
+          key: `material-${index}`,
+          materialType: currentMaterialType?.name,
+          weight: material.weight
+            ? `${material.weight} ${material.measurement.name}`
+            : undefined,
+          capacity: !!material.capacity
+            ? `${material.capacity} ${material.measurement.name}`
+            : "",
+          quantity: !!material.quantity
+            ? `${material.quantity} ${Number(material.materialType.id) !== 2 ? material.measurement.name : ""}`
+            : "",
+          presentation: !!material.presentation
+            ? `${material.presentation} ${material.measurement.name}`
+            : "",
+          sensibleMaterial: material.sensibleMaterial ? "Si" : "No",
+          superUse: material.superUse ? "Si" : "No",
+          storagePlace: material.storagePlace.name,
+          expirationDate: material.expirationDate
+            ? new Date(material.expirationDate).toLocaleDateString("es-VE")
+            : "",
+        }))
+        .reverse() ?? []
     );
   }, [currentMaterialType, materialList, searchValue]);
 
@@ -104,25 +116,41 @@ export default function useInventory() {
       return;
     }
 
-    try {
-      await deleteMaterial(sessionData?.user.token ?? "", materialData.id);
-      refetch();
-      setCurrentMaterial(undefined);
-      setOpenModal(false);
-      openNotification(
-        "success",
-        "Material eliminado",
-        `Se ha eliminado el material ${materialData.name}`,
-        "topRight",
-      );
-    } catch (error) {
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar el material",
-        "",
-        "topRight",
-      );
-    }
+    confirm({
+      title: `Desea eliminar el elemento #${materialData.id} - ${materialData.name}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        await deleteMaterial(sessionData?.user.token ?? "", materialData.id);
+        refetch();
+        setCurrentMaterial(undefined);
+        setOpenModal(false);
+        openNotification(
+          "success",
+          "Material eliminado",
+          `Se ha eliminado el material ${materialData.name}`,
+          "topRight",
+        );
+      } catch (error) {
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar el material",
+          "",
+          "topRight",
+        );
+      }
+    };
   };
 
   return {

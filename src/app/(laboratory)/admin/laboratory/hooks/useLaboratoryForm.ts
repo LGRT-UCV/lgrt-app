@@ -35,8 +35,8 @@ export default function useLaboratoryForm(
 
       openNotification(
         "success",
-        "Laboratorio guardado con exito",
-        `El laboratorio ${values.name} ha sido creado con exito.`,
+        "Laboratorio guardado con éxito",
+        `El laboratorio ${values.name} ha sido creado con éxito.`,
         "topRight",
       );
       callback();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { SaveOutlined, LoadingOutlined } from "@ant-design/icons";
@@ -31,19 +31,21 @@ export default function NewMaterial() {
     return searchParams.get("id");
   }, [searchParams]);
 
+  useEffect(() => {
+    if (!materialId) {
+      form.resetFields();
+    }
+  }, [materialId]);
+
   const { data: currentMaterial, isLoading } = useQuery({
     queryKey: ["material"],
     queryFn: async () => {
       try {
         if (!materialId) {
-          form.resetFields();
           return;
         }
 
-        return await await getMaterial(
-          sessionData?.user.token ?? "",
-          materialId,
-        );
+        return await getMaterial(sessionData?.user.token ?? "", materialId);
       } catch (error) {
         openNotification(
           "error",
@@ -54,7 +56,7 @@ export default function NewMaterial() {
         return;
       }
     },
-    enabled: !!sessionData?.user.token,
+    enabled: !!sessionData?.user.token || !!materialId,
   });
 
   if (isLoading)
@@ -77,7 +79,7 @@ export default function NewMaterial() {
         }}
       />
 
-      <div className="h-[calc(100vh-250px)] overflow-y-auto p-4">
+      <div className="h-[calc(100vh-190px)] overflow-y-auto p-4">
         <MaterialForm formIntance={form} materialData={currentMaterial} />
       </div>
     </>

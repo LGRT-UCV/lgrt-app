@@ -1,11 +1,12 @@
 "use client";
 
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Text from "antd/es/typography";
 import Title from "antd/es/typography/Title";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Image, Input } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { LAB_DETAILS, Routes } from "@/lib/constants";
 import useNotification from "@/hooks/useNotification";
@@ -17,10 +18,13 @@ type TLoginFormData = {
 };
 
 export default function LoginForm() {
+  const [isLoading, setLoading] = useState(false);
   const { openNotification, notificationElement } = useNotification();
   const router = useRouter();
 
   const onFinish = async (values: TLoginFormData) => {
+    setLoading(true);
+
     const responseNextAuth = await signIn("credentials", {
       email: values.email,
       password: values.password,
@@ -37,19 +41,27 @@ export default function LoginForm() {
         openNotification("error", msg, "", "topRight");
         console.log("ERROR: ", error);
       });
+      setLoading(false);
       return;
     }
-
-    router.push(Routes.Inventory);
+    router.push(Routes.Home);
   };
 
   return (
-    <>
+    <div>
       {notificationElement}
-      <div className="my-8 text-center">
+      <div className="my-auto text-center">
+        <Image
+          src="/icons/logo.png"
+          height={50}
+          width={50}
+          alt="Logo"
+          preview={false}
+          className="mx-auto"
+        />
         <Title className="py-2">Iniciar Sesión</Title>
         <Text className="mx-auto w-3/4 py-4">
-          {`Bienvenido al ${LAB_DETAILS.longName}. Por favor ingrese los datos abajo para iniciar sesión`}
+          {`Bienvenido a ${LAB_DETAILS.appName}. Por favor ingrese los datos abajo para iniciar sesión`}
         </Text>
       </div>
       <Form
@@ -59,7 +71,6 @@ export default function LoginForm() {
         }}
         onFinish={onFinish}
         layout="vertical"
-        
         size="large"
         className="mx-auto w-3/4"
       >
@@ -101,14 +112,10 @@ export default function LoginForm() {
             className="bg-brand-primary text-brand-dark-light"
             htmlType="submit"
           >
-            Iniciar sesión
+            {isLoading ? "Cargando..." : "Iniciar sesión"}
           </Button>
-          {/* <div className="mt-16 text-center w-full">
-            <Text className="text-brand-secondary">¿No tienes una cuenta?</Text>{" "}
-            <Link href="">Sign up now</Link>
-          </div> */}
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 }

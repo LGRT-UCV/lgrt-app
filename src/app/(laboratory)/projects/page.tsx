@@ -1,16 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Modal,
-  Button,
-  Divider,
-  Popover,
-  Tag,
-  type TableColumnsType,
-} from "antd";
-import { PlusOutlined, MoreOutlined } from "@ant-design/icons";
+import { Divider, Popover, Tag, type TableColumnsType } from "antd";
+import { PlusOutlined, MoreOutlined, ExportOutlined } from "@ant-design/icons";
 import type { AnyObject } from "antd/es/_util/type";
 import { TFilter, FilterType } from "@/components/dataEntry/tableFilter";
 import TableFilter from "@/components/dataEntry/tableFilter";
@@ -19,8 +12,7 @@ import Header from "@/components/layout/header";
 import { Roles, Routes } from "@/lib/constants";
 import type { IProject } from "./interfaces";
 import useProject from "./useProject";
-import { fieldsProject, getProjectStatusStyle } from "./utils";
-import DetailsModal from "./project/components/detailsModal";
+import { fieldsProject, getProjectStatusStyle, projectStatus } from "./utils";
 import { isMobile } from "react-device-detect";
 import { useLabProvider } from "@/context/labProvider";
 
@@ -28,17 +20,22 @@ export default function Projects() {
   const { role } = useLabProvider();
   const router = useRouter();
   const {
-    openModal,
     tableData,
-    currentProject,
     notificationElement,
     isLoading,
-    handleProjectDetails,
     handleDeleteProject,
     setSearchValue,
-    setOpenModal,
-    handleUpdateProject,
+    setProjectStatus,
   } = useProject();
+
+  const sorter = (a: AnyObject, b: AnyObject, column: string) => {
+    switch (column) {
+      case "id":
+        return Number(a.id) - Number(b.id);
+      case "name":
+        return a.name.localeCompare(b.name);
+    }
+  };
 
   const columns: TableColumnsType<AnyObject> = useMemo(() => {
     const columsList = fieldsProject.filter(
@@ -54,8 +51,14 @@ export default function Projects() {
     const columnToShow: TableColumnsType<AnyObject> = columsList.map(
       (column) => ({
         title: column.label,
-        width: "description" === column.id ? 50 : 20,
+        width: "description" === column.id ? 50 : "id" === column.id ? 5 : 20,
         dataIndex: column.id,
+        sorter: ["id", "name"].includes(column.id)
+          ? {
+              compare: (a, b) => sorter(a, b, column.id),
+              multiple: column.id === "id" ? 1 : 2,
+            }
+          : undefined,
         key: column.id,
         fixed: column.id === "name" && !isMobile ? "left" : undefined,
         align: "center",
@@ -63,9 +66,10 @@ export default function Projects() {
     );
     const renderColumns = columnToShow.concat([
       {
-        title: "Status",
+        title: "Estado",
         align: "center",
-        width: 20,
+        width: 10,
+        fixed: !isMobile ? "right" : undefined,
         render: (record: IProject & { key: string }) => {
           const statusStyle = getProjectStatusStyle(record.status);
           return (
@@ -76,13 +80,19 @@ export default function Projects() {
         },
       },
       {
-        title: "Archivo",
+        title: "URL",
         align: "center",
         width: 20,
         render: (record: IProject & { key: string }) => (
           <div className="mx-auto text-center">
-            <a href={record.projectUri} target="_blank" rel="noreferrer">
-              <strong>Ver Archivo</strong>
+            <a
+              className="flex justify-center gap-2"
+              href={record.projectUri}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <strong>Abrir URL</strong>
+              <ExportOutlined />
             </a>
           </div>
         ),
@@ -98,7 +108,9 @@ export default function Projects() {
               <div className="text-center">
                 <Divider className="m-2" />
                 <span
-                  onClick={() => handleProjectDetails(record)}
+                  onClick={() =>
+                    void router.push(Routes.SaveProject + `/${record.id}`)
+                  }
                   className="h-full w-full cursor-pointer"
                 >
                   Ver proyecto
@@ -106,13 +118,34 @@ export default function Projects() {
                 {Roles.External !== role &&
                   ["A", "I"].includes(record?.status ?? "") && (
                     <>
-                      <Divider className="m-2" />
-                      <span
-                        onClick={() => void handleDeleteProject(record)}
-                        className="h-full w-full cursor-pointer"
-                      >
-                        Eliminar
-                      </span>
+                      {record.status === "A" && (
+                        <>
+                          <Divider className="m-2" />
+                          <span
+                            onClick={() =>
+                              void router.push(
+                                Routes.SaveProject + `?id=${record.id}`,
+                              )
+                            }
+                            className="h-full w-full cursor-pointer"
+                          >
+                            Editar
+                          </span>
+                        </>
+                      )}
+                      {record.projectTasks.every(
+                        (task) => task.status !== "D",
+                      ) && (
+                        <>
+                          <Divider className="m-2" />
+                          <span
+                            onClick={() => void handleDeleteProject(record)}
+                            className="h-full w-full cursor-pointer"
+                          >
+                            Eliminar
+                          </span>
+                        </>
+                      )}
                     </>
                   )}
               </div>
@@ -136,6 +169,15 @@ export default function Projects() {
         setSearchValue(String(value));
       },
     },
+    {
+      label: "Filtrar por estado",
+      placeholder: "Selecciona el estado",
+      type: FilterType.SELECT,
+      values: [{ label: "Todos los estados", value: "all" }, ...projectStatus],
+      onChange(value) {
+        setProjectStatus(String(value));
+      },
+    },
   ];
 
   return (
@@ -143,11 +185,15 @@ export default function Projects() {
       {notificationElement}
       <Header
         title="Proyectos"
-        btn={{
-          label: "Añadir nuevo",
-          icon: <PlusOutlined />,
-          onClick: () => void router.push(Routes.SaveProject),
-        }}
+        btn={
+          Roles.External !== role
+            ? {
+                label: "Añadir nuevo",
+                icon: <PlusOutlined />,
+                onClick: () => void router.push(Routes.SaveProject),
+              }
+            : undefined
+        }
       />
 
       <TableFilter filters={filters} />
@@ -157,45 +203,6 @@ export default function Projects() {
         data={tableData.reverse()}
         isLoading={isLoading}
       />
-
-      <Modal
-        title="Detalles del project"
-        centered
-        open={openModal}
-        okText={"Editar"}
-        onOk={() => handleProjectDetails()}
-        onCancel={() => setOpenModal(false)}
-        okButtonProps={{
-          className: "bg-blue-500",
-        }}
-        footer={[
-          typeof currentProject === "undefined" ||
-          (currentProject.status === "I" && false) ? (
-            <Button
-              key="request"
-              className="border-none bg-blue-500 !text-white hover:!bg-blue-400"
-              onClick={() => void handleDeleteProject(currentProject)}
-            >
-              Solicitar materiales
-            </Button>
-          ) : undefined,
-          Roles.External !== role &&
-          ["A", "I"].includes(currentProject?.status ?? "") ? (
-            <Button
-              key="delete"
-              className="border-none bg-red-500 !text-white hover:!bg-red-400"
-              onClick={() => void handleDeleteProject(currentProject)}
-            >
-              Eliminar proyecto
-            </Button>
-          ) : undefined,
-        ]}
-      >
-        <DetailsModal
-          project={currentProject}
-          closeModal={handleUpdateProject}
-        />
-      </Modal>
     </>
   );
 }

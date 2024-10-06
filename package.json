@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --check .",
-    "fix:prettier": "prettier --write ."
+    "prettier:fix": "prettier --write ."
   },
   "dependencies": {
     "@tanstack/react-query": "^5.34.2",

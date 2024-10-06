@@ -1,4 +1,5 @@
-import { Button, InputNumber, Tag } from "antd";
+import { Button, Input, InputNumber, Tag } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
   RequestStatus,
   TRequestReturnedMaterials,
@@ -6,7 +7,7 @@ import {
   type TRequestStatus,
   type TUpdateRequestStatus,
 } from "../../interfaces";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   requestStatus,
   getStatus,
@@ -29,7 +30,9 @@ interface IDetailsModal {
 
 export default function DetailsModal({ request, closeModal }: IDetailsModal) {
   const { role } = useLabProvider();
+  const [isLoading, setIsLoading] = useState(false);
   const [comments, setComments] = useState<string>("");
+  const [requesterReturn, setRequesterReturn] = useState<string>("");
   const [returnedMaterials, setReturnedMaterials] = useState<
     Array<TRequestReturnedMaterials>
   >([]);
@@ -94,24 +97,54 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
   }, [request.status]);
 
   useEffect(() => {
+    if (typeof request === "undefined") {
+      openNotification(
+        "error",
+        "Ha ocurrido un error al obtener la solicitud",
+        "No se está obteniendo correctamente la solicitud",
+        "topRight",
+      );
+      closeModal();
+      return;
+    }
+
     const getMaterials = async () => {
-      const materials: Array<TMaterial> = [];
-      const sessionToken = sessionData?.user.token ?? "";
-      for (const material of request.materialRequestMaterial) {
-        const materialData = await getMaterial(
-          sessionToken,
-          material.idMaterial,
-        );
-        materials.push({
-          ...materialData,
-          quantity: material.quantity.toString(),
-        });
+      setIsLoading(true);
+      try {
+        const materials: Array<TMaterial> = [];
+        const sessionToken = sessionData?.user.token ?? "";
+        for (const material of request.materialRequestMaterial) {
+          const materialData = await getMaterial(
+            sessionToken,
+            material.idMaterial,
+          );
+          materials.push({
+            ...materialData,
+            quantity: material.quantity.toString(),
+          });
+        }
+        setCurrentMaterials([...materials]);
+      } catch (error) {
+        if (
+          (error as Error).message.includes(
+            "User is not authorized to view this material",
+          )
+        ) {
+          openNotification(
+            "error",
+            "Ha ocurrido un error al obtener los materiales",
+            "No tienes permisos para ver esta solicitud",
+            "topRight",
+          );
+          closeModal();
+        }
+      } finally {
+        setIsLoading(false);
       }
-      setCurrentMaterials([...materials]);
     };
 
     void getMaterials();
-  }, []);
+  }, [request.materialRequestMaterial, sessionData?.user.token]);
 
   const onChangeStatus = async (newStatus?: TRequestStatus) => {
     try {
@@ -138,11 +171,16 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
           case RequestStatus.Delivered:
             data.commentsResponsibleReturn = comments;
             data.materialRequestMaterial = returnedMaterials;
+            if (!requesterReturn)
+              throw new Error(
+                "No se ha seleccionado persona que devolvió los materiales",
+              );
+            data.requesterReturn = requesterReturn;
             break;
         }
       }
 
-      if (role === Roles.External) {
+      if (isRequester) {
         await updateRequest(request.id, data, sessionToken);
       } else {
         await updateRequestStatus(request.id, data, sessionToken);
@@ -150,7 +188,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
       setComments("");
       openNotification(
         "success",
-        "Solicitud actualizada con exito",
+        "Solicitud actualizada con éxito",
         isRequester
           ? "Su comentario ha sido enviado"
           : `El estado de la solicitud ha sido actualizada con éxito.`,
@@ -158,13 +196,22 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
       );
       closeModal();
     } catch (error) {
-      openNotification(
-        "error",
-        "Error al guardar el proyecto",
-        "Ha ocurrido un error al cambiar el status del proyecto",
-        "topRight",
-      );
-      console.log("ERROR: ", error);
+      if ((error as Error).message.includes("No se ha seleccionado persona")) {
+        openNotification(
+          "error",
+          "Error al guardar el proyecto",
+          "Se debe seleccionar la persona que devolvió los materiales",
+          "topRight",
+        );
+      } else {
+        openNotification(
+          "error",
+          "Error al guardar el proyecto",
+          "Ha ocurrido un error al cambiar el status del proyecto",
+          "topRight",
+        );
+        console.error("ERROR: ", error);
+      }
     }
   };
 
@@ -183,13 +230,21 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
         ];
       }
       const newMaterials = [...prev];
-      if (newMaterials[materialIndex]) {
-        newMaterials[materialIndex].quantity = quantity.toString();
+      if (typeof newMaterials[materialIndex] !== "undefined") {
+        (newMaterials[materialIndex] as TRequestReturnedMaterials).quantity =
+          quantity.toString();
       }
 
       return newMaterials;
     });
   };
+
+  if (isLoading)
+    return (
+      <div className="w-full pt-4 text-center">
+        <LoadingOutlined className="text-3xl" />
+      </div>
+    );
 
   return (
     <>
@@ -224,16 +279,18 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                 <p>{material.name}</p>
                 <p>
                   {material.quantity}
-                  {material.measurement.name}
+                  {Number(material.materialType.id) !== 2
+                    ? material.measurement.name
+                    : ""}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="mb-4 mt-4 grid w-full grid-cols-2">
+          <div className="mb-4 mt-4 grid w-full">
             {!!request.idResponsibleDrop && (
-              <div>
-                <p className="mt-4">
+              <div className="flex gap-2">
+                <p className="mt-4 w-full">
                   <strong>Entregado por:</strong>{" "}
                   {`${request.idResponsibleDrop.name} ${request.idResponsibleDrop.lastName}`}
                 </p>
@@ -245,8 +302,8 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
             )}
 
             {!!request.idResponsibleReturn && (
-              <div>
-                <p className="mt-4">
+              <div className="flex gap-2">
+                <p className="mt-4 w-full">
                   <strong>Recibido por:</strong>{" "}
                   {`${request.idResponsibleReturn.name} ${request.idResponsibleReturn.lastName}`}
                 </p>
@@ -256,52 +313,57 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                 </p>
               </div>
             )}
+
+            {!!request.requesterReturn && (
+              <div className="flex gap-2">
+                <p className="mt-4 w-full">
+                  <strong>Recibido por:</strong> {request.requesterReturn}
+                </p>
+              </div>
+            )}
           </div>
 
-          {(isRequester ||
-            [Roles.Admin, Roles.PersonalExtra].includes(userRole)) && (
-            <div className="mb-4 w-full space-y-4">
-              {!!request.commentsResponsible && (
-                <div className="w-full">
-                  <strong>
-                    Comentarios del responsable de entregar el material:
-                  </strong>
-                  <br />
-                  <p>{request.commentsResponsible ?? "Sin comentarios"}</p>
-                </div>
-              )}
+          <div className="mb-4 mt-8 w-full space-y-4">
+            {!!request.commentsResponsible && (
+              <div className="w-full">
+                <strong>
+                  Comentarios del responsable de entregar el material:
+                </strong>
+                <br />
+                <p>{request.commentsResponsible ?? "Sin comentarios"}</p>
+              </div>
+            )}
 
-              {!!request.commentsRequester && (
-                <div className="w-full">
-                  <strong>
-                    Comentarios del solicitante al recibir el material:
-                  </strong>
-                  <br />
-                  <p>{request.commentsRequester}</p>
-                </div>
-              )}
+            {!!request.commentsRequester && (
+              <div className="w-full">
+                <strong>
+                  Comentarios del solicitante al recibir el material:
+                </strong>
+                <br />
+                <p>{request.commentsRequester}</p>
+              </div>
+            )}
 
-              {!!request.commentsRequesterReturn && (
-                <div className="w-full">
-                  <strong>
-                    Comentarios del solicitante al devolver el material:
-                  </strong>
-                  <br />
-                  <p>{request.commentsRequesterReturn}</p>
-                </div>
-              )}
+            {!!request.commentsRequesterReturn && (
+              <div className="w-full">
+                <strong>
+                  Comentarios del solicitante al devolver el material:
+                </strong>
+                <br />
+                <p>{request.commentsRequesterReturn}</p>
+              </div>
+            )}
 
-              {!!request.commentsResponsibleReturn && (
-                <div className="w-full">
-                  <strong>
-                    Comentarios de la persona que recibió el material:
-                  </strong>
-                  <br />
-                  <p>{request.commentsResponsibleReturn}</p>
-                </div>
-              )}
-            </div>
-          )}
+            {!!request.commentsResponsibleReturn && (
+              <div className="w-full">
+                <strong>
+                  Comentarios de la persona que recibió el material:
+                </strong>
+                <br />
+                <p>{request.commentsResponsibleReturn}</p>
+              </div>
+            )}
+          </div>
 
           {((isRequester &&
             ![RequestStatus.Pending, RequestStatus.Approved].includes(
@@ -314,7 +376,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
             nextStatus?.value !== RequestStatus.Pending && (
               <div className="mt-8 flex w-full flex-col gap-1">
                 <p className="mb-4 text-center text-xl font-bold">
-                  {isRequester ? "Deja tu comentario" : "Cambiar status"}:
+                  {isRequester ? "Deja tu comentario" : "Cambiar estado"}:
                 </p>
                 {isRequester && (
                   <p className="text-xs">{messageForRequester}</p>
@@ -325,8 +387,9 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                   ) && (
                     <>
                       {request.status === RequestStatus.Delivered &&
-                        role !== Roles.External && (
-                          <div>
+                        role !== Roles.External &&
+                        !isRequester && (
+                          <div className="space-y-4">
                             <p className="text-base font-bold">
                               Materiales devueltos:
                             </p>
@@ -345,10 +408,24 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                                     handleReturnMaterial(material, value ?? 0)
                                   }
                                   decimalSeparator=","
-                                  suffix={material.measurement.name}
+                                  suffix={
+                                    Number(material.materialType.id) !== 2
+                                      ? material.measurement.name
+                                      : undefined
+                                  }
                                 />
                               </div>
                             ))}
+                            <p className="text-base font-bold">
+                              Persona que devolvió los materiales
+                            </p>
+                            <Input
+                              placeholder="Nombre"
+                              onChange={(e) =>
+                                setRequesterReturn(e.target.value)
+                              }
+                              maxLength={120}
+                            />
                           </div>
                         )}
 
@@ -366,7 +443,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                     className={`flex w-full gap-4 ${request.status !== RequestStatus.Pending ? "justify-end" : "justify-center"}`}
                   >
                     <Button
-                      className="border-none bg-green-500 !text-white hover:!bg-green-400"
+                      className="border-none !bg-green-500 !text-white hover:!bg-green-400"
                       onClick={() => onChangeStatus()}
                     >
                       {isRequester
@@ -378,7 +455,7 @@ export default function DetailsModal({ request, closeModal }: IDetailsModal) {
                     {request.status === RequestStatus.Pending &&
                       currentUser?.id !== request.idRequester.id && (
                         <Button
-                          className="border-none bg-red-500 !text-white hover:!bg-red-400"
+                          className="border-none !bg-red-500 !text-white hover:!bg-red-400"
                           onClick={() => onChangeStatus(requestStatus[1])}
                         >
                           Rechazar

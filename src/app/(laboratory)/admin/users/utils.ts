@@ -68,7 +68,7 @@ export const updateUser = async (
   );
 };
 
-export const requestStatus: Array<TUserStatus> = [
+export const userStatus: Array<TUserStatus> = [
   {
     label: "Activo",
     value: "A",
@@ -127,7 +127,7 @@ export const userFields = [
   },
   {
     id: "id",
-    label: "Email",
+    label: "Correo",
   },
   {
     id: "role",

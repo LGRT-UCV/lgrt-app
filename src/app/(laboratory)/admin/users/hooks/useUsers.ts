@@ -6,10 +6,19 @@ import type { AnyObject } from "antd/es/_util/type";
 import useNotification from "@/hooks/useNotification";
 import { getAllUsers, updateUser, userRoles } from "../utils";
 import type { IUser, TStatus } from "../interfaces";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useUser() {
   const [form] = useForm();
   const [searchValue, setSearchValue] = useState("");
+  const [userStatus, setUserStatus] = useState<string>("all");
+  const [userRole, setUserRole] = useState<string>("all");
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<IUser>();
@@ -43,37 +52,60 @@ export default function useUser() {
     void refetch();
   };
 
-  const handleUserStatus = async (userId: string, status: TStatus) => {
+  const handleUserStatus = async (user: IUser, status: TStatus) => {
+    const actionLabel = status === "A" ? "Activar" : "Desactivar";
+    const userId = user.id;
     if (userId === "") {
       openNotification(
         "error",
-        "No se ha seleccionado un usuario a eliminar",
+        `No se ha seleccionado un usuario a ${actionLabel.toLowerCase()}`,
         "",
         "topRight",
       );
       return;
     }
 
-    try {
-      await updateUser(
-        userId,
-        {
-          status: status,
+    confirm({
+      title: `Desea ${actionLabel.toLowerCase()} el usuario ${user.name + " " + user.lastName}`,
+      content: "Correo del usuario: " + user.id,
+      okText: actionLabel,
+      okType: status === "A" ? "primary" : "danger",
+      okButtonProps: {
+        style: {
+          backgroundColor: status === "A" ? "#1890ff" : "",
         },
-        sessionData?.user.token ?? "",
-      );
-      void refetch();
-      setOpenDetailsModal(false);
-      openNotification("success", "", "Usuario actualizado", "topRight");
-    } catch (error) {
-      console.error("Error", error);
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar el usuario",
-        "",
-        "topRight",
-      );
-    }
+      },
+      cancelText: "Cancelar",
+      onOk() {
+        handleAction();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleAction = async () => {
+      try {
+        await updateUser(
+          userId,
+          {
+            status: status,
+          },
+          sessionData?.user.token ?? "",
+        );
+        void refetch();
+        setOpenDetailsModal(false);
+        openNotification("success", "", "Usuario actualizado", "topRight");
+      } catch (error) {
+        console.error("Error", error);
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar el usuario",
+          "",
+          "topRight",
+        );
+      }
+    };
   };
 
   const handleUserDetails = (user?: IUser, show = true) => {
@@ -86,9 +118,11 @@ export default function useUser() {
     const users = userList.filter((user) => {
       const userFullName = `${user.name} ${user.lastName}`;
       return (
-        user.id.toLocaleLowerCase().includes(search) ||
-        userFullName.toLocaleLowerCase().includes(search) ||
-        user.laboratory.name.toLocaleLowerCase().includes(search)
+        (user.id.toLocaleLowerCase().includes(search) ||
+          userFullName.toLocaleLowerCase().includes(search) ||
+          user.laboratory.name.toLocaleLowerCase().includes(search)) &&
+        (userStatus === "all" || user.status === userStatus) &&
+        (userRole === "all" || user.idRoleId === userRole)
       );
     });
     return (
@@ -102,7 +136,7 @@ export default function useUser() {
             ?.roleName ?? "External",
       })) ?? []
     );
-  }, [userList, searchValue]);
+  }, [userList, searchValue, userStatus, userRole]);
 
   useEffect(() => {
     if (!openCreateModal) {
@@ -124,6 +158,8 @@ export default function useUser() {
     handleUserDetails,
     setOpenCreateModal,
     setOpenDetailsModal,
+    setUserStatus,
+    setUserRole,
     setSearchValue,
     handleUpdateUser,
     setCurrentUser,

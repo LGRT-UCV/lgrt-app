@@ -6,13 +6,22 @@ import useNotification from "@/hooks/useNotification";
 import { deleteRequest, getAllRequests } from "../utils";
 import { RequestStatus, type IRequest } from "../interfaces";
 import { Roles } from "@/lib/constants";
-import { getUserRole } from "@/(laboratory)/admin/users/utils";
+import { useLabProvider } from "@/context/labProvider";
+import { Modal } from "antd";
+
+const { confirm } = Modal;
+
+const destroyAll = () => {
+  Modal.destroyAll();
+};
 
 export default function useRequest() {
   const [searchValue, setSearchValue] = useState("");
+  const [requestStatus, setRequestStatus] = useState<string>("all");
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
+  const { role } = useLabProvider();
   const { openNotification, notificationElement } = useNotification();
   const { data: sessionData } = useSession();
 
@@ -42,13 +51,12 @@ export default function useRequest() {
     (request?: IRequest) => {
       const req = request ?? currentRequest;
       const currentUser = sessionData?.user.user;
-      const userRole = getUserRole(Number(currentUser?.idRoleId)).roleName;
       const isUserWithPermission =
-        [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(userRole) ||
+        [Roles.Admin, Roles.PersonalExtra, Roles.Personal].includes(role) ||
         currentUser?.id === req?.idRequester.id;
       return req?.status === RequestStatus.Pending && isUserWithPermission;
     },
-    [sessionData?.user.user],
+    [sessionData?.user, role],
   );
 
   const handleUpdateRequest = () => {
@@ -68,25 +76,41 @@ export default function useRequest() {
       return;
     }
 
-    try {
-      await deleteRequest(sessionData?.user.token ?? "", request.id);
-      void refetch();
-      setCurrentRequest(undefined);
-      setOpenDetailsModal(false);
-      openNotification(
-        "success",
-        "Solicitud eliminada",
-        `Se ha eliminado la solicitud ${request.id}`,
-        "topRight",
-      );
-    } catch (error) {
-      openNotification(
-        "error",
-        "Ha ocurrido un error al eliminar la solicitud",
-        "",
-        "topRight",
-      );
-    }
+    confirm({
+      title: `Desea eliminar la solicitud #${request.id}`,
+      content: "Esta acción no se puede deshacer",
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        handleDelete();
+      },
+      onCancel() {
+        destroyAll();
+      },
+    });
+
+    const handleDelete = async () => {
+      try {
+        await deleteRequest(sessionData?.user.token ?? "", request.id);
+        void refetch();
+        setCurrentRequest(undefined);
+        setOpenDetailsModal(false);
+        openNotification(
+          "success",
+          "Solicitud eliminada",
+          `Se ha eliminado la solicitud ${request.id}`,
+          "topRight",
+        );
+      } catch (error) {
+        openNotification(
+          "error",
+          "Ha ocurrido un error al eliminar la solicitud",
+          "",
+          "topRight",
+        );
+      }
+    };
   };
 
   const handleRequestDetails = (request?: IRequest, show = true) => {
@@ -99,9 +123,10 @@ export default function useRequest() {
     const requests = requestList.filter((request) => {
       const requesterFullName = `${request.idRequester.name} ${request.idRequester.lastName}`;
       return (
-        request.id.toLocaleLowerCase().includes(search) ||
-        request.idRequester.id.toLocaleLowerCase().includes(search) ||
-        requesterFullName.toLocaleLowerCase().includes(search)
+        (request.id.toLocaleLowerCase().includes(search) ||
+          request.idRequester.id.toLocaleLowerCase().includes(search) ||
+          requesterFullName.toLocaleLowerCase().includes(search)) &&
+        (requestStatus === "all" || request.status === requestStatus)
       );
     });
     return (
@@ -114,7 +139,7 @@ export default function useRequest() {
         ).toLocaleDateString("es-VE"),
       })) ?? []
     );
-  }, [requestList, searchValue]);
+  }, [requestList, searchValue, requestStatus]);
 
   return {
     openDetailsModal,
@@ -130,6 +155,7 @@ export default function useRequest() {
     setOpenDetailsModal,
     setOpenCreateModal,
     setSearchValue,
+    setRequestStatus,
     handleUpdateRequest,
   };
 }

@@ -6,7 +6,20 @@ import dayjs from "dayjs";
 import useNotification from "@/hooks/useNotification";
 import { Routes } from "@/lib/constants";
 import { createMaterial, updateMaterial } from "../../utils";
-import type { TMaterial, TMaterialForm, TMaterialType } from "../../interfaces";
+import type {
+  TCustomFieldValues,
+  TMaterial,
+  TMaterialForm,
+  TMaterialType,
+  TSaveMaterial,
+} from "../../interfaces";
+import { TDefaultMaterialFields } from "../../materialType/interfaces";
+import { isoDateRegex } from "../utils";
+
+interface FieldFinalValues {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
 
 export default function useMaterialForm(
   formIntance: FormInstance,
@@ -33,16 +46,27 @@ export default function useMaterialForm(
       sgaClassif,
       nfpaClassif,
       expirationDate,
+      customFieldValues,
       ...material
     } = materialData;
 
+    const customFields = (customFieldValues ?? []).reduce((acc, field) => {
+      if (isoDateRegex.test(field.value)) {
+        acc[`custom-${field.idMaterialField}`] = dayjs(field.value);
+      } else {
+        acc[`custom-${field.idMaterialField}`] = field.value;
+      }
+      return acc;
+    }, {} as FieldFinalValues);
+
     const fieldData = {
       measurement: measurement.id,
-      materialType: JSON.stringify(materialType),
+      materialType: materialType.id,
       storagePlace: storagePlace.id,
       sgaClassif: sgaClassif.map((sga) => sga?.idSgaClassif ?? ""),
       expirationDate: dayjs(expirationDate),
       ...nfpaClassif,
+      ...customFields,
       ...material,
     };
 
@@ -73,8 +97,28 @@ export default function useMaterialForm(
         sensibleMaterial,
         ...fieldValues
       } = values;
-      const materialTypeParsed = JSON.parse(materialType) as TMaterialType;
-      const materialToSave = {
+
+      // Get custom fields and generate customFieldValues
+      const customFieldValues: TCustomFieldValues["customFieldValues"] =
+        Object.entries(fieldValues)
+          .filter(([key]) => key.startsWith("custom-"))
+          .map(([key, value]) => {
+            const idMaterialField = key.split("-")[1];
+            return {
+              idMaterialField: idMaterialField ?? "",
+              value,
+            };
+          });
+
+      // Remove custom fields from fieldValues
+      const fieldFinalValues: FieldFinalValues = Object.entries(fieldValues)
+        .filter(([key]) => !key.startsWith("custom-"))
+        .reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {} as FieldFinalValues);
+
+      const materialToSave: TSaveMaterial = {
         nfpaClassif: {
           nfpaBlue,
           nfpaRed,
@@ -82,7 +126,7 @@ export default function useMaterialForm(
           nfpaYellow,
         },
         materialType: {
-          id: materialTypeParsed.id,
+          id: materialType,
         },
         measurement: {
           id: measurement,
@@ -90,11 +134,17 @@ export default function useMaterialForm(
         storagePlace: {
           id: storagePlace,
         },
-        sgaClassif: sgaClassif.map((sga) => ({ idSgaClassif: sga })),
+        sgaClassif: sgaClassif?.map((sga) => ({ idSgaClassif: sga })) ?? [],
         weight: weight?.toString(),
         superUse: !!superUse,
         sensibleMaterial: !!sensibleMaterial,
-        ...fieldValues,
+        customFieldValues,
+        name: fieldFinalValues.name,
+        description: fieldFinalValues.description,
+        quantity: fieldFinalValues.quantity,
+        minQuantity: fieldFinalValues.minQuantity,
+        imageUrl: fieldFinalValues.imageUrl,
+        ...fieldFinalValues,
       };
       const sessionToken = sessionData?.user.token;
 
@@ -109,8 +159,8 @@ export default function useMaterialForm(
 
       openNotification(
         "success",
-        "Material guardado con exito",
-        `El material ${values.name} ha sido creado con exito.`,
+        "Material guardado con éxito",
+        `El material ${values.name} ha sido creado con éxito.`,
         "topRight",
       );
       void router.push(Routes.Inventory);
@@ -121,11 +171,11 @@ export default function useMaterialForm(
         "",
         "topRight",
       );
-      console.log("ERROR: ", error);
+      console.error("ERROR: ", error);
     }
   };
 
-  const hasField = (field: string) => {
+  const hasField = (field: TDefaultMaterialFields["id"]) => {
     if (typeof currentMaterialType === "undefined") return false;
     const availableFields = currentMaterialType.fields.split(";");
     return availableFields.includes(field);

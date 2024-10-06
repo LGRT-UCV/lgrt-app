@@ -33,3 +33,11 @@ export interface IFileForm {
   formIntance: FormInstance;
   FileData?: IFile;
 }
+
+export type TFileData = {
+  name: string;
+  fileType: string;
+  description: string;
+  fileUri: string;
+  file: string;
+} & IGenericId;

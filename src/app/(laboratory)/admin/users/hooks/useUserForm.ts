@@ -43,9 +43,11 @@ export default function useUserForm(
           user.token,
         );
       } else {
+        const id = values.id.toLowerCase();
         await createUser(
           {
             ...values,
+            id,
             laboratory: {
               id: values.laboratory,
             },
@@ -56,8 +58,8 @@ export default function useUserForm(
 
       openNotification(
         "success",
-        "Usuario guardado con exito",
-        `El usuario ${values.name} ha sido creado con exito.`,
+        "Usuario guardado con éxito",
+        `El usuario ${values.name} ha sido creado con éxito.`,
         "topRight",
       );
       callback();

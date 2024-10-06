@@ -79,8 +79,8 @@ export default function useRequestForm(callback: () => void) {
 
       openNotification(
         "success",
-        "Solicitud guardada con exito",
-        `La solicitud ha sido creada con exito.`,
+        "Solicitud guardada con éxito",
+        `La solicitud ha sido creada con éxito.`,
         "topRight",
       );
       callback();
@@ -108,17 +108,49 @@ export default function useRequestForm(callback: () => void) {
     }
   };
 
-  const handleMeasurements = (id: string) => {
+  const handleMeasurements = (id: string, key: number) => {
     const materialData = materialList?.materials?.find(
       (material) => material.id === id,
     );
     if (materialData === undefined) return;
 
-    setMaterialsSelected([...materialsSelected, materialData]);
-    setMeasurements([
-      ...measurements,
-      materialData?.measurement.description ?? "",
-    ]);
+    setMaterialsSelected((prev) => {
+      if (key >= prev.length) {
+        return [...prev, materialData];
+      }
+      const materials = prev.map((material, index) =>
+        index === key ? materialData : material,
+      );
+      return materials;
+    });
+
+    const newMeasurement = materialData.measurement.description;
+    setMeasurements((prev) => {
+      if (key >= prev.length) {
+        return [...prev, newMeasurement];
+      }
+      const updateMeasurements = prev.map((measurement, index) =>
+        index === key ? newMeasurement : measurement,
+      );
+      return updateMeasurements;
+    });
+  };
+
+  const handleRemoveMaterial = (key: number) => {
+    setMaterialsSelected((prev) => {
+      const materials = prev.filter((_, index) => index !== key);
+      return materials;
+    });
+
+    setMeasurements((prev) => {
+      const measurements = prev.filter((_, index) => index !== key);
+      return measurements;
+    });
+  };
+
+  const resetValues = () => {
+    setMaterialsSelected([]);
+    setMeasurements([]);
   };
 
   return {
@@ -129,5 +161,7 @@ export default function useRequestForm(callback: () => void) {
     notificationElement,
     onFinish,
     handleMeasurements,
+    handleRemoveMaterial,
+    resetValues,
   };
 }

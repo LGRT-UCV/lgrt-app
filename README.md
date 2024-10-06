@@ -57,24 +57,3 @@ We welcome contributions from the community to improve the LGRT APP. To contribu
 
 If you encounter any issues or have suggestions for improvements, please open an issue on the GitHub repository.
 
-## License
-
-This project is licensed under the MIT License. You can find the full license text in the `LICENSE` file.
-
-To contribute to this project, please follow these guidelines:
-
-1. Fork the repository: Click on the "Fork" button at the top right corner of the GitHub repository page. This will create a copy of the repository in your own GitHub account.
-
-2. Create a new branch: Switch to your forked repository and create a new branch for your feature or bug fix. You can do this by clicking on the branch dropdown menu and entering a new branch name.
-
-3. Make your changes: Make the necessary changes to the codebase to address the issue or implement the new feature. Ensure that your changes follow the project's coding conventions and best practices.
-
-4. Commit your changes: Once you are satisfied with your changes, commit them with descriptive messages. It is recommended to create small, focused commits that address specific issues or features.
-
-5. Push your branch: Push your branch to your forked repository on GitHub. This will make your changes available for review.
-
-6. Submit a pull request: Go to the original repository and click on the "New pull request" button. Select your branch and provide a descriptive title and description for your pull request. This will notify the project maintainers about your changes and start the review process.
-
-If you encounter any issues or have suggestions for improvements, please open an issue on the GitHub repository. We appreciate your contributions and feedback!
-
-Please note that this project is licensed under the MIT License, which allows for modification and distribution but prohibits commercialization. You can find the full license text in the `LICENSE` file.

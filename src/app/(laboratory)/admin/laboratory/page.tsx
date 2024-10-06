@@ -99,13 +99,13 @@ export default function Laboratory() {
                 >
                   Editar
                 </span>
-                {/* <Divider className="m-2"/>
+                <Divider className="m-2" />
                 <span
                   onClick={() => void handleDeleteLaboratory(record)}
                   className="h-full w-full cursor-pointer"
                 >
                   Eliminar
-                </span> */}
+                </span>
               </div>
             }
             title="Opciones"
